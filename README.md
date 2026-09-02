@@ -90,7 +90,7 @@ innehållet i `site/` med ftp.
 ## Innan sajten går live
 
 - [ ] Koppla nyhetsbrevsformuläret på startsidan till din e-posttjänst
-- [ ] Låt de fyra kunderna godkänna sina case, de är namngivna
+- [x] Låt de fyra kunderna godkänna sina case, de är namngivna. Klart 2026-09-02
 - [ ] Kontrollera siffrorna som kommer ur kundernas egna uppföljningar
 - [ ] Lägg in en dataskyddstext om du samlar in mejladresser
 - [ ] Koppla verktygen till mejlinsamling om de ska fungera som lead magnets
