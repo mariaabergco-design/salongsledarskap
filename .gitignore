@@ -1,0 +1,14 @@
+# Arbetsmaterial som stannar på din dator och aldrig ska till GitHub.
+material/
+profil/
+
+# Bildoriginalen väger 6,9 MB och behövs bara när du komprimerar om.
+# Vill du ha dem säkerhetskopierade i repot, ta bort raden nedan.
+bilder/original/
+
+# Skräp som operativsystem och redigerare lägger till av sig själva
+.DS_Store
+Thumbs.db
+*.swp
+__pycache__/
+.venv/
