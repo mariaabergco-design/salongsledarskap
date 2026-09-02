@@ -138,7 +138,9 @@ skickar något.
 - [x] Kontrollera siffrorna som kommer ur kundernas egna uppföljningar. Klart 2026-09-02
 - [x] Lägg in en dataskyddstext om du samlar in mejladresser. Utkast finns i `dataskydd.md`, läs igenom det
 - [x] Verktygen ska vara öppna. Beslut 2026-09-02, ingen mejladress krävs för att se sitt resultat
-- [ ] Välj var sajten ska ligga och peka domänen dit
+- [x] Sajten publiceras på GitHub Pages från `main`. Klart 2026-09-02
+- [x] Dns hos Loopia pekar salongsledarskap.se mot GitHub. Klart 2026-09-02
+- [ ] Kryssa i Enforce HTTPS under Settings, Pages när GitHub hunnit utfärda certifikatet
 
 ## Ordning på publiceringen
 
