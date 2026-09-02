@@ -340,6 +340,9 @@ def bygg():
     shutil.copyfile(os.path.join(ROOT, "scripts", "style.css"), os.path.join(OUT, "style.css"))
     shutil.copyfile(os.path.join(ROOT, "scripts", "favicon.svg"), os.path.join(OUT, "favicon.svg"))
     shutil.copytree(os.path.join(ROOT, "typsnitt"), os.path.join(OUT, "typsnitt"))
+    # CNAME talar om för GitHub Pages vilken domän sajten svarar på
+    if os.path.exists(os.path.join(ROOT, "CNAME")):
+        shutil.copyfile(os.path.join(ROOT, "CNAME"), os.path.join(OUT, "CNAME"))
 
     kalla = os.path.join(ROOT, "bilder")
     if os.path.isdir(kalla):

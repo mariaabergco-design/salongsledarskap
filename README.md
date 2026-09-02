@@ -90,20 +90,33 @@ python3 -m http.server -d site 8000
 
 ## Publicera på salongsledarskap.se
 
-Sajten är helt statisk. Den behöver ingen databas och ingen serverkod.
+Sajten är helt statisk och ligger på GitHub Pages. Arbetsflödet i
+`.github/workflows/pages.yml` bygger och publicerar vid varje push till
+`main`. Filen `CNAME` talar om vilken domän sajten svarar på, och
+byggskriptet kopierar den till `site/`.
 
-**Alternativ 1, Netlify.** Skapa ett konto, välj Add new site och Import from
-Git, peka på det här repot. Ange `python3 scripts/bygg-sajt.py` som build
-command och `site` som publish directory. Lägg sedan till domänen under Domain
-settings och följ instruktionen för DNS.
+**En gång, i repots inställningar.** Gå till Settings, Pages. Välj GitHub
+Actions som källa. Skriv in `salongsledarskap.se` som Custom domain. Kryssa i
+Enforce HTTPS när certifikatet är klart, det tar en stund första gången.
 
-**Alternativ 2, GitHub Pages.** Slå på Pages i repots inställningar och välj
-GitHub Actions som källa. Arbetsflödet i `.github/workflows/pages.yml` bygger
-och publicerar automatiskt vid varje push. Lägg till domänen under Custom
-domain.
+**En gång, hos den som har domänen.** Peka salongsledarskap.se mot GitHub med
+fyra A-poster:
 
-**Alternativ 3, vilket webbhotell som helst.** Kör byggskriptet och ladda upp
-innehållet i `site/` med ftp.
+```
+185.199.108.153
+185.199.109.153
+185.199.110.153
+185.199.111.153
+```
+
+Lägg också en CNAME-post för `www` som pekar på
+`mariaabergco-design.github.io`. Exakta värden visas i Settings, Pages när
+domänen är inskriven, kontrollera mot dem.
+
+DNS tar mellan några minuter och ett dygn på sig.
+
+**Sedan.** Varje push till `main` bygger om sajten. Du kan också köra
+arbetsflödet för hand under Actions, Bygg och publicera sajten, Run workflow.
 
 ## Nyhetsbrevet
 
