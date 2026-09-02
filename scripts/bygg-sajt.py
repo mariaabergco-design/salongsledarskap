@@ -251,7 +251,8 @@ def foot(depth):
     </div>
     <div>
       <strong>Kontakt</strong>
-      <p>maria@abergco.se<br>abergco.se</p>
+      <p>maria@abergco.se<br>abergco.se<br>
+         <a href="{p}dataskydd.html">Dataskydd</a></p>
     </div>
   </div>
   <p class="fotrad">Åberg &amp; Co · salongsledarskap.se</p>
@@ -540,6 +541,23 @@ def bygg():
         sida("Om Maria Åberg · Salongsledarskap",
              "Trettio år i branschen, tjugo som salongsledare.", inne, 0, "om"))
 
+    # dataskydd
+    d = parse_md(os.path.join(ROOT, "dataskydd.md"))
+    inne = """<article class="artikel">
+  <header class="artikelhuvud">
+    <span class="ovan">Dataskydd</span>
+    <h1>{titel}</h1>
+    <p class="ingress">{deck}</p>
+  </header>
+  <div class="brod">
+      {body}
+  </div>
+</article>""".format(titel=html.escape(d["title"]), deck=inline(d["deck"]), body=d["body"])
+    open(os.path.join(OUT, "dataskydd.html"), "w", encoding="utf-8").write(
+        sida("Dataskydd · Salongsledarskap",
+             "Vad som händer med din mejladress om du anmäler dig till nyhetsbrevet.",
+             inne, 0))
+
     # start
     pelarkort = "".join("""<a class="pkort" href="artiklar.html#pelare{nr}">
     <span class="pnr">{nr}</span>
@@ -656,7 +674,7 @@ def bygg():
     print(" ", len(artiklar), "artiklar")
     print(" ", len(case_data), "kundcase")
     print(" ", len(VERKTYG), "verktyg")
-    print(" ", 5, "översiktssidor")
+    print(" ", 6, "översiktssidor")
 
 
 if __name__ == "__main__":

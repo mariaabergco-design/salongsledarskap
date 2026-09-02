@@ -12,6 +12,7 @@ Kunskapssajt för salongsägare med fyra anställda eller fler. Innehållet ägs
 | `verktyg/` | Fyra interaktiva verktyg i html, plus Flaskhalstestets text |
 | `site/` | Den färdiga sajten, genererad. Redigera aldrig här, ändringar skrivs över |
 | `scripts/` | Byggskript och stilmall |
+| `dataskydd.md` | Texten på dataskyddssidan, redigeras som vanlig markdown |
 | `nisch.md` | Målgrupp, nisch, kundens helvete och himmel |
 | `innehallsplan.md` | Pelare, publiceringsrytm, trappan till kartläggningsmöte |
 | `fas1-research.md` | Research med källa och verifieringsgrad per påstående |
@@ -105,7 +106,7 @@ tjänsten. Vill du gå tillbaka till platshållaren tar du bort filen.
 - [ ] Koppla nyhetsbrevsformuläret på startsidan till din e-posttjänst
 - [x] Låt de fyra kunderna godkänna sina case, de är namngivna. Klart 2026-09-02
 - [x] Kontrollera siffrorna som kommer ur kundernas egna uppföljningar. Klart 2026-09-02
-- [ ] Lägg in en dataskyddstext om du samlar in mejladresser
+- [x] Lägg in en dataskyddstext om du samlar in mejladresser. Utkast finns i `dataskydd.md`, läs igenom det
 - [ ] Koppla verktygen till mejlinsamling om de ska fungera som lead magnets
 
 ## Ordning på publiceringen
