@@ -1,23 +1,24 @@
 # Bilder
 
-Lägg fotografierna här med exakt de här filnamnen. Sajten hämtar dem automatiskt
-nästa gång byggskriptet körs. Saknas en fil hoppas den bilden över, och sajten
-byggs ändå utan trasiga bildrutor.
+`original/` innehåller alla sjutton fotografier från fotograferingen, med
+fotografens egna filnamn. Rör dem inte.
 
-| Filnamn | Vilken bild | Används till |
+De fyra bilder som sajten använder ligger direkt i den här mappen och har
+beskrivande namn. Byggskriptet hämtar dem automatiskt.
+
+| Fil | Motiv | Används till |
 |---|---|---|
-| `maria-orange.jpg` | Du i den oranga jackan i dörröppningen, den tajtare av de två | Överst på om-sidan, och som delningsbild när någon delar en länk |
-| `maria-fargskal.jpg` | Du som sträcker fram färgskålen, liggande format | Brett band längst ner på startsidan |
-| `maria-skoljning.jpg` | Sköljningen där ni båda skrattar | Om-sidan, under stycket om de trettio åren |
-| `maria-portratt.jpg` | Porträttet vid tvättstolen, du tittar in i kameran | Liten rund bild vid bylinen i varje artikel |
+| `maria-portratt.jpg` | Maria vid bordet i orange jacka, blicken i kameran | Överst på om-sidan, liten rund bild vid bylinen i varje artikel, och som delningsbild i sociala medier |
+| `maria-pa-golvet.jpg` | Maria sopar hår i salongen och skrattar | Brett band längst ner på startsidan |
+| `maria-skoljning.jpg` | Sköljningen, båda skrattar | Om-sidan, under stycket om de trettio åren |
 
-Ladda upp originalen, upplösningen spelar ingen roll. Delningsbilden bör vara
-minst 1200 pixlar bred, vilket originalen är.
+Vill du byta ut en bild räcker det att lägga en ny fil med samma namn här och
+köra `python3 scripts/bygg-sajt.py` igen.
 
-Två saker att tänka på innan bilderna publiceras:
+Övriga bilder i `original/` är ännu inte inplacerade. Bland dem finns flera
+starka motiv, bland annat Maria i dörröppningen vid produktväggen och en bild
+där hon räcker fram en färgskål.
 
-- Kunderna syns tydligt i flera av bilderna och behöver ha godkänt att synas på
-  en webbplats.
-- Ange gärna fotografens namn i sidfoten om avtalet kräver det.
-
-Kör sedan `python3 scripts/bygg-sajt.py` så följer bilderna med till `site/`.
+Innan bilderna publiceras: kunderna syns tydligt i sköljningsbilden och behöver
+ha godkänt att synas på en webbplats. Ange gärna fotografens namn i sidfoten om
+avtalet kräver det.

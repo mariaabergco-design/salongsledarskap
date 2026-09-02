@@ -99,10 +99,14 @@ VERKTYG = [
 ]
 
 BILDER = {
-    "portratt": {"fil": "maria-portratt.jpg", "alt": "Maria Åberg i salongen"},
-    "orange": {"fil": "maria-orange.jpg", "alt": "Maria Åberg utanför salongen"},
-    "fargskal": {"fil": "maria-fargskal.jpg", "alt": "Maria Åberg räcker fram en färgskål"},
-    "skoljning": {"fil": "maria-skoljning.jpg", "alt": "Maria Åberg sköljer en kunds hår"},
+    "portratt": {"fil": "maria-portratt.jpg",
+                 "alt": "Maria Åberg vid ett bord, med penna och surfplatta"},
+    "orange": {"fil": "maria-vid-bordet.jpg",
+               "alt": "Maria Åberg arbetar vid ett bord i orange jacka"},
+    "fargskal": {"fil": "maria-pa-golvet.jpg",
+                 "alt": "Maria Åberg sopar hår i salongen och skrattar"},
+    "skoljning": {"fil": "maria-skoljning.jpg",
+                  "alt": "Maria Åberg sköljer en kunds hår, båda skrattar"},
 }
 
 
@@ -221,8 +225,8 @@ def foot(depth):
 
 def sida(titel, beskrivning, innehall, depth=0, aktiv="", klass=""):
     p = "../" * depth
-    ogfil = os.path.join(ROOT, "bilder", BILDER["orange"]["fil"])
-    ogbild = ('\n<meta property="og:image" content="%sbilder/%s">' % (p, BILDER["orange"]["fil"])
+    ogfil = os.path.join(ROOT, "bilder", BILDER["portratt"]["fil"])
+    ogbild = ('\n<meta property="og:image" content="%sbilder/%s">' % (p, BILDER["portratt"]["fil"])
               if os.path.exists(ogfil) else "")
     return """<!doctype html>
 <html lang="sv">
@@ -473,7 +477,7 @@ def bygg():
   <h2>Kontakt</h2>
   <p>maria@abergco.se</p>
 </div>
-""".format(omhero=('<div class="omhero">%s</div>' % bild("orange", "portratthero").format(p="")) if bild("orange") else "",
+""".format(omhero=('<div class="omhero">%s</div>' % bild("portratt", "portratthero").format(p="")) if bild("orange") else "",
            ombild=('<figure class="brodbild">%s<figcaption>Trettio år i branschen, och fortfarande på golvet varje sommar.</figcaption></figure>'
                    % bild("skoljning").format(p="")) if bild("skoljning") else "") + cta_block(None, 0)
     open(os.path.join(OUT, "om.html"), "w", encoding="utf-8").write(
