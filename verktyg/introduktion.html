@@ -1,0 +1,302 @@
+<title>Introduktion av ny frisör</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap">
+<style>
+  :root {
+    --ground: #FCF9F6;
+    --panel: #F5EDE5;
+    --panel-2: #FFFFFF;
+    --ink: #241811;
+    --ink-soft: #6B584C;
+    --ink-faint: #9B8779;
+    --line: #EADFD4;
+    --line-strong: #D8C7B7;
+    --accent: #BF5308;
+    --accent-tint: #FBE7D6;
+    --shadow: 0 1px 2px rgba(36, 24, 17, .06);
+    --display: "Playfair Display", Georgia, serif;
+    --body: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #17110C; --panel: #241A12; --panel-2: #1D150F;
+      --ink: #F3EAE2; --ink-soft: #BCA899; --ink-faint: #93806F;
+      --line: #332519; --line-strong: #4A3625;
+      --accent: #FF8C42; --accent-tint: #3A2013;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #17110C; --panel: #241A12; --panel-2: #1D150F;
+    --ink: #F3EAE2; --ink-soft: #BCA899; --ink-faint: #93806F;
+    --line: #332519; --line-strong: #4A3625;
+    --accent: #FF8C42; --accent-tint: #3A2013;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground); color: var(--ink); font-family: var(--body);
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 24px 88px; }
+
+  h1, h2, .pct { font-family: var(--display); }
+
+  header { padding: 66px 0 30px; border-bottom: 1px solid var(--line-strong); }
+  .eyebrow {
+    display: block; font-size: .7rem; font-weight: 600; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 18px;
+  }
+  h1 {
+    font-size: clamp(2.2rem, 6.5vw, 3.2rem); line-height: 1.03; font-weight: 700;
+    letter-spacing: -.012em; margin: 0 0 16px; text-wrap: balance;
+  }
+  .lede { font-size: 1.08rem; line-height: 1.55; color: var(--ink-soft); margin: 0 0 24px; max-width: 62ch; }
+
+  .top { display: flex; gap: 14px; flex-wrap: wrap; padding: 24px 0 4px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label {
+    font-size: .67rem; font-weight: 700; letter-spacing: .11em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  input[type="text"], input[type="date"] {
+    font-family: var(--body); font-size: .97rem; color: var(--ink);
+    background: var(--panel-2); border: 1px solid var(--line-strong);
+    border-radius: 2px; padding: 9px 11px; width: 100%;
+  }
+  input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+
+  .progress {
+    margin: 26px 0 0; padding: 18px 20px;
+    border: 1px solid var(--line-strong); background: var(--panel-2); box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  }
+  .pct {
+    font-size: 2.1rem; font-weight: 700; line-height: 1; color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .bar { flex: 1 1 220px; height: 7px; background: var(--panel); border-radius: 1px; overflow: hidden; }
+  .bar span { display: block; height: 100%; background: var(--accent); width: 0; transition: width .18s ease; }
+  .ptext { font-size: .8rem; font-weight: 600; color: var(--ink-soft); }
+  @media (prefers-reduced-motion: reduce) { .bar span { transition: none; } }
+
+  section { padding: 30px 0 6px; border-bottom: 1px solid var(--line); }
+  .shead { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+  h2 { font-size: 1.3rem; font-weight: 600; margin: 0; line-height: 1.2; }
+  .when {
+    font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-tint); padding: 3px 9px; border-radius: 3px;
+  }
+  .sub { font-size: .92rem; color: var(--ink-soft); margin: 6px 0 16px; max-width: 62ch; }
+
+  ul.check { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  ul.check li { border-top: 1px solid var(--line); }
+  ul.check li:first-child { border-top: 0; }
+  ul.check label.item {
+    display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 0 12px;
+    align-items: start; padding: 11px 0; cursor: pointer;
+    font-size: .97rem; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--ink);
+  }
+  ul.check input { appearance: none; -webkit-appearance: none; margin: 0; width: 18px; height: 18px;
+    border: 1px solid var(--line-strong); border-radius: 2px; background: var(--panel-2);
+    margin-top: 3px; cursor: pointer; position: relative;
+  }
+  ul.check input:checked { background: var(--accent); border-color: var(--accent); }
+  ul.check input:checked::after {
+    content: ""; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px;
+    border: solid #FFF9F4; border-width: 0 2px 2px 0; transform: rotate(45deg);
+  }
+  ul.check input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  ul.check input:checked + span { color: var(--ink-faint); text-decoration: line-through; text-decoration-thickness: 1px; }
+  ul.check .note { display: block; font-size: .84rem; color: var(--ink-faint); margin-top: 2px; }
+
+  .aside { background: var(--panel); border-left: 3px solid var(--accent); padding: 18px 20px; margin: 28px 0 0; }
+  .aside h2 {
+    font-family: var(--body); font-size: .68rem; font-weight: 700; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 10px;
+  }
+  .aside p { margin: 0 0 10px; font-size: .93rem; }
+  .aside p:last-child { margin: 0; }
+
+  .btnrow { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+  button {
+    font-family: var(--body); font-size: .86rem; font-weight: 600;
+    padding: 9px 16px; border-radius: 2px; cursor: pointer;
+    border: 1px solid var(--line-strong); background: var(--panel-2); color: var(--ink);
+  }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .hintline { font-size: .82rem; color: var(--ink-faint); margin-top: 16px; }
+
+  footer {
+    margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line);
+    font-size: .76rem; color: var(--ink-faint);
+    display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Åberg &amp; Co · salongsledarskap.se</span>
+    <h1>Introduktion av ny frisör</h1>
+    <p class="lede">De första sex veckorna avgör om hon stannar i fem år eller fem månader. Listan tar under en timme att gå igenom och är det billigaste du kan göra för en ny anställd.</p>
+  </header>
+
+  <div class="top">
+    <div class="field" style="flex:2 1 220px">
+      <label for="namn">Vem gäller det</label>
+      <input type="text" id="namn" placeholder="Namn på den nya medarbetaren">
+    </div>
+    <div class="field" style="flex:2 1 220px">
+      <label for="ansvarig">Ansvarig för introduktionen</label>
+      <input type="text" id="ansvarig" placeholder="En person med namn, behöver inte vara du">
+    </div>
+    <div class="field" style="flex:1 1 150px">
+      <label for="start">Första arbetsdag</label>
+      <input type="date" id="start">
+    </div>
+  </div>
+
+  <div class="progress">
+    <span class="pct" id="pct">0 %</span>
+    <div class="bar"><span id="bar"></span></div>
+    <span class="ptext" id="ptext">0 av 0 klara</span>
+  </div>
+
+  <section>
+    <div class="shead"><h2>Innan hon börjar</h2><span class="when">Veckan före</span></div>
+    <p class="sub">Det här är den del som oftast hoppas över, och den som ger mest tillbaka. En person som möts av ordning första dagen drar en slutsats om hela salongen.</p>
+    <ul class="check" data-block="fore"></ul>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Vecka ett</h2><span class="when">Dag 1 till 5</span></div>
+    <p class="sub">Målet den här veckan är inte produktion. Det är att hon vet vad som förväntas och vem hon frågar när du inte är där.</p>
+    <ul class="check" data-block="v1"></ul>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Vecka två och tre</h2><span class="when">Bygga boken</span></div>
+    <p class="sub">Nu avgörs om hon får en kundstock eller får bygga den själv. Att lämnas ensam med den uppgiften är den vanligaste orsaken till att någon ger upp.</p>
+    <ul class="check" data-block="v23"></ul>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Vecka fyra till sex</h2><span class="when">Sätta vanan</span></div>
+    <p class="sub">Här stängs fönstret. Det som inte är på plats i vecka sex blir sällan gjort alls.</p>
+    <ul class="check" data-block="v46"></ul>
+  </section>
+
+  <section style="border-bottom:0">
+    <div class="aside">
+      <h2>De tre samtalen</h2>
+      <p>Boka dem i kalendern innan hon börjar. Femton minuter var, alltså fyrtiofem minuter totalt.</p>
+      <p>Slutet av vecka ett: fråga vad som förvånat henne. Svaret säger mer om hur ni faktiskt fungerar än någon rutinbeskrivning gör.</p>
+      <p>Vecka tre: fråga vad hon behöver för att fylla sin bok. Bestäm en konkret sak ni gör åt det.</p>
+      <p>Vecka sex: gå igenom hur det gick med det ni bestämde, och säg tydligt vad hon gör bra.</p>
+    </div>
+
+    <div class="btnrow">
+      <button id="rensa">Rensa listan för nästa anställning</button>
+    </div>
+
+    <p class="hintline">Sidan sparar dina bockar i din egen webbläsare. Ingenting skickas vidare.</p>
+  </section>
+
+  <footer>
+    <span>Åberg &amp; Co</span>
+    <span>Verktyg 4 · Pelare 4</span>
+  </footer>
+
+</div>
+
+<script>
+  const KEY = "introduktion-v1";
+
+  const punkter = {
+    fore: [
+      ["Boka de tre samtalen i kalendern", "Vecka ett, vecka tre, vecka sex. Boka dem nu, medan det är lugnt."],
+      ["Utse en ansvarig med namn", "Behöver inte vara du. Gärna någon som själv nyss gjort en resa i salongen."],
+      ["Skriv ner vad som förväntas vecka ett, tre och sex", "Konkret, inte i allmänna ord. En halv sida räcker."],
+      ["Bestäm vem hon frågar när du inte är där", "En person, inte teamet i allmänhet."],
+      ["Förbered plats, kläder, inlogg och nycklar", "Att sakna inlogg dag ett är ett besked i sig."],
+      ["Berätta för teamet vem som kommer och vad hon ska göra", "Så slipper alla gissa, och ingen känner sig förbisedd."]
+    ],
+    v1: [
+      ["Gå igenom de oskrivna reglerna högt", "Varje salong har dem. Sägs de inte bryter hon mot dem och känner sig utanför."],
+      ["Visa hur bokningssystemet används här", "Inte hur det fungerar. Hur ni använder det."],
+      ["Gå igenom prislistan och vad som ingår i varje behandling", "Här uppstår annars den tysta rabatten."],
+      ["Låt henne följa en kollega en halv dag", "Gärna den som är starkast på konsultation."],
+      ["Håll samtal ett i slutet av veckan", "Fråga vad som förvånat henne."],
+      ["Ge minst en konkret positiv återkoppling", "Vad du såg, vad det ledde till, gör så igen."]
+    ],
+    v23: [
+      ["Lägg en plan för hur boken ska fyllas", "Vilka tider, vilka kunder, vem som hjälper till."],
+      ["Ge henne kunder aktivt, vänta inte på att de dyker upp", "Nya kunder och nätbokningar fördelas medvetet, inte av en slump."],
+      ["Presentera henne för kunder i stolen", "Säg varför just hon passar. Det är den enda överlämning som fungerar."],
+      ["Gå igenom hur ni bokar om vid stolen", "Beteendet ska tränas högt, inte bara beskrivas."],
+      ["Håll samtal två", "Fråga vad hon behöver för att fylla boken. Bestäm en sak."],
+      ["Stäm av att hon vet vad som gäller kring tider och frånvaro", "Otydlighet här blir konflikt senare."]
+    ],
+    v46: [
+      ["Visa hennes egna siffror för första gången", "Beläggning och ombokning. Förklara hur de är uträknade."],
+      ["Sätt ett mål tillsammans för de kommande tre månaderna", "Ett mål, inte fem."],
+      ["Ge henne ett eget litet ansvarsområde", "Att äga något är det som gör att man känner sig hemma."],
+      ["Håll samtal tre", "Följ upp det ni bestämde och säg tydligt vad hon gör bra."],
+      ["Fråga vad som varit svårast hittills", "Vänta ut tystnaden. Det första svaret är sällan det viktiga."],
+      ["Boka in nästa avstämning i kalendern", "Utan datum blir det ingen fjärde gång."]
+    ]
+  };
+
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { state = {}; }
+
+  Object.keys(punkter).forEach(block => {
+    const ul = document.querySelector('ul[data-block="' + block + '"]');
+    punkter[block].forEach((p, i) => {
+      const id = block + "-" + i;
+      const li = document.createElement("li");
+      li.innerHTML =
+        '<label class="item"><input type="checkbox" id="' + id + '">' +
+        '<span>' + p[0] + '<span class="note">' + p[1] + '</span></span></label>';
+      ul.appendChild(li);
+      const box = li.querySelector("input");
+      if (state[id]) box.checked = true;
+      box.addEventListener("change", () => { state[id] = box.checked; spara(); rakna(); });
+    });
+  });
+
+  ["namn", "ansvarig", "start"].forEach(id => {
+    const el = document.getElementById(id);
+    if (state[id]) el.value = state[id];
+    el.addEventListener("input", () => { state[id] = el.value; spara(); });
+  });
+
+  function spara() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function rakna() {
+    const boxar = document.querySelectorAll('ul.check input[type="checkbox"]');
+    const klara = document.querySelectorAll('ul.check input[type="checkbox"]:checked').length;
+    const andel = boxar.length ? Math.round((klara / boxar.length) * 100) : 0;
+    document.getElementById("pct").textContent = andel + " %";
+    document.getElementById("bar").style.width = andel + "%";
+    document.getElementById("ptext").textContent = klara + " av " + boxar.length + " klara";
+  }
+
+  document.getElementById("rensa").addEventListener("click", () => {
+    document.querySelectorAll('ul.check input[type="checkbox"]').forEach(b => b.checked = false);
+    ["namn", "ansvarig", "start"].forEach(id => document.getElementById(id).value = "");
+    state = {};
+    spara();
+    rakna();
+  });
+
+  rakna();
+</script>

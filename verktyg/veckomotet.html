@@ -1,0 +1,308 @@
+<title>Tjugominutersmötet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap">
+<style>
+  :root {
+    --ground: #FCF9F6;
+    --panel: #F5EDE5;
+    --panel-2: #FFFFFF;
+    --ink: #241811;
+    --ink-soft: #6B584C;
+    --ink-faint: #9B8779;
+    --line: #EADFD4;
+    --line-strong: #D8C7B7;
+    --accent: #BF5308;
+    --accent-tint: #FBE7D6;
+    --shadow: 0 1px 2px rgba(36, 24, 17, .06);
+    --display: "Playfair Display", Georgia, serif;
+    --body: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #17110C; --panel: #241A12; --panel-2: #1D150F;
+      --ink: #F3EAE2; --ink-soft: #BCA899; --ink-faint: #93806F;
+      --line: #332519; --line-strong: #4A3625;
+      --accent: #FF8C42; --accent-tint: #3A2013;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #17110C; --panel: #241A12; --panel-2: #1D150F;
+    --ink: #F3EAE2; --ink-soft: #BCA899; --ink-faint: #93806F;
+    --line: #332519; --line-strong: #4A3625;
+    --accent: #FF8C42; --accent-tint: #3A2013;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px 88px; }
+
+  h1, h2, .step-n { font-family: var(--display); }
+
+  header { padding: 66px 0 30px; border-bottom: 1px solid var(--line-strong); }
+
+  .eyebrow {
+    display: block; font-size: .7rem; font-weight: 600; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 18px;
+  }
+
+  h1 {
+    font-size: clamp(2.3rem, 7vw, 3.3rem); line-height: 1.03; font-weight: 700;
+    letter-spacing: -.012em; margin: 0 0 16px; text-wrap: balance;
+  }
+
+  .lede { font-size: 1.1rem; line-height: 1.55; color: var(--ink-soft); margin: 0 0 24px; }
+
+  .meta {
+    font-size: .76rem; font-weight: 600; letter-spacing: .04em;
+    color: var(--ink-faint); display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .meta span:not(:last-child)::after { content: " ·"; color: var(--line-strong); }
+
+  .row-top {
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-end;
+    padding: 26px 0 6px;
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label {
+    font-size: .68rem; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  input[type="text"], input[type="date"], textarea {
+    font-family: var(--body); font-size: .97rem; color: var(--ink);
+    background: var(--panel-2); border: 1px solid var(--line-strong);
+    border-radius: 2px; padding: 9px 11px; width: 100%;
+  }
+  input:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent);
+  }
+  textarea { resize: vertical; min-height: 92px; line-height: 1.55; }
+
+  .step {
+    border-top: 1px solid var(--line);
+    padding: 24px 0;
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 0 14px;
+  }
+  .step-n {
+    font-size: 2rem; font-weight: 600; color: var(--accent);
+    opacity: .4; line-height: 1; padding-top: 2px;
+  }
+  .step h2 { font-size: 1.24rem; font-weight: 600; margin: 0 0 4px; line-height: 1.2; }
+  .step .hint { font-size: .88rem; color: var(--ink-soft); margin: 0 0 12px; }
+
+  .aside {
+    background: var(--panel);
+    border-left: 3px solid var(--accent);
+    padding: 18px 20px;
+    margin: 30px 0 0;
+  }
+  .aside h2 {
+    font-family: var(--body); font-size: .68rem; font-weight: 700;
+    letter-spacing: .13em; text-transform: uppercase; color: var(--accent);
+    margin: 0 0 10px;
+  }
+  .aside ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; font-size: .94rem; }
+  .aside li { position: relative; padding-left: 18px; }
+  .aside li::before {
+    content: ""; position: absolute; left: 0; top: .72em;
+    width: 8px; height: 1px; background: var(--accent);
+  }
+
+  .out {
+    margin-top: 34px; border: 1px solid var(--line-strong);
+    background: var(--panel-2); box-shadow: var(--shadow);
+  }
+  .out-head {
+    padding: 16px 20px; border-bottom: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .out-head strong {
+    font-family: var(--body); font-size: .68rem; font-weight: 700;
+    letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint);
+  }
+  .saved { font-size: .74rem; font-weight: 600; color: var(--accent); }
+  .out textarea {
+    border: 0; border-radius: 0; background: transparent;
+    min-height: 190px; font-size: .92rem; padding: 16px 20px;
+  }
+  .out textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+  .btnrow { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  button {
+    font-family: var(--body); font-size: .86rem; font-weight: 600;
+    padding: 9px 16px; border-radius: 2px; cursor: pointer;
+    border: 1px solid var(--line-strong); background: var(--panel-2); color: var(--ink);
+  }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #FFF9F4; }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .hintline { font-size: .82rem; color: var(--ink-faint); margin-top: 14px; }
+
+  footer {
+    margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line);
+    font-size: .76rem; color: var(--ink-faint);
+    display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Åberg &amp; Co · salongsledarskap.se</span>
+    <h1>Tjugominutersmötet</h1>
+    <p class="lede">Tre punkter, samma tid varje vecka, stående. Det är den billigaste förändring du kan göra i din salong, och det första som ryker när det blir stressigt.</p>
+    <div class="meta"><span>20 minuter</span><span>Tre punkter</span><span>En sak i taget</span></div>
+  </header>
+
+  <div class="row-top">
+    <div class="field" style="flex:1 1 150px">
+      <label for="datum">Datum</label>
+      <input type="date" id="datum">
+    </div>
+    <div class="field" style="flex:2 1 260px">
+      <label for="omrade">Området vi jobbar med nu</label>
+      <input type="text" id="omrade" placeholder="Ett område i taget. Till exempel ombokning vid stolen">
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-n">1</span>
+    <div>
+      <h2>Vad bestämde vi förra veckan</h2>
+      <p class="hint">Läs upp det ni skrev sist, ordagrant. Inte det du minns att ni menade.</p>
+      <textarea id="p1" placeholder="Vi bestämde att…"></textarea>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-n">2</span>
+    <div>
+      <h2>Hur gick det</h2>
+      <p class="hint">Fråga hur det gick när de provade. Inte om de har gjort det. Lyssna färdigt innan du säger något.</p>
+      <textarea id="p2" placeholder="Det gick…"></textarea>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-n">3</span>
+    <div>
+      <h2>Vad gör vi nu</h2>
+      <p class="hint">Vem gör vad, och när. Om ingen står med namn blir det inte gjort.</p>
+      <textarea id="p3" placeholder="Vi gör… Ansvarig… Klart senast…"></textarea>
+    </div>
+  </div>
+
+  <div class="aside">
+    <h2>Skillnaden mellan uppföljning och kontroll</h2>
+    <ul>
+      <li>Har du gjort det är kontroll. Hur gick det när du provade är uppföljning.</li>
+      <li>Kontroll letar efter en skyldig. Uppföljning letar efter vad som behöver justeras.</li>
+      <li>När något inte blivit gjort, fråga vad som kom emellan. Svaret är nästan alltid att överenskommelsen var otydlig, praktiskt omöjlig en fullbokad lördag, eller bortglömd. Två av tre är ditt att lösa.</li>
+      <li>Ge feedback till minst en person som gjorde rätt, varje möte. Tre meningar räcker.</li>
+      <li>Sucka aldrig och gör det själv. Då lär sig teamet att överenskommelser är frivilliga.</li>
+    </ul>
+  </div>
+
+  <div class="out">
+    <div class="out-head">
+      <strong>Anteckningen att ta med till nästa möte</strong>
+      <span class="saved" id="saved"></span>
+    </div>
+    <textarea id="sammanfattning" readonly></textarea>
+  </div>
+
+  <div class="btnrow">
+    <button class="primary" id="ny">Rensa för nästa vecka</button>
+    <button id="behall">Flytta punkt 3 till punkt 1</button>
+  </div>
+
+  <p class="hintline">Sidan sparar det du skriver i din egen webbläsare. Ingenting skickas vidare.</p>
+
+  <footer>
+    <span>Åberg &amp; Co</span>
+    <span>Verktyg 2 · Pelare 2</span>
+  </footer>
+
+</div>
+
+<script>
+  const ids = ["datum", "omrade", "p1", "p2", "p3"];
+  const out = document.getElementById("sammanfattning");
+  const saved = document.getElementById("saved");
+  const KEY = "veckomotet-v1";
+
+  function read() {
+    const o = {};
+    ids.forEach(id => o[id] = document.getElementById(id).value);
+    return o;
+  }
+
+  function render() {
+    const v = read();
+    const rader = [];
+    if (v.datum) rader.push("Veckomöte " + v.datum);
+    if (v.omrade) rader.push("Område: " + v.omrade);
+    if (v.p1) rader.push("\nVad vi bestämde förra veckan\n" + v.p1);
+    if (v.p2) rader.push("\nHur det gick\n" + v.p2);
+    if (v.p3) rader.push("\nVad vi gör nu\n" + v.p3);
+    out.value = rader.length
+      ? rader.join("\n")
+      : "Fyll i de tre punkterna ovan, så byggs anteckningen här. Ta med den till nästa möte och börja med att läsa upp den.";
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(read()));
+      saved.textContent = "Sparat";
+      setTimeout(() => saved.textContent = "", 1600);
+    } catch (e) {
+      saved.textContent = "";
+    }
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return;
+      const v = JSON.parse(raw);
+      ids.forEach(id => { if (v[id]) document.getElementById(id).value = v[id]; });
+    } catch (e) {}
+  }
+
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener("input", () => { render(); save(); });
+  });
+
+  document.getElementById("ny").addEventListener("click", () => {
+    ["p1", "p2", "p3"].forEach(id => document.getElementById(id).value = "");
+    document.getElementById("datum").value = "";
+    render(); save();
+  });
+
+  document.getElementById("behall").addEventListener("click", () => {
+    const p3 = document.getElementById("p3").value;
+    document.getElementById("p1").value = p3;
+    document.getElementById("p2").value = "";
+    document.getElementById("p3").value = "";
+    document.getElementById("datum").value = "";
+    render(); save();
+  });
+
+  load();
+  render();
+</script>
