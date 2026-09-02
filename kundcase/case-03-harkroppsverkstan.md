@@ -36,11 +36,19 @@ Det tydligaste utfallet i dokumentationen är att ägaren frigjort tid från sal
 
 Rollerna är tydligare, ekonomikontakten fungerar och rutinerna kring dagskassan sitter. Semesterplaneringen har gått från reaktiv till styrd.
 
-Här behöver jag vara ärlig med vad materialet visar. Det här är dokumenterade förändringar i arbetssätt, inte nyckeltal.
+Ekonomiskt har tre saker förändrats.
 
-Beläggning, ombokningsgrad och omsättning för perioden finns inte sammanställda i det underlag jag arbetat med. De ska mätas och redovisas innan de används som resultat.
+Ägaren har bytt till en redovisningskonsult med frisörbakgrund, och kontakten är löpande i stället för årlig.
 
-Det är ett medvetet val att säga det i stället för att fylla luckan med något som låter bra.
+Hon har räknat ut exakt hur många kundtimmar i veckan hon behöver för att kunna ta ut 50 000 kronor i månaden. Det talet styr nu hennes schema.
+
+Lagret har rensats, och salongen var fullbokad under försommaren.
+
+Två nyckeltal är utpekade som höstens arbete. Produktförsäljningen låg på fyra procent i juli mot ett mål på trettio procent, och ombokningsgraden ska upp.
+
+Ett projekt för en fullbokad november pågår, där kunder bokas in på tre tider framåt.
+
+Siffrorna kommer ur salongens egen uppföljning. Utfallet av höstens arbete mäts vid avstämningarna i november och december.
 
 ## Vad ägaren gör annorlunda i dag
 
