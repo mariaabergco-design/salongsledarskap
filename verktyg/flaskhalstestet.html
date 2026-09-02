@@ -1,0 +1,444 @@
+<title>Flaskhalstestet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700&display=swap">
+<style>
+  :root {
+    --ground: #FCF9F6;
+    --panel: #F5EDE5;
+    --panel-2: #FFFFFF;
+    --ink: #241811;
+    --ink-soft: #6B584C;
+    --ink-faint: #9B8779;
+    --line: #EADFD4;
+    --line-strong: #D8C7B7;
+    --accent: #BF5308;
+    --accent-strong: #E0670D;
+    --accent-tint: #FBE7D6;
+    --warm: #8A5A2B;
+    --warm-tint: #F6ECDD;
+    --shadow: 0 1px 2px rgba(36, 24, 17, .06);
+    --display: "Playfair Display", Georgia, "Times New Roman", serif;
+    --body: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #17110C;
+      --panel: #241A12;
+      --panel-2: #1D150F;
+      --ink: #F3EAE2;
+      --ink-soft: #BCA899;
+      --ink-faint: #93806F;
+      --line: #332519;
+      --line-strong: #4A3625;
+      --accent: #FF8C42;
+      --accent-strong: #FFA366;
+      --accent-tint: #3A2013;
+      --warm: #E0A462;
+      --warm-tint: #33230F;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #17110C;
+    --panel: #241A12;
+    --panel-2: #1D150F;
+    --ink: #F3EAE2;
+    --ink-soft: #BCA899;
+    --ink-faint: #93806F;
+    --line: #332519;
+    --line-strong: #4A3625;
+    --accent: #FF8C42;
+    --accent-strong: #FFA366;
+    --accent-tint: #3A2013;
+    --warm: #E0A462;
+    --warm-tint: #33230F;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16.5px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px 88px; }
+
+  h1, h2, h3, .score-n, .band-name { font-family: var(--display); }
+
+  h1 {
+    font-size: clamp(2.5rem, 8vw, 3.6rem);
+    line-height: 1.02;
+    font-weight: 700;
+    letter-spacing: -.012em;
+    margin: 0 0 16px;
+    text-wrap: balance;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 10px;
+    text-wrap: balance;
+  }
+
+  p { margin: 0 0 15px; }
+  p:last-child { margin-bottom: 0; }
+
+  .eyebrow {
+    display: block;
+    font-size: .705rem;
+    font-weight: 600;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+
+  header {
+    padding: 70px 0 34px;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .lede { font-size: 1.14rem; line-height: 1.55; color: var(--ink-soft); margin: 0 0 26px; }
+
+  .meta {
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    color: var(--ink-faint);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .meta span:not(:last-child)::after { content: " ·"; color: var(--line-strong); }
+
+  /* ---- questions ---- */
+  form { margin: 0; padding: 0; }
+
+  .q {
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0;
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 0 10px;
+  }
+
+  .q-num {
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+    padding-top: 3px;
+  }
+
+  .q-text {
+    font-size: 1.02rem;
+    line-height: 1.45;
+    margin: 0 0 14px;
+  }
+
+  .opts {
+    grid-column: 2;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .opt { position: relative; }
+
+  .opt input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .opt span {
+    display: block;
+    font-size: .84rem;
+    font-weight: 500;
+    padding: 7px 15px;
+    border: 1px solid var(--line-strong);
+    background: var(--panel-2);
+    color: var(--ink-soft);
+    border-radius: 2px;
+    transition: background .12s ease, color .12s ease, border-color .12s ease;
+  }
+
+  .opt input:hover + span { border-color: var(--accent); }
+  .opt input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .opt input:checked + span {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #FFF9F4;
+    font-weight: 600;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .opt span { transition: none; }
+  }
+
+  /* ---- result ---- */
+  .result {
+    margin-top: 34px;
+    border: 1px solid var(--line-strong);
+    background: var(--panel-2);
+    box-shadow: var(--shadow);
+  }
+
+  .result-head {
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .progress {
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .score-n {
+    font-size: 2.9rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.01em;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+  }
+  .score-n .of { font-size: 1.1rem; color: var(--ink-faint); font-weight: 500; }
+
+  .band-name { font-size: 1.45rem; font-weight: 600; line-height: 1.15; margin: 0; }
+
+  .result-body { padding: 22px 24px; }
+
+  .placeholder { color: var(--ink-soft); font-size: .97rem; }
+
+  /* scale */
+  .scale { padding: 20px 24px 4px; }
+  .scale-track {
+    display: grid;
+    grid-template-columns: 7fr 6fr 6fr 6fr;
+    gap: 3px;
+    margin-bottom: 7px;
+  }
+  .scale-track div {
+    height: 7px;
+    background: var(--panel);
+    border-radius: 1px;
+  }
+  .scale-track div.on { background: var(--accent); }
+  .scale-labels {
+    display: grid;
+    grid-template-columns: 7fr 6fr 6fr 6fr;
+    gap: 3px;
+    font-size: .66rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+  .scale-labels span { line-height: 1.25; }
+
+  .first-move {
+    background: var(--accent-tint);
+    border-left: 3px solid var(--accent);
+    padding: 15px 18px;
+    margin-top: 18px;
+  }
+  .first-move .label {
+    display: block;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .first-move p { font-size: .97rem; margin: 0; }
+
+  .cta {
+    margin-top: 26px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: .95rem;
+    color: var(--ink-soft);
+  }
+
+  .hint {
+    font-size: .84rem;
+    color: var(--ink-faint);
+    margin-top: 16px;
+  }
+
+  footer {
+    margin-top: 40px;
+    font-size: .78rem;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Åberg &amp; Co · salongsledarskap.se</span>
+    <h1>Flaskhalstestet</h1>
+    <p class="lede">Tolv påståenden om din vardag i salongen. De mäter en enda sak: hur mycket av verksamheten som måste passera dig för att fungera. Svara som det faktiskt är den här månaden, inte som du vill att det ska bli.</p>
+    <div class="meta"><span>12 påståenden</span><span>3 minuter</span><span>För dig med minst fyra anställda</span></div>
+  </header>
+
+  <form id="test"></form>
+
+  <div class="result" id="result">
+    <div class="result-head">
+      <div>
+        <span class="score-n" id="score">–<span class="of"> / 24</span></span>
+      </div>
+      <span class="progress" id="progress">0 av 12 besvarade</span>
+    </div>
+    <div class="scale">
+      <div class="scale-track">
+        <div id="b0"></div><div id="b1"></div><div id="b2"></div><div id="b3"></div>
+      </div>
+      <div class="scale-labels">
+        <span>Fast mark<br>0–6</span><span>Ena foten<br>7–12</span><span>Djupt<br>13–18</span><span>Upp till halsen<br>19–24</span>
+      </div>
+    </div>
+    <div class="result-body" id="body">
+      <p class="placeholder">Svara på alla tolv påståenden, så räknar testet ut hur djupt du står.</p>
+    </div>
+  </div>
+
+  <p class="hint">Testet sparar ingenting och skickar ingenting vidare. Ditt svar stannar i din webbläsare.</p>
+
+  <footer>
+    <span>Åberg &amp; Co</span>
+    <span>Verktyg 1 · Pelare 1: Flaskhalsträsket</span>
+  </footer>
+
+</div>
+
+<script>
+  const QUESTIONS = [
+    "Om du är sjuk en dag ringer eller messar någon i teamet dig med en fråga.",
+    "Du är den enda som håller koll på vad som ska beställas hem, och när.",
+    "Nya kunder bokas hellre in hos dig än hos dina anställda.",
+    "Du tar reklamationen även när det inte var din kund från början.",
+    "Du kollar boken flera gånger om dagen för att se om de andra har luckor.",
+    "När någon i teamet har en lucka är det du som fyller den med något.",
+    "Att ta en hel veckas semester kräver att ni stänger eller bokar om.",
+    "Du gör schemat själv, och varje ändring går via dig.",
+    "Det obekväma samtalet tar du varje gång. Ingen annan gör det.",
+    "Salongens ekonomi finns i ditt huvud, inte i ett underlag någon annan kan följa.",
+    "Teamet frågar dig om saker ni redan har bestämt tillsammans.",
+    "Du står bakom stolen mer än 30 timmar i veckan och leder på kvällar och helger."
+  ];
+
+  const OPTIONS = [
+    { label: "Stämmer inte", value: 0 },
+    { label: "Delvis", value: 1 },
+    { label: "Stämmer", value: 2 }
+  ];
+
+  const BANDS = [
+    {
+      max: 6,
+      name: "På fast mark",
+      body: "Salongen klarar sig utan dig i vardagen. Det är ovanligt, och det är resultatet av något du redan gör rätt. Din risk är den motsatta: att du är så trygg i strukturen att du slutar utveckla den, och att teamet gör rätt saker på rutin utan att veta varför.",
+      move: "Ta reda på vad som faktiskt bär strukturen i dag. Fråga tre i teamet vad de skulle göra om du var borta en månad. Om svaren skiljer sig åt är marken inte så fast som den känns."
+    },
+    {
+      max: 12,
+      name: "Ena foten i träsket",
+      body: "Det mesta fungerar, men det finns områden där allt fortfarande går genom dig — oftast bokning, inköp och de jobbiga samtalen. Det märks inte i en vanlig vecka. Det märks den vecka du är sjuk, eller när två personer slutar samtidigt.",
+      move: "Välj det område där flest av dina tvåor ligger och lämna över det helt inom fyra veckor. Inte hjälpa till med. Lämna över, med en tydlig överenskommelse om vad som gäller och när ni följer upp."
+    },
+    {
+      max: 18,
+      name: "Djupt i träsket",
+      body: "Du är salongens verkliga infrastruktur. Verksamheten fungerar för att du håller ihop den varje dag, och det är därför du är trött. Det här är inte ett tecken på att du är dålig på ditt jobb — det är tecknet på att du aldrig fått lära dig ledarskap, bara hantverk.",
+      move: "Börja med veckomötet. Tjugo minuter, samma tid varje vecka, tre punkter: vad vi bestämde, hur det gick, vad vi gör nu. Det är den enda förändring som sänker alla tolv poängen samtidigt."
+    },
+    {
+      max: 24,
+      name: "Träsket upp till halsen",
+      body: "Ingenting i salongen rör sig utan dig, och du betalar för det med dina kvällar, din vinst och förmodligen din hälsa. Du kan inte arbeta dig ur det här läget — mer arbete är just det som gör det djupare. Det enda som fungerar är att bygga om hur beslut fattas.",
+      move: "Sluta lösa den första frågan du får i morgon. Ställ i stället motfrågan: vad tycker du att vi ska göra? Skriv ner svaret. Det är första gången teamet får äga ett beslut, och det är där hela vägen upp börjar."
+    }
+  ];
+
+  const form = document.getElementById("test");
+  QUESTIONS.forEach((q, i) => {
+    const row = document.createElement("div");
+    row.className = "q";
+    const opts = OPTIONS.map(o => `
+      <label class="opt">
+        <input type="radio" name="q${i}" value="${o.value}" aria-label="${o.label}">
+        <span>${o.label}</span>
+      </label>`).join("");
+    row.innerHTML = `
+      <span class="q-num" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
+      <p class="q-text" id="q-label-${i}">${q}</p>
+      <div class="opts" role="radiogroup" aria-labelledby="q-label-${i}">${opts}</div>`;
+    form.appendChild(row);
+  });
+
+  const scoreEl = document.getElementById("score");
+  const progressEl = document.getElementById("progress");
+  const bodyEl = document.getElementById("body");
+  const bars = [0, 1, 2, 3].map(i => document.getElementById("b" + i));
+
+  function update() {
+    const answers = QUESTIONS.map((_, i) =>
+      document.querySelector(`input[name="q${i}"]:checked`)
+    );
+    const done = answers.filter(Boolean).length;
+    const score = answers.reduce((sum, el) => sum + (el ? Number(el.value) : 0), 0);
+
+    progressEl.textContent = `${done} av 12 besvarade`;
+
+    if (done < QUESTIONS.length) {
+      scoreEl.innerHTML = `–<span class="of"> / 24</span>`;
+      bars.forEach(b => b.classList.remove("on"));
+      bodyEl.innerHTML = `<p class="placeholder">Svara på alla tolv påståenden, så räknar testet ut hur djupt du står.</p>`;
+      return;
+    }
+
+    const bandIndex = BANDS.findIndex(b => score <= b.max);
+    const band = BANDS[bandIndex];
+    scoreEl.innerHTML = `${score}<span class="of"> / 24</span>`;
+    bars.forEach((b, i) => b.classList.toggle("on", i <= bandIndex));
+
+    bodyEl.innerHTML = `
+      <h2 class="band-name">${band.name}</h2>
+      <p>${band.body}</p>
+      <div class="first-move">
+        <span class="label">Ditt första drag</span>
+        <p>${band.move}</p>
+      </div>
+      <p class="cta">Vill du veta vad din poäng kostar dig i kronor per år? Det räknar vi ut tillsammans på ett kartläggningsmöte.</p>`;
+  }
+
+  form.addEventListener("change", update);
+  update();
+</script>
