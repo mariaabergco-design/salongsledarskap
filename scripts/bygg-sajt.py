@@ -572,6 +572,42 @@ def bygg():
              "Artiklar och verktyg om ledarskap, ekonomi och personal för salongsägare med anställda.",
              inne, 0, "", "start"))
 
+    # korrekturvy med allt innehåll på en sida
+    delar = []
+    nr = 0
+    for pel in PELARE:
+        delar.append('<h2 class="korrpelare">Pelare %d. %s</h2>' % (pel["nr"], html.escape(pel["namn"])))
+        for slug in pel["artiklar"]:
+            a = artiklar[slug]
+            nr += 1
+            delar.append(
+                '<article class="korrtext" id="t%d">'
+                '<div class="korrhuvud"><span class="korrnr">%d</span>'
+                '<span class="korrfil">%s.md</span></div>'
+                '<h3>%s</h3><p class="ingress">%s</p><div class="brod">%s</div></article>'
+                % (nr, nr, slug, html.escape(a["title"]), inline(a["deck"]), a["body"]))
+
+    delar.append('<h2 class="korrpelare">Kundcase</h2>')
+    for c in case_data:
+        nr += 1
+        delar.append(
+            '<article class="korrtext" id="t%d">'
+            '<div class="korrhuvud"><span class="korrnr">%d</span>'
+            '<span class="korrfil">kundcase/%s.md</span></div>'
+            '<h3>%s</h3><p class="ingress">%s</p><div class="brod">%s</div></article>'
+            % (nr, nr, c["slug"], html.escape(c["title"]), inline(c["deck"]), c["body"]))
+
+    korr = """<div class="sidhuvud smal">
+  <span class="ovan">Korrektur</span>
+  <h1>Alla texter på en sida</h1>
+  <p class="ingress">%d texter i den ordning de ligger på sajten. Varje text har ett nummer och sitt filnamn, så att du kan hänvisa exakt när något ska ändras.</p>
+</div>
+<div class="korrektur">%s</div>""" % (nr, "".join(delar))
+
+    open(os.path.join(OUT, "korrektur.html"), "w", encoding="utf-8").write(
+        sida("Korrektur · Salongsledarskap", "Alla texter på en sida för genomläsning.",
+             korr, 0, "", "korr"))
+
     print("Sidor byggda:")
     print(" ", len(artiklar), "artiklar")
     print(" ", len(case_data), "kundcase")
