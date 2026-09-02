@@ -292,6 +292,26 @@ def sida(titel, beskrivning, innehall, depth=0, aktiv="", klass=""):
                   ogbild=ogbild)
 
 
+def brevform():
+    """Anmälningsformuläret på startsidan.
+
+    Ligger det en fil som heter nyhetsbrev.html i mappen används den rakt av.
+    Där klistrar du in koden du får ur din e-posttjänst. Saknas filen visas ett
+    formulär som ser rätt ut men inte skickar något, med en notis om det.
+    """
+    egen = os.path.join(ROOT, "nyhetsbrev.html")
+    if os.path.exists(egen):
+        return open(egen, encoding="utf-8").read().strip()
+    return """<form class="brevform" onsubmit="return false;">
+    <label for="mejl">Din mejladress</label>
+    <div class="brevrad">
+      <input id="mejl" type="email" placeholder="namn@salong.se" required>
+      <button type="submit">Anmäl mig</button>
+    </div>
+    <p class="notis">Formuläret behöver kopplas till din e-posttjänst innan sajten publiceras.</p>
+  </form>"""
+
+
 def cta_block(pelare, depth):
     p = "../" * depth
     if pelare and pelare["verktyg"]:
@@ -582,15 +602,9 @@ def bygg():
     <h2>Ett brev varannan vecka</h2>
     <p>Ett kort resonemang, en länk och ett konkret tips. Inget annat.</p>
   </div>
-  <form class="brevform" onsubmit="return false;">
-    <label for="mejl">Din mejladress</label>
-    <div class="brevrad">
-      <input id="mejl" type="email" placeholder="namn@salong.se" required>
-      <button type="submit">Anmäl mig</button>
-    </div>
-    <p class="notis">Formuläret behöver kopplas till din e-posttjänst innan sajten publiceras.</p>
-  </form>
+  {brevform}
 </section>""".format(n=len(artiklar), pelarkort=pelarkort, utvalda=utvalda, vkort=vkort,
+           brevform=brevform(),
            band=('<section class="band">%s<div class="bandtext"><span class="label">Vem som skriver</span>'
                  '<h2>Maria Åberg</h2><p>Trettio år i branschen, tjugo som salongsledare. Driver fortfarande '
                  'en säsongssalong varje sommar och står själv på golvet.</p>'

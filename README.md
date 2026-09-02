@@ -87,6 +87,19 @@ domain.
 **Alternativ 3, vilket webbhotell som helst.** Kör byggskriptet och ladda upp
 innehållet i `site/` med ftp.
 
+## Nyhetsbrevet
+
+Formuläret på startsidan skickar ingenting förrän det kopplats till din
+e-posttjänst. Så här kopplar du det:
+
+1. Hämta koden för ett anmälningsformulär i din e-posttjänst
+2. Spara den i en fil som heter `nyhetsbrev.html` här i mappen
+3. Kör `python3 scripts/bygg-sajt.py`
+
+Byggskriptet lägger då in din kod i stället för det formulär som bara ser ut
+att fungera. Filen används rakt av, så klistra in exakt det du får ur
+tjänsten. Vill du gå tillbaka till platshållaren tar du bort filen.
+
 ## Innan sajten går live
 
 - [ ] Koppla nyhetsbrevsformuläret på startsidan till din e-posttjänst
