@@ -124,7 +124,8 @@ skickar något.
 - [x] Låt de fyra kunderna godkänna sina case, de är namngivna. Klart 2026-09-02
 - [x] Kontrollera siffrorna som kommer ur kundernas egna uppföljningar. Klart 2026-09-02
 - [x] Lägg in en dataskyddstext om du samlar in mejladresser. Utkast finns i `dataskydd.md`, läs igenom det
-- [ ] Koppla verktygen till mejlinsamling om de ska fungera som lead magnets
+- [x] Verktygen ska vara öppna. Beslut 2026-09-02, ingen mejladress krävs för att se sitt resultat
+- [ ] Välj var sajten ska ligga och peka domänen dit
 
 ## Ordning på publiceringen
 
