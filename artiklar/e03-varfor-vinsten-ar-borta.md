@@ -26,6 +26,20 @@ Tid som inte debiteras. Behandlingar som tar längre tid än prislistan säger. 
 
 Din egen lön som stryker för allt annat. När du tar ut mindre än du borde ser resultatet bättre ut än verksamheten är.
 
+## Den femte läckan som ingen letar efter
+
+Materialkostnaden smyger sig på, eftersom den betalas i småposter under hela året.
+
+I en av mina grupper tog en salongsägare upp att förbrukningen av färg gått från omkring 50 000 kronor ett år till omkring 150 000 kronor året därpå.
+
+Omsättningen hade inte ökat i närheten av samma takt. Det var revisorn som upptäckte det, inte salongen.
+
+Uppgifterna kommer ur salongens egen redovisning.
+
+En tredubblad materialkostnad utan motsvarande intäkt betyder något av tre saker. Priserna täcker inte längre materialet. Det blandas mer färg än som används. Eller så följer ingen upp beställningarna.
+
+Alla tre går att åtgärda på en månad. Ingen av dem upptäcks utan att någon jämför två år mot varandra.
+
 ## Skillnaden mellan omsättning och marginal
 
 Det här är kärnan i hela texten.
