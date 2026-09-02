@@ -19,9 +19,27 @@ faktiska värdena ur dess stilmall, inte gissat.
 - Accent: `#FCBE04`, en gyllene gul
 - Två stödfärger: `#FEE69F` ljus guld och `#E6DDD4` varm gråbeige
 
-**Logotypen.** Ordbild där ÅBERG står i grått `#878786` och &CO i bärnsten
-`#F6A315`. Under står raden Ledarskap Utveckling Coaching i samma grå.
-Proportion ungefär 502 gånger 131 pixlar.
+**Lilla Manualen_ÅbergCO.pdf**, den grafiska profilen från 2020. Den ligger i
+mappen Bygga hemsidan i din Drive. Värdena nedan är hämtade därifrån och går
+före allt jag mätt i bild.
+
+| Roll i manualen | Kod | Tryck |
+|---|---|---|
+| Primärfärg | `#FCBE04` | CMYK 0/28/94/0 |
+| Komplementfärg | `#F6A313` | CMYK 0/42/94/0, PMS 137 C |
+| Accentfärg | `#878787` | CMYK 0/0/0/60, PMS Cool gray 8 C |
+
+**Logotypen.** Ordbild där ÅBERG står i manualens accentgrå och &CO i
+komplementfärgen. Under står raden Ledarskap Utveckling Coaching i samma grå.
+Den liggande varianten är ungefär 502 gånger 131 pixlar, den stående 197 gånger
+133.
+
+Manualen säger två saker om användningen. Den liggande logotypen används med
+fördel alltid tillsammans med taglinen. Den stående används med eller utan.
+
+**Frizonen** är definierad i manualen: runt logotypen ska det alltid finnas ett
+område fritt från andra element, bilder och texter, och det området ska vara
+minst höjden på bokstaven G i ÅBERG.
 
 **Formspråket på den befintliga sajten** består av stora rundade organiska
 former i guld och beige som ligger som bakgrund bakom text. De fungerar på en
@@ -59,7 +77,7 @@ accentfärgen inte går att använda till text, och det förklaras under Accente
 | Text svag | `#736D64` | Datum, lästid, filnamn, etiketter |
 | Linje | `#E6DDD4` | Avdelare, ramar, tabellinjer |
 | Linje stark | `#D6C9BB` | Ramar som ska synas, inputfält |
-| Accent | `#F6A315` | Grafisk markering, aldrig text |
+| Accent | `#F6A313` | Grafisk markering, aldrig text |
 | Accent djup | `#8A5A05` | Länkar, knappar, etiketter i versal |
 | Guldton | `#FEE69F` | Bakgrund i markerade block |
 
@@ -87,17 +105,17 @@ kvällen. Samma varma temperatur, omvänd.
 
 ### Accenten, och varför den ändras
 
-Varumärkets gula `#FCBE04` ger kontrast 1,6 mot den råvita bakgrunden. Logotypens
-bärnsten `#F6A315` ger 2,0. Kravet för läsbar text är 4,5. En länk i någon av de
+Manualens primärfärg `#FCBE04` ger kontrast 1,6 mot den råvita bakgrunden.
+Komplementfärgen `#F6A313` ger 2,0. Kravet för läsbar text är 4,5. En länk i någon av de
 färgerna är alltså osynlig för den som läser i solljus eller ser färger sämre.
 
 Därför delas accenten i två.
 
-**`#F6A315` är den grafiska accenten.** Den syns i logotypen, i den lodräta
+**`#F6A313` är den grafiska accenten.** Den syns i logotypen, i den lodräta
 linjen bredvid citat, i understrykningen under en aktiv menypost, i siffran
 framför en pelare, i ikonen i faviconet. Aldrig som text som ska läsas.
 
-**`#8A5A05` är den läsbara accenten.** Samma färgton, mörkare. Den används på
+**`#8A5A05` är den läsbara accenten.** Samma färgton som komplementfärgen, mörkare. Den används på
 länkar i löptext, på knappar och på etiketter i versal. Den ser ut som samma
 familj och den går att läsa.
 
@@ -174,11 +192,18 @@ Skuggor används en gång, på kort som ligger på panelfärg, och då mycket sv
 
 Logotypen ligger till vänster i sidhuvudet, som länk till startsidan.
 
-- Höjd 26 pixlar på dator, 22 pixlar på telefon
+- Den liggande varianten, höjd 26 pixlar på dator och 22 på telefon
 - Version **utan taglinen**, alltså bara ordbilden ÅBERG&CO
-- Fritt utrymme runt om: minst halva logotypens höjd åt alla håll
-- Till höger om den, med en lodrät linje emellan, står ordet
+- Frizon enligt manualen: minst höjden på bokstaven G i ÅBERG, åt alla håll.
+  Vid 26 pixlars logotyp blir det ungefär 14 pixlar
+- Till höger om frizonen, med en lodrät linje emellan, står ordet
   **Salongsledarskap** i Montserrat 600, 0,95 rem, i `#2E2E2E`
+
+Manualen säger att den liggande logotypen med fördel alltid används med
+taglinen. Här görs ett undantag, och skälet är storleken. Vid 26 pixlars höjd
+blir taglinen omkring 2 pixlar hög och går inte att läsa. En oläslig tagline
+tjänar varumärket sämre än ingen alls. Hela lockupen med tagline finns i stället
+i sidfoten, där den är läsbar.
 
 Ordningen är avsiktlig. Åberg & Co är avsändaren, Salongsledarskap är
 publikationen. Precis som ett förlag står före en tidskrifts namn.
@@ -261,7 +286,7 @@ Fyra kontroller innan något publiceras.
 
 Fattade 2026-09-02.
 
-**Den gula accenten delas i två.** `#F6A315` till ren grafik, `#8A5A05` till allt
+**Den gula accenten delas i två.** `#F6A313` till ren grafik, `#8A5A05` till allt
 som ska läsas. Avvikelsen från varumärket är godkänd, och skälet är kontrasten.
 
 **Åberg & Co står först i sidhuvudet**, sedan en tunn linje och ordet
@@ -271,9 +296,9 @@ Salongsledarskap. Avsändaren före publikationen.
 
 ## Öppna frågor
 
-1. **Mappen profil.** Jag hittar ingen mapp med det namnet i din Drive. Logotypen
-   jag utgått från är hämtad från din live-sajt, och eps-filerna ligger i mappen
-   Salonger. Finns det en grafisk profil som pdf någonstans, säg var, så
-   kontrollerar jag mot den.
-2. **Logotyp i svg.** Har du logotypen som svg, och finns det en version utan
-   taglinen. Annars gör jag dem ur eps-filerna i `ÅbergCO Logo.zip`.
+1. **Taglinen i sidhuvudet.** Manualen säger att den liggande logotypen med
+   fördel alltid används med tagline. Förslaget här är att utelämna den i
+   sidhuvudet, eftersom den blir oläslig i den storleken, och behålla hela
+   lockupen i sidfoten. Det behöver ditt ja.
+2. **Logotyp i svg.** Jag gör två svg-filer ur eps-filerna, en utan tagline till
+   sidhuvudet och en med till sidfoten, om du inte redan har dem.
