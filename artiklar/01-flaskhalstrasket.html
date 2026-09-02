@@ -183,6 +183,29 @@
     background: var(--accent);
   }
 
+  blockquote.quote {
+    margin: 34px 0;
+    padding: 4px 0 4px 22px;
+    border-left: 3px solid var(--accent);
+  }
+  blockquote.quote p {
+    font-family: var(--display);
+    font-size: 1.32rem;
+    line-height: 1.34;
+    font-weight: 500;
+    font-style: italic;
+    margin: 0 0 10px;
+    text-wrap: balance;
+  }
+  blockquote.quote cite {
+    font-family: var(--body);
+    font-size: .78rem;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: .03em;
+    color: var(--ink-faint);
+  }
+
   .cta-box {
     margin: 44px 0 0;
     background: var(--panel);
@@ -219,87 +242,86 @@
   <header>
     <span class="eyebrow">Pelare 1 · Flaskhalsträsket</span>
     <h1>Därför stannar allt när du inte är i salongen</h1>
-    <p class="deck">Du har byggt en salong som fungerar. Problemet är att den bara fungerar när du är där. Så här ser mekanismen ut, och så här tar du dig ur den — utan att lägga till en enda arbetstimme.</p>
-    <div class="byline"><span>Maria Åberg</span><span>Åberg &amp; Co</span><span>9 min läsning</span></div>
+    <p class="deck">Du har byggt en salong som fungerar. Problemet är att den bara fungerar när du är där.</p>
+    <div class="byline"><span>Maria Åberg</span><span>Åberg &amp; Co</span><span>5 min läsning</span></div>
   </header>
 
   <article>
-      <h2>Torsdag, 07:40</h2>
-      <p>Du låser upp. Innan du hunnit hänga av dig jackan står någon i dörren till personalrummet med en fråga om en färg som inte kom med leveransen. Du löser det på fyra minuter.</p>
-      <p>Halv nio messar en av tjejerna: en kund vill flytta sin tid på lördag, går det? Du svarar mellan två sköljningar. Vid elva frågar någon vad ni egentligen bestämde om provisionen på produkter. Ni bestämde det i mars. Du förklarar igen.</p>
-      <p>Vid tvåtiden ser du att det är en lucka hos den nyanställda klockan tre, och du känner det i magen. Du börjar fundera på vem du kan ringa. Vid halv sju sitter du kvar med schemat för nästa vecka, ensam i en släckt salong. På vägen hem tänker du att i morgon, i morgon ska du ta tag i det där samtalet med Emma.</p>
-      <p>Det har du tänkt i sju månader.</p>
-      <p>Om du känner igen dig ska du veta en sak direkt: det här är inte en text om att du behöver bli bättre på att planera. Du är förmodligen redan en av de mest välplanerade människor jag träffar. Du har inte ett planeringsproblem.</p>
-      <p>Du står i Flaskhalsträsket.</p>
-      <h2>Vad Flaskhalsträsket är</h2>
-      <p>Det är tillståndet där allt måste passera dig för att salongen ska fungera. Informationen finns i ditt huvud. Besluten fattas av dig. Och det som ingen hinner med gör du själv, oftast efter stängning.</p>
-      <p>Det lömska med ett träsk är att det inte ser farligt ut när du kliver i. Det ser ut som ansvarstagande. Det ser ut som en engagerad ägare som bryr sig om sin salong. Och det fungerar — ett tag.</p>
-      <p>Sedan kommer den där mekanismen som ingen berättat för dig om: <strong>ju hårdare du jobbar, desto djupare sjunker du.</strong> Varje fråga du löser åt teamet är ett steg ner. Inte för att du gör något fel i stunden, utan för att du varje gång lär dem något utan att märka det.</p>
-      <p>Du lär dem att fråga dig.</p>
-      <h2>Därför fastnade du</h2>
-      <p>Du blev inte ledare för att du sökte ett ledarjobb. Du blev ledare den dagen du skrev under ditt första anställningsavtal.</p>
-      <p>Fram till dess hade du lärt dig ett hantverk. Du hade gått igenom en utbildning, du hade lärlingsår bakom dig, du hade tusentals klippningar i händerna. Du kan förklara exakt hur en slingning ska läggas för att växa ut snyggt. Du vet varför.</p>
-      <p>Ledarskapet fick du aldrig lära dig. Det förväntades bara komma, ungefär som att det skulle sitta i personen. Så du gjorde det enda rimliga: du gjorde det du redan var bäst i salongen på.</p>
-      <p>Du löste saker.</p>
-      <p>Och här är den obekväma delen. Ett team som får ett svar varje gång de frågar slutar leta efter svaret själva. Det tar ungefär tre månader. Det handlar inte om lathet eller ointresse — det är inlärning, precis lika mekanisk som när en kund lär sig att alltid boka om vid kassan för att du alltid frågar. Människor gör mer av det som fungerar. Att fråga dig fungerar alltid.</p>
-      <p>Så när du säger att teamet är omotiverat och inte tar egna initiativ, beskriver du inte deras personligheter. Du beskriver resultatet av en struktur.</p>
-      <p class="statement">Du har inte ett omotiverat team. Du har ett team som har lärt sig att du alltid löser det.</p>
-      <h2>De tre sakerna som sitter i dig samtidigt</h2>
-      <p>För att förstå varför det aldrig lättar räcker det att titta på vad du faktiskt bär under en vanlig dag:</p>
-      <p><strong>Informationen.</strong> Bara du vet vad som beställts, vad leverantören sa, vad ni kom överens om i mars, vilken kund som är känslig, vad marginalen ligger på.</p>
-      <p><strong>Besluten.</strong> Bara du får bestämma om en kund ska få rabatt, om någon får byta ett pass, om ni ska ta in en till elev.</p>
-      <p><strong>Utförandet.</strong> Och så gör du dessutom det ingen annan hinner: schemat, beställningen, reklamationen, kvällarna med bokföringen.</p>
-      <p>Så länge alla tre sitter på samma person är salongen inte en verksamhet. Den är en förlängning av dig. Och en förlängning av dig kan varken bli sjuk, ta semester eller säljas.</p>
-      <h2>"Men det går ju fortare om jag gör det själv"</h2>
+      <h2>Torsdag klockan 07.40</h2>
+      <p>Du låser upp. Innan jackan är av står någon i dörren med en fråga om en färg som inte kom med leveransen.</p>
+      <p>Du löser det på fyra minuter.</p>
+      <p>Halv nio kommer ett mess. En kund vill flytta sin tid på lördag.</p>
+      <p>Vid elva frågar någon vad ni egentligen bestämde om provisionen. Ni bestämde det i mars. Du förklarar igen.</p>
+      <p>Vid två ser du en lucka hos den nyanställda. Du känner det i magen och börjar tänka på vem du kan ringa.</p>
+      <p>Halv sju sitter du kvar med schemat. Salongen är släckt.</p>
+      <p>På vägen hem tänker du att i morgon ska du ta tag i det där samtalet. Det har du tänkt i sju månader.</p>
+      <h2>Det här är inte ett planeringsproblem</h2>
+      <p>Du är förmodligen redan en av de mest välplanerade människor som finns.</p>
+      <p>Problemet är ett annat. Allt måste passera dig för att salongen ska fungera.</p>
+      <p>Informationen finns i ditt huvud. Besluten fattas av dig. Det ingen hinner med gör du själv efter stängning.</p>
+      <p>Det ser inte farligt ut. Det ser ut som ansvarstagande.</p>
+      <p>En VD för en salongsgrupp beskrev sitt läge så här när vi började arbeta tillsammans:</p>
+      <blockquote class="quote"><p>Mitt mål nu är att hålla mig flytande.</p><cite>VD, salongsgrupp med två salonger</cite></blockquote>
+      <p>Hon jobbade till elva på kvällarna. Ekonomin var stark. Ändå fanns ingen väg framåt, eftersom varje beslut gick genom henne.</p>
+      <h2>Ju hårdare du jobbar desto djupare sjunker du</h2>
+      <p>Här är mekanismen som ingen berättat om.</p>
+      <p>Varje fråga du löser åt teamet lär dem något. Den lär dem att svaret finns hos dig.</p>
+      <p>Nästa gång frågar de igen. Efter tre månader tänker de inte längre efter först.</p>
+      <p>Det handlar inte om lathet. Människor gör mer av det som fungerar.</p>
+      <p>Att fråga dig fungerar varje gång, och det går fort.</p>
+      <p>När du sedan säger att teamet är omotiverat beskriver du inte deras personligheter. Du beskriver resultatet av en struktur du själv byggt utan att märka det.</p>
+      <h2>Tre saker sitter i dig samtidigt</h2>
+      <p>Titta på vad du bär under en vanlig dag.</p>
+      <p>Informationen. Bara du vet vad som beställts, vad ni kom överens om och vilken kund som är känslig.</p>
+      <p>Besluten. Bara du får bestämma om en kund får rabatt eller om någon får byta pass.</p>
+      <p>Utförandet. Du gör dessutom det ingen annan hinner. Schemat, beställningen, reklamationen.</p>
+      <p>Så länge alla tre sitter hos en person är salongen inte en verksamhet. Den är en förlängning av dig.</p>
+      <p>En förlängning av dig kan varken bli sjuk, ta semester eller säljas.</p>
+      <h2>Det går ju fortare om jag gör det själv</h2>
       <p>Ja. I dag går det fortare.</p>
-      <p>Räkna med mig i tio sekunder. Fyra frågor om dagen, tio minuter styck. Det är trettio timmar i månaden. Det är närmare <strong>trehundrafemtio timmar om året</strong> — nästan två månaders heltidsarbete, som du lägger på att vara den som vet.</p>
-      <p>Och det är bara den synliga kostnaden. Den osynliga är den dyra: varje gång du löser det själv betalar du för att förstärka mönstret. Du köper en kvart i dag och säljer nästa år.</p>
-      <p>Det finns en regel som är obekväm men sann: <strong>en medarbetare som inte får bestämma någonting blir aldrig ansvarig för någonting.</strong> Ansvar och befogenhet är samma sak sedd från två håll. Du kan inte be om det ena utan att ge det andra.</p>
-      <h2>Så tar du dig ur träsket</h2>
-      <p>Fem steg. De ska tas i den här ordningen, och det tar ett kvartal — inte en helg.</p>
-      <h3>Steg 1 — Mät hur djupt du står</h3>
-      <p>En vecka. Lägg ett papper vid kassan och skriv en streck varje gång någon i teamet kommer till dig med en fråga. Bara ett streck. Inga analyser.</p>
-      <p>På fredagen räknar du. Nästan alla blir förvånade. De flesta salongsägare jag bett göra det här landar på mellan trettio och sextio frågor på en vecka, och nästan ingen hade gissat mer än tio.</p>
-      <p>Du kan inte förändra något du inte har mätt. Det här är din nollpunkt.</p>
-      <h3>Steg 2 — Sortera frågorna i tre högar</h3>
-      <p>Gå igenom veckan och lägg varje fråga i en av tre högar.</p>
-      <p><strong>Hög ett: frågor om sådant ni redan har bestämt.</strong> Provisionen. Rutinen vid telefonbokning. Hur ni gör med kunder som uteblir. Den här högen är alltid störst, och den betyder en enda sak: det ni bestämde var aldrig tydligt.</p>
-      <p><strong>Hög två: frågor som kräver ett beslut bara du kan fatta.</strong> Investeringar, priser, anställningar. Det här är ditt riktiga jobb som ägare. Den här högen är alltid den minsta.</p>
-      <p><strong>Hög tre: frågor som aldrig borde ha nått dig.</strong> Får jag byta pass med Sara? Ska jag beställa mer folie? Här har någon inte fått befogenhet, och därför frågar de.</p>
-      <p>Hög ett löser du med tydlighet. Hög tre löser du med befogenhet. Hög två är det enda du ska ha kvar.</p>
-      <h3>Steg 3 — Tydliggör ett område. Bara ett.</h3>
-      <p>Här går de flesta bet, för de försöker rätta till allt på en gång, i ett långt möte en måndag, och tre veckor senare är allt som förut.</p>
-      <p>Välj i stället det område som har flest lappar i hög ett. Ofta är det beställningen, telefonen eller hur ni tar hand om en missnöjd kund.</p>
-      <p>Att tydliggöra betyder fyra saker: <strong>vad som ska uppnås, vilket beteende som krävs, vem som gör det, och när.</strong></p>
-      <p>Ett mål är inte "vi ska ha bättre koll på lagret". Det går inte att göra på en tisdag. Ett mål är: <em>vi tar aldrig slut på de tolv färger vi använder mest, och vi har aldrig mer än två veckors förbrukning hemma.</em> Beteendet är: <em>Sara inventerar varje tisdag efter lunch och lägger beställningen på torsdag.</em></p>
-      <p>Skriv det som du skulle beskriva en klippning för en elev. Så konkret att någon som började förra veckan kan följa det utan att fråga dig.</p>
-      <p>Och sedan det svåraste: säg det högt till hela teamet, och fråga varje person vad de hörde. Du kommer att bli förvånad. Det är där otydligheten bor.</p>
-      <h3>Steg 4 — Följ upp, varje vecka, tjugo minuter</h3>
-      <p>Utan uppföljning dör varje överenskommelse på ungefär två veckor. Inte för att någon saboterar, utan för att vardagen är starkare än ett beslut.</p>
-      <p>Boka tjugo minuter, samma tid varje vecka. Stå upp. Tre punkter, aldrig fler:</p>
-      <ol><li>Vad bestämde vi förra veckan?</li><li>Hur gick det?</li><li>Vad gör vi nu?</li></ol>
-      <p>Många ledare drar sig för det här för att det känns som kontroll. Det är det inte. Kontroll är när du kollar för att du inte litar på någon. Uppföljning är när ni tillsammans tittar på om det ni bestämt faktiskt fungerar i verkligheten. Skillnaden märks direkt i rummet.</p>
-      <p>Det här mötet är den enskilt mest lönsamma tjugominutersinvestering du kan göra i din salong. Det är också det första som ryker när det blir stressigt — och det är precis då det behövs.</p>
-      <h3>Steg 5 — Ge feedback så att beteendet upprepas</h3>
-      <p>De flesta salongsägare ger bara feedback när något gått fel. Då blir feedback ett straff, och teamet lär sig att tystnad är beröm.</p>
-      <p>Vänd på det. Tre meningar, nära i tid, alltid om beteendet och aldrig om personen:</p>
-      <p><em>Jag såg att du ringde upp kunden själv i går.</em> (vad du såg)<br><em>Hon bokade om direkt, och slapp vänta på mig.</em> (vad det ledde till)<br><em>Gör så igen.</em> (vad du vill se mer av)</p>
-      <p>Fjorton sekunder. Och det är den enda mekanism som gör att ett nytt beteende överlever.</p>
-      <h2>Två saker som avgör om det håller</h2>
-      <p><strong>Motfrågan.</strong> Nästa gång någon kommer med en fråga ur hög tre, lös den inte. Ställ i stället motfrågan: <em>Vad tycker du att vi ska göra?</em> Vänta. Tystnaden kommer att kännas pinsam och den är helt avgörande. Skriv sedan ner svaret. Det är första gången den personen äger ett beslut, och därifrån går det fortare än du tror.</p>
-      <p><strong>Åttio procent räcker.</strong> Om du tar tillbaka en uppgift för att den inte blev exakt som du hade gjort den, har du lärt teamet att det inte lönar sig att försöka. Då är du tillbaka i träsket, och den här gången har du dessutom tagit med dig någon annans motivation ner.</p>
-      <p>Jag har gjort båda misstagen själv. Jag drev tre salonger samtidigt och var helt övertygad om att lösningen var att bli ännu bättre på att lösa saker snabbt. Jag var väldigt bra på det. Det var precis därför det tog så många år.</p>
+      <p>Här är ett räkneexempel med påhittade tal. Byt ut dem mot dina egna.</p>
+      <p>Fyra frågor om dagen. Tio minuter styck, inklusive tiden tillbaka in i arbetet.</p>
+      <p>Det blir trettio timmar i månaden. På ett år närmar det sig trehundrafemtio timmar.</p>
+      <p>Den synliga kostnaden är tiden. Den osynliga är dyrare.</p>
+      <p>Varje gång du löser det själv betalar du för att förstärka mönstret. Du köper en kvart i dag och säljer nästa år.</p>
+      <p>En medarbetare som inte får bestämma något blir aldrig ansvarig för något. Ansvar och befogenhet är samma sak sedd från två håll.</p>
+      <h2>Så tar du dig ur det</h2>
+      <p>Fem steg. De tar ett kvartal, inte en helg.</p>
+      <h3>Mät hur djupt du står</h3>
+      <p>Lägg ett papper vid kassan i en vecka. Skriv ett streck varje gång någon kommer med en fråga.</p>
+      <p>Räkna på fredagen. Det är din nollpunkt.</p>
+      <h3>Sortera frågorna i tre högar</h3>
+      <p>Första högen är frågor om sådant ni redan bestämt. Den betyder att beslutet aldrig blev tydligt.</p>
+      <p>Andra högen är beslut bara du kan fatta. Det är ditt riktiga arbete, och den högen är alltid minst.</p>
+      <p>Tredje högen är frågor som aldrig borde ha nått dig. Där saknar någon rätten att bestämma.</p>
+      <h3>Tydliggör ett område</h3>
+      <p>Bara ett. Välj det med flest lappar i första högen.</p>
+      <p>Skriv ner vad som ska uppnås, vilket beteende som krävs, vem som gör det och när.</p>
+      <p>Skriv det som du beskriver ett klippmoment för en elev. Så konkret att en ny medarbetare kan följa det utan att fråga dig.</p>
+      <h3>Följ upp varje vecka</h3>
+      <p>Tjugo minuter, samma tid. Tre punkter. Vad bestämde vi, hur gick det, vad gör vi nu.</p>
+      <p>Utan uppföljning dör varje överenskommelse på ett par veckor.</p>
+      <h3>Ge feedback så beteendet upprepas</h3>
+      <p>Tre meningar. Vad du såg, vad det ledde till, vad du vill se mer av.</p>
+      <p>Fjorton sekunder. Det är det enda som gör att ett nytt beteende överlever.</p>
+      <h2>Två saker avgör om det håller</h2>
+      <p>Nästa gång någon kommer med en fråga ur tredje högen, lös den inte. Fråga vad hon själv tycker att ni ska göra.</p>
+      <p>Sedan tystnad. Den känns pinsam och den är avgörande.</p>
+      <p>Och acceptera åttio procent. Tar du tillbaka uppgiften för att den inte blev som din har du lärt teamet att det inte lönar sig att försöka.</p>
+      <p>En ägare med fyra anställda beskrev sitt gamla mönster som att hon plockade undan själv i stället för att sätta en konsekvens. Det är samma sak, i mindre format.</p>
       <h2>Så vet du att det fungerar</h2>
-      <p>En mätpunkt, inte fem: <strong>antalet frågor som når dig per vecka.</strong></p>
-      <p>Räkna om efter sex veckor. Har siffran inte gått ner har du antingen tydliggjort för brett eller slutat följa upp — det är alltid en av de två.</p>
-      <p>Och så tre tecken som brukar komma i den här ordningen:</p>
-      <ul><li>Någon fyller en lucka i boken innan du hunnit se den.</li><li>Du är sjuk en dag och ingen ringer.</li><li>Du tar en hel vecka ledigt utan att stänga eller boka om en enda kund.</li></ul>
-      <p>En varning som sparar dig ett par nätter: <strong>de första två veckorna blir det värre.</strong> Teamet testar om du menar allvar, och frågorna ökar innan de minskar. Det är inte ett tecken på att det inte fungerar. Det är tecknet på att det har börjat.</p>
-      <h2>Vad det här egentligen handlar om</h2>
-      <p>Du kommer inte att jobba dig ur Flaskhalsträsket. Mer arbete är själva mekanismen som gör det djupare, och det är därför de senaste årens ansträngningar inte gett dig mer tid — bara tröttare kvällar.</p>
-      <p>Det som fungerar är att bygga om hur beslut fattas i din salong. Tydliggöra vad som gäller. Följa upp att det händer. Ge feedback så att det upprepas. Det är inte magiskt och det är inte medfött. Det är ett hantverk, precis som klippning, och det går att lära sig i vilken ålder som helst.</p>
-      <p>Skillnaden är att den här gången är det du som är eleven.</p>
-      <div class="cta-box"><span class="label">Nästa steg</span><p><strong>Börja med att ta reda på hur djupt du står.</strong> Flaskhalstestet är tolv påståenden om din vardag och tar tre minuter. Du får en siffra, en nivå — och ett första drag som är anpassat efter var du faktiskt befinner dig.</p></div>
+      <p>En mätpunkt. Antalet frågor som når dig per vecka.</p>
+      <p>Räkna om efter sex veckor. Har siffran inte gått ner har du antingen tydliggjort för brett eller slutat följa upp.</p>
+      <p>Tre tecken brukar komma i den här ordningen. Någon fyller en lucka innan du sett den. Du är sjuk en dag och ingen ringer. Du tar en hel vecka ledigt utan att stänga.</p>
+      <h2>Det svåra kommer i vecka två</h2>
+      <p>De första veckorna blir det värre. Teamet testar om du menar allvar, och frågorna ökar innan de minskar.</p>
+      <p>Nästan alla ger upp där. Inte för att de saknar kunskap, utan för att ingen säger att det som händer är normalt.</p>
+      <p>Varje månad i det gamla mönstret förstärker det. Du blir tröttare och teamet blir mer passivt.</p>
+      <p>Den som tröttnar först är sällan den minst engagerade. Det är den mest engagerade.</p>
+      <h2>Din mätövning i veckan</h2>
+      <p>Lägg upp pappret i morgon bitti. Räkna i fem dagar.</p>
+      <p>Skriv ner summan och datumet. Lägg lappen i plånboken.</p>
+      <p>Om sex veckor gör du om mätningen.</p>
   </article>
 
   <footer>

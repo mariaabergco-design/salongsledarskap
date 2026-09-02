@@ -1,0 +1,312 @@
+<title>Sjukdagen visar vad din salong klarar utan dig</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&display=swap">
+<style>
+  :root {
+    --ground: #FCF9F6;
+    --panel: #F5EDE5;
+    --panel-2: #FFFFFF;
+    --ink: #241811;
+    --ink-soft: #6B584C;
+    --ink-faint: #9B8779;
+    --line: #EADFD4;
+    --line-strong: #D8C7B7;
+    --accent: #BF5308;
+    --accent-strong: #E0670D;
+    --accent-tint: #FBE7D6;
+    --warm: #8A5A2B;
+    --warm-tint: #F6ECDD;
+    --shadow: 0 1px 2px rgba(36, 24, 17, .06);
+    --display: "Playfair Display", Georgia, "Times New Roman", serif;
+    --body: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #17110C;
+      --panel: #241A12;
+      --panel-2: #1D150F;
+      --ink: #F3EAE2;
+      --ink-soft: #BCA899;
+      --ink-faint: #93806F;
+      --line: #332519;
+      --line-strong: #4A3625;
+      --accent: #FF8C42;
+      --accent-strong: #FFA366;
+      --accent-tint: #3A2013;
+      --warm: #E0A462;
+      --warm-tint: #33230F;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #17110C;
+    --panel: #241A12;
+    --panel-2: #1D150F;
+    --ink: #F3EAE2;
+    --ink-soft: #BCA899;
+    --ink-faint: #93806F;
+    --line: #332519;
+    --line-strong: #4A3625;
+    --accent: #FF8C42;
+    --accent-strong: #FFA366;
+    --accent-tint: #3A2013;
+    --warm: #E0A462;
+    --warm-tint: #33230F;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.78;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 660px; margin: 0 auto; padding: 0 24px 96px; }
+
+  h1, h2, h3, .statement, .deck { font-family: var(--display); }
+
+  .eyebrow {
+    display: block;
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  header { padding: 72px 0 32px; }
+
+  h1 {
+    font-size: clamp(2.4rem, 7vw, 3.5rem);
+    line-height: 1.04;
+    font-weight: 700;
+    letter-spacing: -.012em;
+    margin: 0 0 20px;
+    text-wrap: balance;
+  }
+
+  .deck {
+    font-size: 1.24rem;
+    line-height: 1.5;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+    margin: 0 0 26px;
+    text-wrap: pretty;
+  }
+
+  .byline {
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    color: var(--ink-faint);
+    padding-top: 20px;
+    border-top: 1px solid var(--line-strong);
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+  }
+  .byline span:not(:last-child)::after { content: " ·"; color: var(--line-strong); }
+
+  article { padding-top: 38px; }
+
+  h2 {
+    font-size: 1.62rem;
+    line-height: 1.18;
+    font-weight: 600;
+    letter-spacing: -.006em;
+    margin: 46px 0 14px;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-size: 1.16rem;
+    line-height: 1.28;
+    font-weight: 600;
+    margin: 34px 0 10px;
+    color: var(--accent);
+    text-wrap: balance;
+  }
+
+  p { margin: 0 0 20px; }
+
+  .statement {
+    font-size: 1.42rem;
+    line-height: 1.32;
+    font-weight: 600;
+    color: var(--ink);
+    border-left: 3px solid var(--accent);
+    padding: 4px 0 4px 22px;
+    margin: 32px 0;
+    text-wrap: balance;
+  }
+
+  ol, ul { margin: 0 0 20px; padding-left: 0; list-style: none; display: grid; gap: 10px; }
+  ol { counter-reset: n; }
+  ol > li {
+    counter-increment: n;
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 0 10px;
+  }
+  ol > li::before {
+    content: counter(n);
+    font-family: var(--body);
+    font-size: .74rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-tint);
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    margin-top: 6px;
+  }
+  ul > li { position: relative; padding-left: 20px; }
+  ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .82em;
+    width: 8px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  blockquote.quote {
+    margin: 34px 0;
+    padding: 4px 0 4px 22px;
+    border-left: 3px solid var(--accent);
+  }
+  blockquote.quote p {
+    font-family: var(--display);
+    font-size: 1.32rem;
+    line-height: 1.34;
+    font-weight: 500;
+    font-style: italic;
+    margin: 0 0 10px;
+    text-wrap: balance;
+  }
+  blockquote.quote cite {
+    font-family: var(--body);
+    font-size: .78rem;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: .03em;
+    color: var(--ink-faint);
+  }
+
+  .cta-box {
+    margin: 44px 0 0;
+    background: var(--panel);
+    border-left: 3px solid var(--accent);
+    padding: 22px 24px;
+  }
+  .cta-box .label {
+    display: block;
+    font-family: var(--body);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .cta-box p { margin: 0; }
+
+  footer {
+    margin-top: 52px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: .78rem;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Pelare 1 · Flaskhalsträsket</span>
+    <h1>Sjukdagen visar vad din salong klarar utan dig</h1>
+    <p class="deck">Det finns ett test som svarar på om du byggt ett team eller en publik. Det tar en dag och du kan inte förbereda dig på det.</p>
+    <div class="byline"><span>Maria Åberg</span><span>Åberg &amp; Co</span><span>4 min läsning</span></div>
+  </header>
+
+  <article>
+      <h2>Du vilade ju</h2>
+      <p>Du vaknar med feber och messar att du inte kommer in.</p>
+      <p>Strax före åtta kommer första frågan. Ska vi flytta din niokund eller boka om.</p>
+      <p>Du svarar liggande.</p>
+      <p>Vid nio hittar ingen koden till leverantörsportalen. Vid halv tolv är en kund missnöjd med sin färg.</p>
+      <p>Du ringer upp kunden själv, från sängen.</p>
+      <p>Vid tre på eftermiddagen har du hanterat elva ärenden och sovit i tjugo minuter.</p>
+      <p>På kvällen säger någon att det är skönt att du fick vila.</p>
+      <h2>Därför är sjukdagen det ärligaste testet du har</h2>
+      <p>Allt annat går att kompensera för.</p>
+      <p>En semestervecka kan du förbereda i tre veckor. Du lämnar listor, sätter upp lappar och ringer in extra folk.</p>
+      <p>Du kan planera bort problemet och sedan tro att du löst det.</p>
+      <p>Sjukdagen kan du inte planera. Den visar salongen som den faktiskt är.</p>
+      <p>Det den mäter är inte om ditt team är kompetent. De kan sitt hantverk, det är därför du anställde dem.</p>
+      <p>Den mäter hur mycket av salongens beslutsfattande som sitter i en enda person.</p>
+      <h2>Fyra utfall, och vad de betyder</h2>
+      <p>Räkna kontakterna nästa gång du är borta en hel dag. De sorterar sig nästan alltid i en av fyra.</p>
+      <p>De frågar om sådant ni redan har bestämt. Rutinen finns men är inte tydlig nog att följa utan dig. Det är det vanligaste utfallet och också det snabbaste att rätta till.</p>
+      <p>De frågar om lov. Får jag boka om, får jag ge henne en ny tid utan att ta betalt. Här vet de vad som borde göras, men ingen har fått rätten att bestämma det.</p>
+      <p>De hör inte av sig, men inget utöver det vanliga blir gjort. Kunderna klipps och dagen rullar. Allt annat står stilla tills du är tillbaka.</p>
+      <p>Dagen fungerar och du får en kort sammanfattning efteråt. Då har du ett team.</p>
+      <h2>Det går att komma dit</h2>
+      <p>En ägare jag arbetar med var borta sex veckor i somras. Hon fick tre samtal under hela perioden.</p>
+      <p>Salongen har flera anställda och elever. Två år tidigare hade samma frånvaro varit otänkbar.</p>
+      <p>Det som förändrades var inte personalen. Det var att rutiner, ansvar och beslut hade flyttats ut, en bit i taget.</p>
+      <h2>Gör testet på riktigt i stället för att vänta på influensan</h2>
+      <p>Du behöver inte bli sjuk för att få svaret. Boka en dag.</p>
+      <p>Välj en vanlig torsdag om tre veckor. Inte en lugn måndag i juli.</p>
+      <p>Utse en person som bestämmer den dagen. En, med namn, sagt högt inför alla. Att ni löser det tillsammans betyder alltid att ingen bestämmer.</p>
+      <p>Skriv ner de tre beslut som oftast dyker upp och vad som gäller. Ofta är det ombokning, missnöjd kund och akut beställning.</p>
+      <p>Stäng av notiserna till klockan fyra. Ring inte och kolla vid lunch. Då mäter du ingenting, och du talar om för teamet att du inte litar på dem.</p>
+      <p>Ställ en enda fråga när du kommer tillbaka. Vad behövde ni mig till i dag?</p>
+      <p>Säg gärna rakt ut att det är ett test. Ett team som vet att de blir betrodda för en dag brukar anstränga sig mer.</p>
+      <h2>Så vet du att det fungerar</h2>
+      <p>Mätpunkten är antalet gånger någon behövde dig under dagen.</p>
+      <p>Noll eller en betyder att du står stadigare än du trodde.</p>
+      <p>Fem eller fler betyder att salongen fortfarande går genom dig. Då vet du också exakt vilka fem saker det handlar om.</p>
+      <p>Gör om testet om tre månader. Siffran ska ha gått ner.</p>
+      <p>Om den inte har det är det inte teamet som inte lärt sig något. Det är samma frågor som fortfarande saknar tydligt svar.</p>
+      <h2>Det som gör det svårt</h2>
+      <p>Att boka dagen är enkelt. Att låta telefonen ligga är det inte.</p>
+      <p>De flesta ägare som provar bryter någon gång under förmiddagen. De ringer och kollar, och testet är förstört.</p>
+      <p>Nästa gång skjuts upp till efter högsäsongen. Sedan blir det aldrig av.</p>
+      <p>Det handlar inte om att de saknar disciplin. Det handlar om att ingen frågar dem efteråt hur det gick.</p>
+      <h2>Vad du gör med svaret</h2>
+      <p>Sorteringen avgör vad du ska rätta till.</p>
+      <p>Handlade frågorna om sådant ni redan bestämt är det tydligheten som brister. Skriv om överenskommelsen så konkret att en ny medarbetare kan följa den utan dig.</p>
+      <p>Handlade de om lov är det befogenheten som saknas. Välj tre beslut och skriv ner vem som får fatta dem och inom vilka ramar.</p>
+      <p>Stod allt utanför kundarbetet stilla saknas ägarskap. Ge varje område en person med namn, inte gruppen som helhet.</p>
+      <p>Ta en sak i taget. Att rätta till allt samtidigt fungerar aldrig, och det är den vanligaste orsaken till att ingenting förändras.</p>
+      <h2>Din mätövning i veckan</h2>
+      <p>Sätt ett datum i kalendern för din frånvarodag. Skriv in det som ett uppdrag, inte som ledighet.</p>
+      <p>Skriv ner namnet på den som bestämmer den dagen.</p>
+      <p>Skriv sedan ner de tre vanligaste besluten och vad som gäller för dem. Tre meningar räcker.</p>
+      <p>Den lappen är hela förberedelsen.</p>
+  </article>
+
+  <footer>
+    <span>salongsledarskap.se</span>
+    <span>Pelare 1 · Flaskhalsträsket</span>
+  </footer>
+
+</div>
