@@ -107,21 +107,20 @@ innehållet i `site/` med ftp.
 
 ## Nyhetsbrevet
 
-Formuläret på startsidan skickar ingenting förrän det kopplats till din
-e-posttjänst. Så här kopplar du det:
+Formuläret kommer från Kartra, under Forms. Koden ligger i `nyhetsbrev.html`
+och byggskriptet lägger in den på startsidan.
 
-1. Hämta koden för ett anmälningsformulär i din e-posttjänst
-2. Spara den i en fil som heter `nyhetsbrev.html` här i mappen
-3. Kör `python3 scripts/bygg-sajt.py`
+Byter du formulär i Kartra: kopiera den nya koden, klistra in den i
+`nyhetsbrev.html` i stället för den gamla, och kör
+`python3 scripts/bygg-sajt.py`. Filen används rakt av.
 
-Byggskriptet lägger då in din kod i stället för det formulär som bara ser ut
-att fungera. Filen används rakt av, så klistra in exakt det du får ur
-tjänsten. Vill du gå tillbaka till platshållaren tar du bort filen.
+Tar du bort filen visas i stället ett formulär som ser rätt ut men inte
+skickar något.
 
 ## Innan sajten går live
 
-- [ ] Koppla nyhetsbrevsformuläret på startsidan till Kartra
-- [ ] Se efter om Kartras formulär laddar något från Kartra när sidan öppnas, och skriv i så fall en rad om det i `dataskydd.md`
+- [x] Koppla nyhetsbrevsformuläret på startsidan till Kartra. Koden ligger i `nyhetsbrev.html`
+- [x] Kartras formulär laddas från Kartra när startsidan öppnas. Det står i `dataskydd.md`
 - [x] Låt de fyra kunderna godkänna sina case, de är namngivna. Klart 2026-09-02
 - [x] Kontrollera siffrorna som kommer ur kundernas egna uppföljningar. Klart 2026-09-02
 - [x] Lägg in en dataskyddstext om du samlar in mejladresser. Utkast finns i `dataskydd.md`, läs igenom det

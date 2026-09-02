@@ -42,6 +42,8 @@ Sajten sätter inga kakor för att följa dig och har ingen besöksmätning.
 
 Typsnitten ligger på sajten själv, så ingenting hämtas från Google när du läser.
 
+Anmälningsformuläret på startsidan visas av Kartra. Det betyder att din webbläsare kontaktar Kartra när startsidan öppnas, även om du inte anmäler dig. Övriga sidor hämtar ingenting utifrån.
+
 ## Ändringar
 
 Den här texten uppdateras om något i hanteringen ändras. Senast ändrad i september 2026.
