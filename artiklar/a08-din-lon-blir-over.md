@@ -80,6 +80,14 @@ Nu har du något att arbeta mot som går att mäta. Priset, beläggningen och be
 
 Det låter hårt. Det är samma krav du redan ställer på varje annan kostnad i företaget.
 
+## Underskattningen sitter hos dig
+
+Samma mönster syns när ledare ska sätta pris på sitt eget arbete. Två salongsledare som förhandlade om ett ledartillägg sammanfattade det i fyra ord:
+
+> Man vill inte vara girig. | Salongsledare, salongsgrupp med två enheter
+
+De landade på ett lägre tillägg än vad rollen faktiskt motsvarade. Ingen hade sagt nej till dem. De bad om mindre än de var värda.
+
 ## Varför de flesta ändå inte gör det
 
 Att räkna tar en timme. Att stå fast vid siffran tar ett år.

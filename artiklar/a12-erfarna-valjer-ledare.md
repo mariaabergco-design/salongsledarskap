@@ -36,6 +36,16 @@ Och hon vill veta om det finns någon som ser vad hon gör bra.
 
 Ingen av de sakerna kostar pengar. Alla handlar om hur salongen leds.
 
+## Bra individer räcker inte
+
+En ägare beskrev sitt läge med en bild som fastnar:
+
+> Bra individer, svagt team. | Ägare, hudvårdssalong
+
+Personalen var kompetent. Det som saknades var struktur, tydliga roller och någon som ledde.
+
+Det är precis den skillnaden en erfaren frisör känner av under en provdag. Hon ser om det finns ordning, långt innan hon hunnit läsa anställningsavtalet.
+
 ## Ryktet är din verkliga annons
 
 I varje stad finns ett tyst register över vilka salonger som är bra att jobba på.

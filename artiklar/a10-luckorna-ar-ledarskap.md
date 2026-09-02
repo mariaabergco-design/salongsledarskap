@@ -66,6 +66,16 @@ Efter en månad har luckorna minskat utan att en enda krona lagts på annonser.
 
 Det som förändrades var inte marknadsföringen. Det var vem som ägde timmen.
 
+## Siffrorna rör sig när någon äger dem
+
+I en salongsgrupp jag arbetar med låg ombokningsgraden i ett av teamen mellan sju och nitton procent under 2024.
+
+Efter drygt ett år med tydliga mål och uppföljning varje vecka låg den mellan tjugoen och tjugosex procent.
+
+En enskild medarbetare gick från tjugosju procents beläggning i januari 2024 till sextioåtta procent två år senare.
+
+Siffrorna kommer ur företagets egen uppföljning. Ingen annons var inblandad.
+
 ## Varför det känns svårt att säga något
 
 Att prata om någon annans tomma tider känns som kritik.

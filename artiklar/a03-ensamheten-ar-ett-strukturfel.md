@@ -12,6 +12,14 @@ Sedan går du hem. Ingen har frågat hur du har det.
 
 Det är inte elakt menat. Ingen tänker på att ägaren också är en person med en dålig dag.
 
+En ny salongsledare beskrev det så här på ett coachingmöte:
+
+> Man jobbar ju ganska själv. Jag känner mig väldigt själv. | Salongsledare, salong i en grupp med två enheter
+
+Hon sa också något som fler känner igen sig i än som säger det högt:
+
+> Om jag ska vara helt ärlig, så mår inte jag jättebra i det här. Så det måste bli en förändring. | Salongsledare, salong i en grupp med två enheter
+
 ## Varför det är rollen och inte du
 
 Många ägare tror att ensamheten är ett personligt fel. Att andra klarar det bättre.

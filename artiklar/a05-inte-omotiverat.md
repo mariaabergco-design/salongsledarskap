@@ -38,6 +38,16 @@ Antagligen långsamt. Inte för att du var ointresserad. Du fick aldrig chansen 
 
 Samma sak händer nu, fast du står på andra sidan.
 
+## Så låter det från andra hållet
+
+En medarbetare som mest fick höra av sig när något var fel sa till sina ledare:
+
+> Ni är på mig hela tiden. Det är bara mig ni har möte med. Jag duger inte. | Medarbetare, frisörsalong med flera anställda
+
+Ägaren beskrev samma sak från sitt håll. Hon kände ångest inför varje samtal, eftersom medarbetaren alltid gick i försvar.
+
+Ett halvår senare hade samma medarbetare mer än fördubblat sin produktförsäljning. Det som förändrades var att beröm kom lika ofta som korrigering.
+
 ## Vad du berövar dem
 
 Här är den obekväma delen.

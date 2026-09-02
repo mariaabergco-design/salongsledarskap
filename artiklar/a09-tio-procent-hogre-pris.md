@@ -80,6 +80,16 @@ I mars är det ingen som pratar om det längre. Skillnaden ligger i kassan varje
 
 Det som gjorde det möjligt var inte modet. Det var förberedelsen.
 
+## Vad som faktiskt hände när någon höjde
+
+En salong med fyra anställda höjde priset på en tjänstekategori med omkring tvåhundra kronor per behandling.
+
+Höjningen gick obemärkt förbi. Varken kunder eller anställda reagerade.
+
+Siffran kommer ur salongens egen uppföljning. Ägaren hade skjutit upp höjningen i flera år.
+
+Det är det vanligaste utfallet. Rädslan är verklig, men den handlar sällan om kunderna.
+
 ## Varför de flesta ändå väntar
 
 Nästan alla ägare vet att de ligger för lågt. Många har vetat det i flera år.

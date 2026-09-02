@@ -72,6 +72,18 @@ De två första är dina att lösa. Det tredje löser sig av att ni ses igen nä
 
 Det du inte ska göra är att sucka och göra det själv. Då har du lärt teamet att överenskommelser är frivilliga.
 
+## Fyra år av samtal som inte fastnade
+
+Två delägare hade pratat med samma medarbetare om prislistan sedan 2021, utan bestående resultat. De beskrev sitt gamla sätt själva:
+
+> Nu har vi haft en grej som vi har jobbat jättemycket med. Som vi bara haffade henne en dag på lunchen. | Delägare, frisörsalong med två ägare
+
+Hösten därpå tog de samtalet med konkreta exempel i stället för antydningar. Sedan gjorde de det de aldrig gjort förut. De följde upp, gång på gång, och gav beröm på förändringen.
+
+Medarbetaren tog rätt betalt från den dagen. Hon slutade jobba över och fick ändå sin bästa lön hittills.
+
+Det var inte ett bättre samtal som avgjorde. Det var det femte.
+
 ## Ett typfall
 
 En salong med fyra anställda bestämmer att alla ska fråga kunden om nästa tid vid kassan.

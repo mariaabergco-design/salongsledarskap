@@ -16,6 +16,12 @@ Men teamet märker att något är fel. De ser att du är tyst. De vet att du sta
 
 Det de inte har är information. Så de fyller i själva.
 
+Motstridiga besked är värre än inga besked. En ledare beskrev sin vardag så här:
+
+> En av dagen så har vi jättemycket pengar. Men nästa dag då går vi på knäna. | Salongsledare, salong i en grupp med två enheter
+
+Hon la till att det fanns trådar men att hon inte kunde hålla i dem. Det är vad otydlighet gör med en person som vill göra rätt.
+
 ## Vad de fyller i
 
 Människor tål dåliga nyheter bättre än tystnad.
