@@ -115,9 +115,14 @@ Därför delas accenten i två.
 linjen bredvid citat, i understrykningen under en aktiv menypost, i siffran
 framför en pelare, i ikonen i faviconet. Aldrig som text som ska läsas.
 
-**`#8A5A05` är den läsbara accenten.** Samma färgton som komplementfärgen, mörkare. Den används på
-länkar i löptext, på knappar och på etiketter i versal. Den ser ut som samma
+**`#8A5A05` är den läsbara accenten.** Samma färgton som komplementfärgen, mörkare.
+Den används på länkar i löptext och på etiketter i versal. Den ser ut som samma
 familj och den går att läsa.
+
+**Knappar bär guldet.** Bakgrunden är komplementfärgen och texten på den är
+`#2E2E2E`, mörk i både ljust och mörkt läge. Kontrasten blir 6,6. Det är den
+enda ytan på sajten som är helt guldfärgad, och den gör att en besökare känner
+igen avsändaren utan att läsa logotypen.
 
 Guldet `#FEE69F` används som bakgrund bakom ett block som ska sticka ut, med
 vanlig svart text ovanpå. Kontrasten där blir 11,0.
@@ -222,17 +227,25 @@ taglinen Ledarskap Utveckling Coaching.
 
 ### Filformat
 
-Logotypen ska ligga i `bilder/` som **svg**. En ordbild i punktformat blir suddig
-på skärmar med hög upplösning och väger mer. Finns ingen svg går det att göra en
-ur eps-filerna i `ÅbergCO Logo.zip`.
+Fyra filer ligger i `bilder/`, gjorda av `scripts/logotyp.py` ur originalet i
+`bilder/original/aberg-co-logotyp.png`.
 
-Två filer behövs:
+| Fil | Innehåll |
+|---|---|
+| `aberg-co` | Ordbilden, till sidhuvudet |
+| `aberg-co-morkt` | Samma, ljus, till mörkt läge |
+| `aberg-co-tagline` | Hela lockupen, till sidfoten |
+| `aberg-co-tagline-morkt` | Samma, ljus, till mörkt läge |
 
-- `aberg-co.svg`, bara ordbilden, till sidhuvudet
-- `aberg-co-tagline.svg`, hela lockupen, till sidfoten
+Varje fil finns som png och webp. I den ljusa varianten byts manualens
+accentgrå mot `#F2EBE1`. Bärnstenen i &CO står kvar, den syns bra mot mörkt.
+Antikaliseringen ligger i alfakanalen, så färgbytet blir rent.
 
-I mörkt läge byts det grå i ordbilden mot `#F2EBE1`. Bärnstenen i &CO står kvar,
-den syns bra mot mörkt.
+Originalet är 392 pixlar brett, vilket räcker gott till 26 pixlars höjd i
+sidhuvudet och 180 pixlars bredd i sidfoten, även på skärmar med hög upplösning.
+Punktformat i stället för svg är ett medvetet val av praktiska skäl: eps-filerna
+går inte att göra om till svg utan Illustrator eller Inkscape. Får du fram en
+svg någon gång byter du bara ut filerna och behåller namnen.
 
 ## Bilder
 

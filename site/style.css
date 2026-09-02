@@ -1,37 +1,43 @@
+/* Färgerna kommer ur Lilla Manualen och ur abergco.se. Ändras något här ska
+   designbrief.md ändras först, den filen är sanningen om designen. */
 :root {
-  --ground: #FCF9F6;
-  --panel: #F5EDE5;
+  --ground: #FFFCF5;
+  --panel: #F7F0E4;
   --panel-2: #FFFFFF;
-  --ink: #241811;
-  --ink-soft: #6B584C;
-  --ink-faint: #9B8779;
-  --line: #EADFD4;
-  --line-strong: #D8C7B7;
-  --accent: #BF5308;
-  --accent-tint: #FBE7D6;
-  --warm: #8A5A2B;
-  --warm-tint: #F6ECDD;
-  --shadow: 0 1px 2px rgba(36, 24, 17, .06);
+  --ink: #2E2E2E;
+  --ink-soft: #6E685F;
+  --ink-faint: #736D64;
+  --line: #E6DDD4;
+  --line-strong: #D6C9BB;
+  --accent: #8A5A05;
+  --accent-graf: #F6A313;
+  --accent-tint: #FEE69F;
+  --pa-accent: #FFFCF5;
+  --warm: #8A5A05;
+  --warm-tint: #F7F0E4;
+  --shadow: 0 1px 2px rgba(46, 46, 46, .06);
   --display: "Playfair Display", Georgia, "Times New Roman", serif;
   --body: "Montserrat", "Helvetica Neue", Arial, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ground: #17110C; --panel: #241A12; --panel-2: #1D150F;
-    --ink: #F3EAE2; --ink-soft: #BCA899; --ink-faint: #93806F;
-    --line: #332519; --line-strong: #4A3625;
-    --accent: #FF8C42; --accent-tint: #3A2013;
-    --warm: #E0A462; --warm-tint: #33230F;
+    --ground: #1B1714; --panel: #241F1A; --panel-2: #201B17;
+    --ink: #F2EBE1; --ink-soft: #C4B8A9; --ink-faint: #A79B8C;
+    --line: #332B24; --line-strong: #4A3E33;
+    --accent: #FFC661; --accent-graf: #FFB43D; --accent-tint: #3A2C12;
+    --pa-accent: #1B1714;
+    --warm: #FFC661; --warm-tint: #241F1A;
     --shadow: 0 1px 2px rgba(0, 0, 0, .35);
   }
 }
 :root[data-theme="dark"] {
-  --ground: #17110C; --panel: #241A12; --panel-2: #1D150F;
-  --ink: #F3EAE2; --ink-soft: #BCA899; --ink-faint: #93806F;
-  --line: #332519; --line-strong: #4A3625;
-  --accent: #FF8C42; --accent-tint: #3A2013;
-  --warm: #E0A462; --warm-tint: #33230F;
+  --ground: #1B1714; --panel: #241F1A; --panel-2: #201B17;
+  --ink: #F2EBE1; --ink-soft: #C4B8A9; --ink-faint: #A79B8C;
+  --line: #332B24; --line-strong: #4A3E33;
+  --accent: #FFC661; --accent-graf: #FFB43D; --accent-tint: #3A2C12;
+  --pa-accent: #1B1714;
+  --warm: #FFC661; --warm-tint: #241F1A;
   --shadow: 0 1px 2px rgba(0, 0, 0, .35);
 }
 
@@ -45,8 +51,8 @@ body {
   background: var(--ground);
   color: var(--ink);
   font-family: var(--body);
-  font-size: 16.5px;
-  line-height: 1.7;
+  font-size: 17px;
+  line-height: 1.72;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -66,18 +72,31 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-
   font-size: .8rem; font-weight: 600;
 }
 .nav .ord {
+  display: flex; align-items: center; gap: 14px;
   font-family: var(--display); font-size: 1rem; font-weight: 700;
   color: var(--ink); text-decoration: none;
 }
+/* Frizonen enligt Lilla Manualen: minst höjden på bokstaven G i ÅBERG.
+   Vid 26 pixlars ordbild blir det 14 pixlar. */
+.nav .navlogga { display: block; height: 26px; width: auto; margin-right: 14px; }
+.nav .strecket { width: 1px; height: 22px; background: var(--line-strong); }
+.nav .pubnamn { font-family: var(--body); font-size: .95rem; font-weight: 600; }
+@media (max-width: 560px) {
+  .nav .ord { gap: 10px; }
+  .nav .navlogga { height: 22px; margin-right: 11px; }
+  .nav .pubnamn { font-size: .88rem; }
+}
 .nav .navlank { display: flex; gap: 16px; flex-wrap: wrap; }
 .nav a { color: var(--ink-soft); text-decoration: none; }
-.nav a:hover, .nav a.pa { color: var(--accent); }
+.nav a:hover { color: var(--accent); }
+.nav a.pa { color: var(--ink); border-bottom: 2px solid var(--accent-graf); padding-bottom: 2px; }
 
 /* ---------- gemensamt ---------- */
 .sidhuvud, .block, .hero, .pelare, .artikel, .brod {
   max-width: 1020px; margin: 0 auto; padding-left: 24px; padding-right: 24px;
 }
 .smal, .artikel .brod, .artikelhuvud { max-width: 720px; }
+.artikel .brod { padding-left: 0; padding-right: 0; }
 .artikel { max-width: 720px; }
 
 .ovan {
@@ -104,7 +123,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-
 .knapp {
   display: inline-block; font-size: .9rem; font-weight: 600; text-decoration: none;
   padding: 11px 20px; border-radius: 2px;
-  background: var(--accent); color: #FFF9F4; border: 1px solid var(--accent);
+  background: var(--accent-graf); color: #2E2E2E; border: 1px solid var(--accent-graf);
 }
 .knapp.tunn { background: transparent; color: var(--ink); border-color: var(--line-strong); }
 .knapp:hover { opacity: .92; }
@@ -131,15 +150,18 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-
 .blockhuvud p { margin: 0; color: var(--ink-soft); font-size: .97rem; }
 
 /* ---------- pelarkort ---------- */
-.pkortgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px;
-  background: var(--line); border: 1px solid var(--line); }
+/* Hårfina linjer görs med en ring runt varje kort i stället för en färgad
+   platta bakom rutnätet. Då blir tomrummet efter sista kortet sidans egen
+   bakgrund och inte en beige fläck. */
+.pkortgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(186px, 1fr)); gap: 1px;
+  background: var(--ground); }
 .pkort {
   display: block; background: var(--ground); padding: 20px; text-decoration: none;
-  color: var(--ink);
+  color: var(--ink); box-shadow: 0 0 0 1px var(--line);
 }
 .pkort:hover { background: var(--panel); }
 .pkort .pnr {
-  display: block; font-size: 2rem; font-weight: 600; color: var(--accent);
+  display: block; font-size: 2rem; font-weight: 600; color: var(--accent-graf);
   opacity: .4; line-height: 1; margin-bottom: 10px;
 }
 .pkort .pnamn { display: block; font-size: 1.12rem; font-weight: 600; line-height: 1.25; margin-bottom: 8px; }
@@ -163,14 +185,14 @@ ol.lista .dags {
   display: block; margin-top: 8px; font-size: .72rem; font-weight: 700;
   letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint);
 }
-ol.lista li.huvud a { background: var(--panel-2); border-left: 3px solid var(--accent); padding-left: 18px; }
+ol.lista li.huvud a { background: var(--panel-2); border-left: 3px solid var(--accent-graf); padding-left: 18px; }
 ol.lista.stor .rubrik { font-size: 1.28rem; }
 
 /* ---------- pelarsektion ---------- */
 .pelare { padding: 44px 24px; border-top: 1px solid var(--line); scroll-margin-top: 70px; }
 .pelarhuvud { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 0 16px; margin-bottom: 18px; }
 .pelarhuvud .pnr {
-  font-size: 2.6rem; font-weight: 600; color: var(--accent); opacity: .38; line-height: .95;
+  font-size: 2.6rem; font-weight: 600; color: var(--accent-graf); line-height: .95;
 }
 .pelarhuvud h2 { font-size: 1.6rem; font-weight: 600; margin: 0 0 4px; line-height: 1.15; }
 .gloss { margin: 0 0 10px; color: var(--ink-soft); font-size: .97rem; max-width: 62ch; }
@@ -209,15 +231,15 @@ ol.lista.stor .rubrik { font-size: 1.28rem; }
 }
 .brod ol > li::before {
   content: counter(n); font-family: var(--body); font-size: .74rem; font-weight: 700;
-  color: var(--accent); background: var(--accent-tint);
-  width: 21px; height: 21px; border-radius: 50%; display: grid; place-items: center; margin-top: 6px;
+  color: var(--ink); background: var(--accent-tint);
+  width: 21px; height: 21px; border-radius: 2px; display: grid; place-items: center; margin-top: 6px;
 }
 .brod ul > li { position: relative; padding-left: 20px; }
 .brod ul > li::before {
-  content: ""; position: absolute; left: 0; top: .82em; width: 8px; height: 1px; background: var(--accent);
+  content: ""; position: absolute; left: 0; top: .82em; width: 8px; height: 1px; background: var(--accent-graf);
 }
 
-blockquote.quote { margin: 34px 0; padding: 4px 0 4px 22px; border-left: 3px solid var(--accent); }
+blockquote.quote { margin: 34px 0; padding: 4px 0 4px 22px; border-left: 3px solid var(--accent-graf); }
 blockquote.quote p {
   font-family: var(--display); font-size: 1.32rem; line-height: 1.34; font-weight: 500;
   font-style: italic; margin: 0 0 10px; text-wrap: balance;
@@ -239,7 +261,7 @@ blockquote.quote cite {
 /* ---------- cta ---------- */
 .cta {
   max-width: 720px; margin: 46px auto 0; padding: 26px 24px;
-  background: var(--panel); border-left: 3px solid var(--accent);
+  background: var(--panel); border-left: 3px solid var(--accent-graf);
 }
 .cta h2 { font-size: 1.35rem; font-weight: 600; margin: 0 0 8px; line-height: 1.2; }
 .cta p { margin: 0 0 16px; color: var(--ink-soft); font-size: .97rem; }
@@ -276,7 +298,7 @@ blockquote.quote cite {
 .brevform input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .brevform button {
   font-family: var(--body); font-size: .9rem; font-weight: 600; cursor: pointer;
-  background: var(--accent); color: #FFF9F4; border: 1px solid var(--accent);
+  background: var(--accent-graf); color: #2E2E2E; border: 1px solid var(--accent-graf);
   border-radius: 2px; padding: 10px 18px;
 }
 .notis { font-size: .78rem; color: var(--ink-faint); margin-top: 10px; }
@@ -294,6 +316,8 @@ blockquote.quote cite {
 .fotgrid p { margin: 0; font-size: .92rem; color: var(--ink-soft); line-height: 1.7; }
 .fotgrid a { color: var(--ink-soft); }
 .fotgrid a:hover { color: var(--accent); }
+.fotlogga { display: block; width: 180px; height: auto; margin-bottom: 14px; }
+@media (max-width: 560px) { .fotlogga { width: 150px; } }
 .fotrad {
   max-width: 1020px; margin: 30px auto 0; padding-top: 18px; border-top: 1px solid var(--line-strong);
   font-size: .76rem; color: var(--ink-faint);
@@ -347,7 +371,7 @@ blockquote.quote cite {
 .korrektur { max-width: 720px; margin: 0 auto; padding: 0 24px; }
 .korrpelare {
   font-size: 1.5rem; font-weight: 600; margin: 56px 0 8px;
-  padding-top: 22px; border-top: 2px solid var(--accent);
+  padding-top: 22px; border-top: 2px solid var(--accent-graf);
 }
 .korrtext { padding: 30px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 70px; }
 .korrhuvud {
@@ -355,7 +379,7 @@ blockquote.quote cite {
   font-family: var(--body);
 }
 .korrnr {
-  font-size: .78rem; font-weight: 700; color: #FFF9F4; background: var(--accent);
+  font-size: .78rem; font-weight: 700; color: var(--pa-accent); background: var(--accent);
   padding: 2px 9px; border-radius: 3px; font-variant-numeric: tabular-nums;
 }
 .korrfil { font-size: .76rem; color: var(--ink-faint); font-weight: 600; }

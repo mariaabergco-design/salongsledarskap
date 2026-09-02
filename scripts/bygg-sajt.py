@@ -124,6 +124,22 @@ def bild(nyckel, klass=""):
             '</picture>') % (kalla, klass, jpg, b["alt"])
 
 
+# Logotypen. Ordbilden i sidhuvudet, hela lockupen med tagline i sidfoten.
+# Filerna görs av scripts/logotyp.py och finns i två varianter, en för ljust
+# läge och en ljus för mörkt.
+def logotyp(namn, klass, alt, p):
+    fil = os.path.join(ROOT, "bilder", namn + ".png")
+    if not os.path.exists(fil):
+        return ""
+    return ('<picture>'
+            '<source media="(prefers-color-scheme: dark)" srcset="{p}bilder/{n}-morkt.webp" type="image/webp">'
+            '<source media="(prefers-color-scheme: dark)" srcset="{p}bilder/{n}-morkt.png">'
+            '<source srcset="{p}bilder/{n}.webp" type="image/webp">'
+            '<img class="{k}" src="{p}bilder/{n}.png" alt="{a}" width="392" height="{h}">'
+            '</picture>').format(p=p, n=namn, k=klass, a=alt,
+                                 h=104 if "tagline" in namn else 74)
+
+
 CASE = ["case-01-ledartid-som-gav-resultat", "case-02-uppfoljning-som-holl",
         "case-03-harkroppsverkstan", "case-04-1982"]
 
@@ -231,8 +247,13 @@ def nav(depth, aktiv=""):
     for key, namn, fil in lankar:
         cls = ' class="pa"' if key == aktiv else ""
         ut.append('<a href="%s%s"%s>%s</a>' % (p, fil, cls, namn))
-    return ('<nav class="nav"><a class="ord" href="%sindex.html">Salongsledarskap</a>'
-            '<div class="navlank">%s</div></nav>') % (p, "".join(ut))
+    marke = logotyp("aberg-co", "navlogga", "Åberg & Co", p)
+    if marke:
+        ord_ = ('<a class="ord" href="%sindex.html">%s<span class="strecket"></span>'
+                '<span class="pubnamn">Salongsledarskap</span></a>' % (p, marke))
+    else:
+        ord_ = '<a class="ord" href="%sindex.html">Salongsledarskap</a>' % p
+    return '<nav class="nav">%s<div class="navlank">%s</div></nav>' % (ord_, "".join(ut))
 
 
 def foot(depth):
@@ -240,7 +261,7 @@ def foot(depth):
     return """<footer class="sitefot">
   <div class="fotgrid">
     <div>
-      <strong>Salongsledarskap</strong>
+      {lockup}
       <p>En kunskapssajt för dig som äger salong och har anställda. Skriven av Maria Åberg, Åberg &amp; Co.</p>
     </div>
     <div>
@@ -256,7 +277,9 @@ def foot(depth):
     </div>
   </div>
   <p class="fotrad">Åberg &amp; Co · salongsledarskap.se</p>
-</footer>""".format(p=p)
+</footer>""".format(p=p, lockup=logotyp("aberg-co-tagline", "fotlogga",
+                                        "Åberg & Co, Ledarskap Utveckling Coaching", p)
+                    or "<strong>Salongsledarskap</strong>")
 
 
 def sida(titel, beskrivning, innehall, depth=0, aktiv="", klass=""):
