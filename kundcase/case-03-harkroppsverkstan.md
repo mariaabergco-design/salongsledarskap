@@ -28,6 +28,20 @@ Rutiner för ekonomin sattes upp. Kontakten med revisorn började fungera löpan
 
 Semesterplaneringen lades om. I stället för att samla in önskemål och lösa pusslet i efterhand styrde ledningen processen från början.
 
+I april höll vi en ekonomigenomgång med hela teamet, tillsammans med en redovisningskonsult som själv varit salongsägare.
+
+Den gick igenom vad timpris och beläggningsgrad betyder i praktiken, och vad salongen faktiskt kostar att driva varje månad.
+
+Talen blev konkreta. Driftskostnaderna låg på 101 000 kronor i månaden exklusive personalkostnader, vilket var mer än de flesta i rummet hade gissat.
+
+En heltidsanställd frisör på 927 kronor i timmen och 80 procents beläggning kostar salongen omkring 81 000 kronor i månaden och behöver jobba in cirka 64 000 kronor för att gå runt.
+
+Prislistan granskades i samma möte. En klippning på fyrtiofem minuter kostade 595 kronor, vilket motsvarar ungefär 793 kronor i timmen. Gruppen diskuterade 695 kronor som ett realistiskt nästa steg mot ett mål på 750 kronor.
+
+Månadsrapporten byggdes ut med individuella mål för intjäning, beläggningsgrad och snitt-timpris, så att varje person vet vad hon behöver dra in.
+
+Det sista är den viktigaste förändringen. Siffror som bara finns hos ägaren skapar oro. Siffror som var och en kan se och påverka skapar rörelse.
+
 Bemanningsbeslut inför hösten togs samlat i stället för ett i taget. Tjänstegrader, upptrappning och villkor beslutades i förväg, och daglig uppföljning av två medarbetare var ett uttalat krav från första dagen.
 
 ## Resultatet
