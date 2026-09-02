@@ -107,3 +107,5 @@ Skriv hela frågan, med några ord. Markera sedan de frågor som gäller något 
 Räkna dem. Välj sedan ut det som förekommer oftast.
 
 Skriv en ram på tre rader för just det beslutet och säg den högt på nästa möte.
+
+Ramen säger vad som gäller. Nästa text säger hur mycket frihet som följer med, i tre nivåer.
