@@ -13,6 +13,7 @@ Kunskapssajt för salongsägare med fyra anställda eller fler. Innehållet ägs
 | `site/` | Den färdiga sajten, genererad. Redigera aldrig här, ändringar skrivs över |
 | `scripts/` | Byggskript och stilmall |
 | `typsnitt/` | Montserrat och Playfair Display som filer, med licenser |
+| `designbrief.md` | Färger, typsnitt, luft och logotyp. Sanningen om designen |
 | `dataskydd.md` | Texten på dataskyddssidan, redigeras som vanlig markdown |
 | `nisch.md` | Målgrupp, nisch, kundens helvete och himmel |
 | `innehallsplan.md` | Pelare, publiceringsrytm, trappan till kartläggningsmöte |
