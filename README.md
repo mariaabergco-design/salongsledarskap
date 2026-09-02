@@ -12,6 +12,7 @@ Kunskapssajt för salongsägare med fyra anställda eller fler. Innehållet ägs
 | `verktyg/` | Fyra interaktiva verktyg i html, plus Flaskhalstestets text |
 | `site/` | Den färdiga sajten, genererad. Redigera aldrig här, ändringar skrivs över |
 | `scripts/` | Byggskript och stilmall |
+| `typsnitt/` | Montserrat och Playfair Display som filer, med licenser |
 | `dataskydd.md` | Texten på dataskyddssidan, redigeras som vanlig markdown |
 | `nisch.md` | Målgrupp, nisch, kundens helvete och himmel |
 | `innehallsplan.md` | Pelare, publiceringsrytm, trappan till kartläggningsmöte |
@@ -41,6 +42,22 @@ med originalen.
 När du skriver en ny artikel: lägg markdownfilen i `artiklar/`, lägg till
 filnamnet i rätt pelare i listan `PELARE` överst i `scripts/bygg-sajt.py`, och
 kör skriptet igen.
+
+## Typsnitten
+
+Montserrat och Playfair Display ligger i `typsnitt/` och laddas från sajten
+själv. Inget hämtas från Google när någon läser, så besökarens ip-adress
+stannar hos dig. Filerna ska checkas in i repot.
+
+Behöver du en ny vikt eller ett annat snitt, ändra `ADRESS` överst i
+`scripts/hamta-typsnitt.py` och kör
+
+```
+python3 scripts/hamta-typsnitt.py
+```
+
+Skriptet behöver internet, hämtar hem filerna och skriver om
+`typsnitt/typsnitt.css`. Byggskriptet kopierar hela mappen till `site/`.
 
 ## Länkar i texten
 
@@ -103,7 +120,8 @@ tjänsten. Vill du gå tillbaka till platshållaren tar du bort filen.
 
 ## Innan sajten går live
 
-- [ ] Koppla nyhetsbrevsformuläret på startsidan till din e-posttjänst
+- [ ] Koppla nyhetsbrevsformuläret på startsidan till Kartra
+- [ ] Se efter om Kartras formulär laddar något från Kartra när sidan öppnas, och skriv i så fall en rad om det i `dataskydd.md`
 - [x] Låt de fyra kunderna godkänna sina case, de är namngivna. Klart 2026-09-02
 - [x] Kontrollera siffrorna som kommer ur kundernas egna uppföljningar. Klart 2026-09-02
 - [x] Lägg in en dataskyddstext om du samlar in mejladresser. Utkast finns i `dataskydd.md`, läs igenom det

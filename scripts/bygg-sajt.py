@@ -272,9 +272,7 @@ def sida(titel, beskrivning, innehall, depth=0, aktiv="", klass=""):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{titel}</title>
 <meta name="description" content="{besk}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="{p}typsnitt/typsnitt.css">
 <link rel="stylesheet" href="{p}style.css">
 <link rel="icon" href="{p}favicon.svg" type="image/svg+xml">
 <meta property="og:title" content="{titel}">
@@ -341,6 +339,7 @@ def bygg():
 
     shutil.copyfile(os.path.join(ROOT, "scripts", "style.css"), os.path.join(OUT, "style.css"))
     shutil.copyfile(os.path.join(ROOT, "scripts", "favicon.svg"), os.path.join(OUT, "favicon.svg"))
+    shutil.copytree(os.path.join(ROOT, "typsnitt"), os.path.join(OUT, "typsnitt"))
 
     kalla = os.path.join(ROOT, "bilder")
     if os.path.isdir(kalla):
@@ -434,6 +433,9 @@ def bygg():
         m_title = re.search(r"<title>(.*?)</title>", frag, re.S)
         titel = m_title.group(1) if m_title else v["namn"]
         head_bitar = re.findall(r"<link[^>]*>|<style>.*?</style>", frag, re.S)
+        head_bitar = [h for h in head_bitar if "fonts.googleapis" not in h
+                      and "fonts.gstatic" not in h]
+        head_bitar.insert(0, '<link rel="stylesheet" href="../typsnitt/typsnitt.css">')
         kropp = re.sub(r"<title>.*?</title>|<link[^>]*>|<style>.*?</style>", "", frag, flags=re.S)
         extra = """<style>
   .nav{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;

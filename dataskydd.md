@@ -36,11 +36,11 @@ Du har rätt att få veta vilka uppgifter jag har om dig, att få dem rättade o
 
 Tycker du att jag hanterar dina uppgifter fel kan du klaga hos Integritetsskyddsmyndigheten, imy.se.
 
-## Kakor och typsnitt
+## Kakor och spårning
 
 Sajten sätter inga kakor för att följa dig och har ingen besöksmätning.
 
-Typsnitten hämtas från Google Fonts när sidan laddas. Det innebär att din ip-adress når Google. Vill du slippa det kan du blockera det i din webbläsare.
+Typsnitten ligger på sajten själv, så ingenting hämtas från Google när du läser.
 
 ## Ändringar
 
