@@ -24,7 +24,11 @@ jobs:
           python-version: "3.12"
       - name: Bygg sajten
         run: python3 scripts/bygg-sajt.py
+      # enablement slår på Pages i repot första gången, så att sajten
+      # kommer igång utan att någon behöver klicka i inställningarna
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
