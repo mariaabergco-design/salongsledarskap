@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Salongens nyckeltal · Salongsledarskap</title>
+<meta name="description" content="Räknar fram beläggning, snittintäkt per kundtimme och bidrag per stol med dina egna tal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap">
+<style>
+  :root {
+    --ground: #FCF9F6;
+    --panel: #F5EDE5;
+    --panel-2: #FFFFFF;
+    --ink: #241811;
+    --ink-soft: #6B584C;
+    --ink-faint: #9B8779;
+    --line: #EADFD4;
+    --line-strong: #D8C7B7;
+    --accent: #BF5308;
+    --accent-tint: #FBE7D6;
+    --good: #2F6B4F;
+    --good-tint: #DFEDE5;
+    --warn: #9A4A16;
+    --warn-tint: #FAE3D2;
+    --shadow: 0 1px 2px rgba(36, 24, 17, .06);
+    --display: "Playfair Display", Georgia, serif;
+    --body: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #17110C; --panel: #241A12; --panel-2: #1D150F;
+      --ink: #F3EAE2; --ink-soft: #BCA899; --ink-faint: #93806F;
+      --line: #332519; --line-strong: #4A3625;
+      --accent: #FF8C42; --accent-tint: #3A2013;
+      --good: #7FC7A2; --good-tint: #172A20;
+      --warn: #F0A06A; --warn-tint: #35200F;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #17110C; --panel: #241A12; --panel-2: #1D150F;
+    --ink: #F3EAE2; --ink-soft: #BCA899; --ink-faint: #93806F;
+    --line: #332519; --line-strong: #4A3625;
+    --accent: #FF8C42; --accent-tint: #3A2013;
+    --good: #7FC7A2; --good-tint: #172A20;
+    --warn: #F0A06A; --warn-tint: #35200F;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground); color: var(--ink); font-family: var(--body);
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px 88px; }
+
+  h1, h2, .big { font-family: var(--display); }
+
+  header { padding: 66px 0 30px; border-bottom: 1px solid var(--line-strong); }
+  .eyebrow {
+    display: block; font-size: .7rem; font-weight: 600; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 18px;
+  }
+  h1 {
+    font-size: clamp(2.2rem, 6vw, 3.2rem); line-height: 1.03; font-weight: 700;
+    letter-spacing: -.012em; margin: 0 0 16px; text-wrap: balance;
+  }
+  .lede { font-size: 1.08rem; line-height: 1.55; color: var(--ink-soft); margin: 0 0 22px; max-width: 62ch; }
+  .meta {
+    font-size: .76rem; font-weight: 600; letter-spacing: .04em; color: var(--ink-faint);
+    display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .meta span:not(:last-child)::after { content: " ·"; color: var(--line-strong); }
+
+  section { padding: 30px 0; border-bottom: 1px solid var(--line); }
+  h2 { font-size: 1.35rem; font-weight: 600; margin: 0 0 6px; line-height: 1.2; }
+  .sub { font-size: .92rem; color: var(--ink-soft); margin: 0 0 18px; max-width: 62ch; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label {
+    font-size: .67rem; font-weight: 700; letter-spacing: .11em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  input {
+    font-family: var(--body); font-size: .97rem; color: var(--ink);
+    background: var(--panel-2); border: 1px solid var(--line-strong);
+    border-radius: 2px; padding: 9px 11px; width: 100%;
+    font-variant-numeric: tabular-nums;
+  }
+  input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+
+  .scroll { overflow-x: auto; margin-top: 6px; }
+  table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: .93rem; }
+  th {
+    text-align: left; font-size: .66rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-faint);
+    padding: 0 10px 8px 0; border-bottom: 1px solid var(--line-strong); vertical-align: bottom;
+  }
+  td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  td:last-child, th:last-child { padding-right: 0; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  table input { padding: 7px 9px; font-size: .9rem; }
+
+  .pill {
+    display: inline-block; font-size: .72rem; font-weight: 700;
+    padding: 3px 9px; border-radius: 3px; white-space: nowrap;
+  }
+  .pill.ok { background: var(--good-tint); color: var(--good); }
+  .pill.low { background: var(--warn-tint); color: var(--warn); }
+  .pill.na { background: var(--panel); color: var(--ink-faint); }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0; border-top: 1px solid var(--line); margin-top: 8px; }
+  .card { padding: 18px 20px 18px 0; border-right: 1px solid var(--line); }
+  .card:last-child { border-right: 0; }
+  .card:not(:first-child) { padding-left: 20px; }
+  .big {
+    display: block; font-size: 1.85rem; font-weight: 600; line-height: 1.05;
+    letter-spacing: -.01em; font-variant-numeric: tabular-nums; color: var(--accent);
+  }
+  .card .k { display: block; font-size: .76rem; color: var(--ink-soft); margin-top: 4px; }
+
+  .aside { background: var(--panel); border-left: 3px solid var(--accent); padding: 18px 20px; margin-top: 26px; }
+  .aside h2 {
+    font-family: var(--body); font-size: .68rem; font-weight: 700; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 10px;
+  }
+  .aside ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; font-size: .93rem; }
+  .aside li { position: relative; padding-left: 18px; }
+  .aside li::before {
+    content: ""; position: absolute; left: 0; top: .72em; width: 8px; height: 1px; background: var(--accent);
+  }
+
+  .hintline { font-size: .82rem; color: var(--ink-faint); margin-top: 16px; }
+
+  footer {
+    margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line);
+    font-size: .76rem; color: var(--ink-faint);
+    display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  }
+</style>
+<style>
+  .nav{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;
+    gap:16px;flex-wrap:wrap;padding:14px 24px;border-bottom:1px solid var(--line);
+    background:var(--ground);font-family:var(--body);font-size:.8rem;font-weight:600}
+  .nav .ord{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--ink);text-decoration:none}
+  .nav .navlank{display:flex;gap:16px;flex-wrap:wrap}
+  .nav a{color:var(--ink-soft);text-decoration:none}
+  .nav a:hover,.nav a.pa{color:var(--accent)}
+</style>
+</head>
+<body>
+<nav class="nav"><a class="ord" href="../index.html">Salongsledarskap</a><div class="navlank"><a href="../index.html">Start</a><a href="../artiklar.html">Artiklar</a><a href="../verktyg.html" class="pa">Verktyg</a><a href="../kundcase.html">Kundcase</a><a href="../om.html">Om</a></div></nav>
+
+
+
+
+
+
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Åberg &amp; Co · salongsledarskap.se</span>
+    <h1>Salongens nyckeltal</h1>
+    <p class="lede">Fyll i dina egna tal, så räknas beläggning, snittintäkt per kundtimme och bidrag per stol fram. Talen som visas är exempel och ska bytas mot dina.</p>
+    <div class="meta"><span>Tar en eftermiddag</span><span>Underlag: bokföring, lönespecifikationer, bokningssystem</span></div>
+  </header>
+
+  <section>
+    <h2>Salongens fasta kostnader</h2>
+    <p class="sub">Hyra, el, försäkringar, bokningssystem, städ, redovisning och avskrivningar. Allt som betalas varje månad oavsett hur många kunder som kommer.</p>
+    <div class="grid">
+      <div class="field">
+        <label for="fasta">Fasta kostnader per månad</label>
+        <input type="number" id="fasta" value="164000" min="0" step="1000">
+      </div>
+      <div class="field">
+        <label for="tjanster">Antal heltidstjänster</label>
+        <input type="number" id="tjanster" value="6.7" min="0.5" step="0.1">
+      </div>
+      <div class="field">
+        <label for="avgifter">Påslag på lön i procent</label>
+        <input type="number" id="avgifter" value="45" min="0" step="1">
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card"><span class="big" id="perPerson">–</span><span class="k">fasta kostnader per person och månad</span></div>
+      <div class="card"><span class="big" id="salongTotal">–</span><span class="k">salongens omsättning ex moms per månad</span></div>
+      <div class="card"><span class="big" id="salongBidrag">–</span><span class="k">kvar efter löner och fasta kostnader</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>En rad per person</h2>
+    <p class="sub">Schemalagda timmar är tid avsatt för kundarbete. Debiterade timmar är tid en kund faktiskt betalat för. Omsättning anges exklusive moms.</p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:15%">Person</th>
+            <th style="width:12%">Schemalagda tim</th>
+            <th style="width:12%">Debiterade tim</th>
+            <th style="width:14%">Omsättning ex moms</th>
+            <th style="width:12%">Månadslön</th>
+            <th style="width:9%">Belägg.</th>
+            <th style="width:10%">Kr/timme</th>
+            <th style="width:10%">Bidrag</th>
+            <th style="width:10%">Status</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="hintline">Lämna raden tom för de stolar du inte har. Din egen stol räknas som en person, med en marknadsmässig lön för ditt arbete.</p>
+  </section>
+
+  <section>
+    <h2>Så läser du tabellen</h2>
+    <div class="aside">
+      <h2>Fyra saker talen brukar visa</h2>
+      <ul>
+        <li>Bidraget är vad som blir kvar av personens omsättning efter lön, påslag och hennes andel av de fasta kostnaderna. Är det negativt bär stolen inte sig själv den månaden.</li>
+        <li>Beläggningen är den siffra som rör sig snabbast. Skillnaden mellan hundra och nittiofem procent är några hundralappar. Skillnaden mellan hundra och femtio är tusenlappar varje månad.</li>
+        <li>Lägg din tid på den som ligger lågt, inte på den som redan går bra. De flesta gör tvärtom.</li>
+        <li>En låg siffra säger att stolen inte varit fylld tillräckligt många timmar. Den säger ingenting om hur skicklig personen är i sitt hantverk.</li>
+      </ul>
+    </div>
+    <p class="hintline">Räkna om varje månad, samma dag varje gång. En enskild månad kan vara missvisande, tolv månader är en kurva du kan lita på. Sidan sparar dina tal i din egen webbläsare och skickar ingenting vidare.</p>
+  </section>
+
+  <footer>
+    <span>Åberg &amp; Co</span>
+    <span>Verktyg 3 · Pelare 3</span>
+  </footer>
+
+</div>
+
+<script>
+  const N = 8;
+  const KEY = "nyckeltal-v1";
+  const exempel = [
+    { namn: "Du själv", sch: 100, deb: 88, oms: 84000, lon: 35000 },
+    { namn: "Frisör 1",  sch: 128, deb: 96, oms: 86000, lon: 27000 },
+    { namn: "Frisör 2",  sch: 128, deb: 77, oms: 69000, lon: 27000 },
+    { namn: "Frisör 3",  sch: 128, deb: 64, oms: 57000, lon: 26000 }
+  ];
+
+  const kr = n => Math.round(n).toLocaleString("sv-SE") + " kr";
+  const pct = n => Math.round(n) + " %";
+
+  const tbody = document.getElementById("rows");
+  for (let i = 0; i < N; i++) {
+    const d = exempel[i] || { namn: "", sch: "", deb: "", oms: "", lon: "" };
+    const tr = document.createElement("tr");
+    tr.innerHTML =
+      '<td><input type="text" data-i="' + i + '" data-f="namn" value="' + d.namn + '" placeholder="Namn"></td>' +
+      '<td><input type="number" data-i="' + i + '" data-f="sch" value="' + d.sch + '" min="0"></td>' +
+      '<td><input type="number" data-i="' + i + '" data-f="deb" value="' + d.deb + '" min="0"></td>' +
+      '<td><input type="number" data-i="' + i + '" data-f="oms" value="' + d.oms + '" min="0" step="1000"></td>' +
+      '<td><input type="number" data-i="' + i + '" data-f="lon" value="' + d.lon + '" min="0" step="500"></td>' +
+      '<td class="num" id="belagg' + i + '">–</td>' +
+      '<td class="num" id="timpris' + i + '">–</td>' +
+      '<td class="num" id="bidrag' + i + '">–</td>' +
+      '<td id="status' + i + '"><span class="pill na">–</span></td>';
+    tbody.appendChild(tr);
+  }
+
+  function val(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+  function cell(i, f) {
+    const el = document.querySelector('input[data-i="' + i + '"][data-f="' + f + '"]');
+    if (f === "namn") return el.value;
+    const v = parseFloat(el.value);
+    return isNaN(v) ? 0 : v;
+  }
+
+  function berakna() {
+    const fasta = val("fasta");
+    const tjanster = Math.max(val("tjanster"), 0.1);
+    const paslag = val("avgifter") / 100;
+    const perPerson = fasta / tjanster;
+
+    document.getElementById("perPerson").textContent = kr(perPerson);
+
+    let omsTotal = 0, bidragTotal = 0;
+
+    for (let i = 0; i < N; i++) {
+      const sch = cell(i, "sch"), deb = cell(i, "deb"), oms = cell(i, "oms"), lon = cell(i, "lon");
+      const aktiv = sch > 0 || oms > 0 || lon > 0;
+
+      const belaggEl = document.getElementById("belagg" + i);
+      const timprisEl = document.getElementById("timpris" + i);
+      const bidragEl = document.getElementById("bidrag" + i);
+      const statusEl = document.getElementById("status" + i);
+
+      if (!aktiv) {
+        belaggEl.textContent = "–";
+        timprisEl.textContent = "–";
+        bidragEl.textContent = "–";
+        statusEl.innerHTML = '<span class="pill na">–</span>';
+        continue;
+      }
+
+      const belagg = sch > 0 ? (deb / sch) * 100 : 0;
+      const timpris = deb > 0 ? oms / deb : 0;
+      const kostnad = lon * (1 + paslag) + perPerson;
+      const bidrag = oms - kostnad;
+
+      omsTotal += oms;
+      bidragTotal += bidrag;
+
+      belaggEl.textContent = sch > 0 ? pct(belagg) : "–";
+      timprisEl.textContent = deb > 0 ? kr(timpris) : "–";
+      bidragEl.textContent = kr(bidrag);
+      statusEl.innerHTML = bidrag >= 0
+        ? '<span class="pill ok">Bär sig</span>'
+        : '<span class="pill low">Under gränsen</span>';
+    }
+
+    document.getElementById("salongTotal").textContent = kr(omsTotal);
+    document.getElementById("salongBidrag").textContent = kr(bidragTotal);
+  }
+
+  function spara() {
+    try {
+      const data = { fasta: val("fasta"), tjanster: val("tjanster"), avgifter: val("avgifter"), rader: [] };
+      for (let i = 0; i < N; i++) {
+        data.rader.push({ namn: cell(i, "namn"), sch: cell(i, "sch"), deb: cell(i, "deb"), oms: cell(i, "oms"), lon: cell(i, "lon") });
+      }
+      localStorage.setItem(KEY, JSON.stringify(data));
+    } catch (e) {}
+  }
+
+  function ladda() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (d.fasta) document.getElementById("fasta").value = d.fasta;
+      if (d.tjanster) document.getElementById("tjanster").value = d.tjanster;
+      if (d.avgifter !== undefined) document.getElementById("avgifter").value = d.avgifter;
+      (d.rader || []).forEach((r, i) => {
+        ["namn", "sch", "deb", "oms", "lon"].forEach(f => {
+          const el = document.querySelector('input[data-i="' + i + '"][data-f="' + f + '"]');
+          if (el && r[f] !== undefined && r[f] !== 0 && r[f] !== "") el.value = r[f];
+        });
+      });
+    } catch (e) {}
+  }
+
+  document.addEventListener("input", e => {
+    if (e.target.tagName === "INPUT") { berakna(); spara(); }
+  });
+
+  ladda();
+  berakna();
+</script>
+
+
+</body>
+</html>
