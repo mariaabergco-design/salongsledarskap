@@ -2,13 +2,13 @@
 
 Du har byggt en salong som fungerar. Problemet är att den bara fungerar när du är där.
 
-## Torsdag klockan 07.40
+## Torsdag klockan 08.40
 
 Du låser upp. Innan jackan är av står någon i dörren med en fråga om en färg som inte kom med leveransen.
 
 Du löser det på fyra minuter.
 
-Halv nio kommer ett mess. En kund vill flytta sin tid på lördag.
+Halv tio kommer ett mess. En kund vill flytta sin tid på lördag.
 
 Vid elva frågar någon vad ni egentligen bestämde om provisionen. Ni bestämde det i mars. Du förklarar igen.
 
@@ -48,7 +48,7 @@ Att fråga dig fungerar varje gång, och det går fort.
 
 När du sedan säger att teamet är omotiverat beskriver du inte deras personligheter. Du beskriver resultatet av en struktur du själv byggt utan att märka det.
 
-## Tre saker sitter i dig samtidigt
+## Fyra saker som sitter i ditt huvud
 
 Titta på vad du bär under en vanlig dag.
 
@@ -58,7 +58,9 @@ Besluten. Bara du får bestämma om en kund får rabatt eller om någon får byt
 
 Utförandet. Du gör dessutom det ingen annan hinner. Schemat, beställningen, reklamationen.
 
-Så länge alla tre sitter hos en person är salongen inte en verksamhet. Den är en förlängning av dig.
+Kunderna. Du ska samtidigt göra dem nöjda och utveckla dem. Det är ju därför du är här, och det är det första som får stryka på foten när de tre andra tar över.
+
+Så länge alla fyra sitter hos en person är salongen inte en verksamhet. Den är en förlängning av dig.
 
 En förlängning av dig kan varken bli sjuk, ta semester eller säljas.
 
@@ -84,9 +86,11 @@ Fem steg. De tar ett kvartal, inte en helg.
 
 ### Mät hur djupt du står
 
-Lägg ett papper vid kassan i en vecka. Skriv ett streck varje gång någon kommer med en fråga.
+Lägg ett papper vid kassan i en vecka. Skriv ner frågan varje gång någon kommer med en.
 
-Räkna på fredagen. Det är din nollpunkt.
+Bara frågan, med några ord. Ingen bedömning av den.
+
+Räkna på fredagen. Det är din nollpunkt, och orden på lappen visar dig vad frågorna handlar om.
 
 ### Sortera frågorna i tre högar
 
@@ -146,8 +150,8 @@ Den som tröttnar först är sällan den minst engagerade. Det är den mest enga
 
 ## Din mätövning i veckan
 
-Lägg upp pappret i morgon bitti. Räkna i fem dagar.
+Lägg upp pappret i morgon bitti. Skriv ner varje fråga du får under fem dagar.
 
-Skriv ner summan och datumet. Lägg lappen i plånboken.
+Räkna raderna på fredagen och skriv summan och datumet. Lägg lappen i plånboken.
 
 Om sex veckor gör du om mätningen.
