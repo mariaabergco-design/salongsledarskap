@@ -100,9 +100,9 @@ Och den dagen du verkligen behöver att någon fattar ett beslut utan dig finns 
 
 ## Din mätövning i veckan
 
-Skriv ner varje fråga du får under fem dagar. Ett ord räcker.
+Lägg ett papper vid kassan i morgon bitti. Skriv ner frågan varje gång någon kommer med en, under fem dagar.
 
-Markera de frågor som gäller något av de fem besluten ovan.
+Skriv hela frågan, med några ord. Markera sedan de frågor som gäller något av de fem besluten ovan.
 
 Räkna dem. Välj sedan ut det som förekommer oftast.
 
