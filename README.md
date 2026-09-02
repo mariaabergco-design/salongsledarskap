@@ -27,6 +27,16 @@ python3 scripts/bygg-sajt.py
 Skriptet läser markdown i `artiklar/` och `kundcase/`, verktygen i `verktyg/`
 och stilmallen i `scripts/style.css`. Allt hamnar i `site/`.
 
+Byter du ut ett fotografi, kör först
+
+```
+python3 scripts/komprimera.py
+```
+
+Det skriptet läser originalen i `bilder/original/`, skalar ner dem och sparar
+både jpeg och webp i `bilder/`. Sajten väger 1,7 MB med bilder, mot 6,9 MB
+med originalen.
+
 När du skriver en ny artikel: lägg markdownfilen i `artiklar/`, lägg till
 filnamnet i rätt pelare i listan `PELARE` överst i `scripts/bygg-sajt.py`, och
 kör skriptet igen.

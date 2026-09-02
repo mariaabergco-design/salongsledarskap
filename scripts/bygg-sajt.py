@@ -107,15 +107,21 @@ BILDER = {
                  "alt": "Maria Åberg sopar hår i salongen och skrattar"},
     "skoljning": {"fil": "maria-skoljning.jpg",
                   "alt": "Maria Åberg sköljer en kunds hår, båda skrattar"},
+    "avatar": {"fil": "maria-avatar.jpg", "alt": "Maria Åberg"},
 }
 
 
 def bild(nyckel, klass=""):
-    """Returnerar en img-tagg om filen finns, annars tom sträng."""
+    """Returnerar en picture-tagg med webp och jpeg, eller tom sträng om filen saknas."""
     b = BILDER[nyckel]
-    if not os.path.exists(os.path.join(ROOT, "bilder", b["fil"])):
+    jpg = b["fil"]
+    if not os.path.exists(os.path.join(ROOT, "bilder", jpg)):
         return ""
-    return '<img class="%s" src="{p}bilder/%s" alt="%s" loading="lazy">' % (klass, b["fil"], b["alt"])
+    webp = jpg.rsplit(".", 1)[0] + ".webp"
+    kalla = ('<source srcset="{p}bilder/%s" type="image/webp">' % webp
+             if os.path.exists(os.path.join(ROOT, "bilder", webp)) else "")
+    return ('<picture>%s<img class="%s" src="{p}bilder/%s" alt="%s" loading="lazy" decoding="async">'
+            '</picture>') % (kalla, klass, jpg, b["alt"])
 
 
 CASE = ["case-01-ledartid-som-gav-resultat", "case-02-uppfoljning-som-holl",
@@ -329,7 +335,7 @@ def bygg():
 </article>""".format(nr=pel["nr"], pnamn=html.escape(pel["namn"]), titel=html.escape(a["title"]),
                      deck=inline(a["deck"]), min=a["minuter"], body=a["body"],
                      cta=cta_block(pel, 1), mer=mer,
-                     avatar=bild("portratt", "avatar").format(p="../"))
+                     avatar=bild("avatar", "avatar").format(p="../"))
             open(os.path.join(OUT, "artiklar", slug + ".html"), "w", encoding="utf-8").write(
                 sida(a["title"] + " · Salongsledarskap", a["deck"], inne, 1, "artiklar"))
 
