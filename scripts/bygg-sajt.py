@@ -98,6 +98,22 @@ VERKTYG = [
      "text": "Checklista för de sex första veckorna, med de tre samtalen som avgör om hon stannar."},
 ]
 
+BILDER = {
+    "portratt": {"fil": "maria-portratt.jpg", "alt": "Maria Åberg i salongen"},
+    "orange": {"fil": "maria-orange.jpg", "alt": "Maria Åberg utanför salongen"},
+    "fargskal": {"fil": "maria-fargskal.jpg", "alt": "Maria Åberg räcker fram en färgskål"},
+    "skoljning": {"fil": "maria-skoljning.jpg", "alt": "Maria Åberg sköljer en kunds hår"},
+}
+
+
+def bild(nyckel, klass=""):
+    """Returnerar en img-tagg om filen finns, annars tom sträng."""
+    b = BILDER[nyckel]
+    if not os.path.exists(os.path.join(ROOT, "bilder", b["fil"])):
+        return ""
+    return '<img class="%s" src="{p}bilder/%s" alt="%s" loading="lazy">' % (klass, b["fil"], b["alt"])
+
+
 CASE = ["case-01-ledartid-som-gav-resultat", "case-02-uppfoljning-som-holl",
         "case-03-harkroppsverkstan", "case-04-1982"]
 
@@ -205,6 +221,9 @@ def foot(depth):
 
 def sida(titel, beskrivning, innehall, depth=0, aktiv="", klass=""):
     p = "../" * depth
+    ogfil = os.path.join(ROOT, "bilder", BILDER["orange"]["fil"])
+    ogbild = ('\n<meta property="og:image" content="%sbilder/%s">' % (p, BILDER["orange"]["fil"])
+              if os.path.exists(ogfil) else "")
     return """<!doctype html>
 <html lang="sv">
 <head>
@@ -216,6 +235,12 @@ def sida(titel, beskrivning, innehall, depth=0, aktiv="", klass=""):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap">
 <link rel="stylesheet" href="{p}style.css">
+<link rel="icon" href="{p}favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="{titel}">
+<meta property="og:description" content="{besk}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="sv_SE">{ogbild}
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="{klass}">
 {nav}
@@ -223,7 +248,8 @@ def sida(titel, beskrivning, innehall, depth=0, aktiv="", klass=""):
 {foot}
 </body>
 </html>""".format(titel=html.escape(titel), besk=html.escape(beskrivning), p=p,
-                  klass=klass, nav=nav(depth, aktiv), innehall=innehall, foot=foot(depth))
+                  klass=klass, nav=nav(depth, aktiv), innehall=innehall, foot=foot(depth),
+                  ogbild=ogbild)
 
 
 def cta_block(pelare, depth):
@@ -253,6 +279,14 @@ def bygg():
     os.makedirs(os.path.join(OUT, "verktyg"))
 
     shutil.copyfile(os.path.join(ROOT, "scripts", "style.css"), os.path.join(OUT, "style.css"))
+    shutil.copyfile(os.path.join(ROOT, "scripts", "favicon.svg"), os.path.join(OUT, "favicon.svg"))
+
+    kalla = os.path.join(ROOT, "bilder")
+    if os.path.isdir(kalla):
+        os.makedirs(os.path.join(OUT, "bilder"), exist_ok=True)
+        for f in os.listdir(kalla):
+            if f.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
+                shutil.copyfile(os.path.join(kalla, f), os.path.join(OUT, "bilder", f))
 
     artiklar = {}
     for pel in PELARE:
@@ -278,7 +312,7 @@ def bygg():
     <a class="ovan" href="../artiklar.html#pelare{nr}">Pelare {nr} · {pnamn}</a>
     <h1>{titel}</h1>
     <p class="ingress">{deck}</p>
-    <div class="byline"><span>Maria Åberg</span><span>{min} min läsning</span></div>
+    <div class="byline">{avatar}<span>Maria Åberg</span><span>{min} min läsning</span></div>
   </header>
   <div class="brod">
       {body}
@@ -290,7 +324,8 @@ def bygg():
   </div>
 </article>""".format(nr=pel["nr"], pnamn=html.escape(pel["namn"]), titel=html.escape(a["title"]),
                      deck=inline(a["deck"]), min=a["minuter"], body=a["body"],
-                     cta=cta_block(pel, 1), mer=mer)
+                     cta=cta_block(pel, 1), mer=mer,
+                     avatar=bild("portratt", "avatar").format(p="../"))
             open(os.path.join(OUT, "artiklar", slug + ".html"), "w", encoding="utf-8").write(
                 sida(a["title"] + " · Salongsledarskap", a["deck"], inne, 1, "artiklar"))
 
@@ -415,7 +450,8 @@ def bygg():
         sida("Kundcase · Salongsledarskap", "Fyra dokumenterade kundcase.", inne, 0, "kundcase"))
 
     # om
-    inne = """<div class="sidhuvud smal">
+    inne = """{omhero}
+<div class="sidhuvud smal">
   <span class="ovan">Om</span>
   <h1>Jag har stått där du står</h1>
   <p class="ingress">Trettio år i branschen, tjugo som salongsledare. Jag driver fortfarande en säsongssalong varje sommar och står själv på golvet.</p>
@@ -426,6 +462,7 @@ def bygg():
   <h2>Det jag hjälper till med</h2>
   <p>Salongsägare med fyra anställda eller fler, som vill gå från tjat och brandsläckning till ett team som tar egna initiativ. Det handlar om tid, tydlighet och lönsamhet.</p>
   <p>Arbetet bygger på tre delar som hänger ihop. Tydliggöra vad som gäller, följa upp att det händer, och ge feedback så att det upprepas. Det är ett hantverk, precis som klippning, och det går att lära sig.</p>
+  {ombild}
   <h2>Det jag har att visa</h2>
   <ul>
     <li>Salonger som ökat sin ombokningsgrad och försäljning</li>
@@ -436,7 +473,9 @@ def bygg():
   <h2>Kontakt</h2>
   <p>maria@abergco.se</p>
 </div>
-""" + cta_block(None, 0)
+""".format(omhero=('<div class="omhero">%s</div>' % bild("orange", "portratthero").format(p="")) if bild("orange") else "",
+           ombild=('<figure class="brodbild">%s<figcaption>Trettio år i branschen, och fortfarande på golvet varje sommar.</figcaption></figure>'
+                   % bild("skoljning").format(p="")) if bild("skoljning") else "") + cta_block(None, 0)
     open(os.path.join(OUT, "om.html"), "w", encoding="utf-8").write(
         sida("Om Maria Åberg · Salongsledarskap",
              "Trettio år i branschen, tjugo som salongsledare.", inne, 0, "om"))
@@ -495,6 +534,8 @@ def bygg():
   <div class="vkortgrid">{vkort}</div>
 </section>
 
+{band}
+
 <section class="block brev">
   <div>
     <span class="label">Nyhetsbrevet</span>
@@ -509,7 +550,12 @@ def bygg():
     </div>
     <p class="notis">Formuläret behöver kopplas till din e-posttjänst innan sajten publiceras.</p>
   </form>
-</section>""".format(n=len(artiklar), pelarkort=pelarkort, utvalda=utvalda, vkort=vkort)
+</section>""".format(n=len(artiklar), pelarkort=pelarkort, utvalda=utvalda, vkort=vkort,
+           band=('<section class="band">%s<div class="bandtext"><span class="label">Vem som skriver</span>'
+                 '<h2>Maria Åberg</h2><p>Trettio år i branschen, tjugo som salongsledare. Driver fortfarande '
+                 'en säsongssalong varje sommar och står själv på golvet.</p>'
+                 '<a class="knapp tunn" href="om.html">Läs mer om mig</a></div></section>'
+                 % bild("fargskal", "bandbild").format(p="")) if bild("fargskal") else "")
 
     open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(
         sida("Salongsledarskap · kunskapssajten för dig som äger salong",
