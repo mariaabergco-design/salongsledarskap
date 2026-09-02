@@ -108,4 +108,4 @@ Räkna dem. Välj sedan ut det som förekommer oftast.
 
 Skriv en ram på tre rader för just det beslutet och säg den högt på nästa möte.
 
-Ramen säger vad som gäller. Nästa text säger hur mycket frihet som följer med, i tre nivåer.
+Ramen säger vad som gäller. [Nästa text](artikel:a21-delegera-i-tre-nivaer) säger hur mycket frihet som följer med, i tre nivåer.

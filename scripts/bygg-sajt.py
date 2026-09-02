@@ -129,8 +129,37 @@ CASE = ["case-01-ledartid-som-gav-resultat", "case-02-uppfoljning-som-holl",
 
 # ---------------------------------------------------------------- markdown
 
+# Länkar skrivs [text](adress) i markdown. Adressen får vara tre saker:
+#
+#   artikel:slug     en artikel i artiklar/, utan .md
+#   verktyg:slug     ett verktyg i verktyg/
+#   kundcase:slug    ett kundcase i kundcase/
+#   https://...      vilken adress som helst utanför sajten
+#
+# De tre första blir rätt sökväg oavsett hur djupt sidan ligger. Byggskriptet
+# stoppar in PREFIX och byter ut det mot ../ så många gånger som behövs.
+PREFIX = "%%P%%"
+MAPPAR = {"artikel": "artiklar", "verktyg": "verktyg", "kundcase": "kundcase"}
+
+
+def adress(href):
+    """Gör om en adress ur markdown till en adress som fungerar i html."""
+    sort, _, resten = href.partition(":")
+    if sort in MAPPAR and resten:
+        return PREFIX + MAPPAR[sort] + "/" + resten + ".html"
+    return href.replace('"', "%22")
+
+
+def lank(m):
+    text, href = m.group(1), adress(m.group(2))
+    utanfor = href.startswith("http") and "salongsledarskap.se" not in href
+    extra = ' target="_blank" rel="noopener"' if utanfor else ""
+    return '<a href="%s"%s>%s</a>' % (href, extra, text)
+
+
 def inline(t):
     t = html.escape(t, quote=False)
+    t = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", lank, t)
     t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
     t = re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)", r"<em>\1</em>", t)
     return t
@@ -231,6 +260,7 @@ def foot(depth):
 
 def sida(titel, beskrivning, innehall, depth=0, aktiv="", klass=""):
     p = "../" * depth
+    innehall = innehall.replace(PREFIX, p)
     ogfil = os.path.join(ROOT, "bilder", BILDER["portratt"]["fil"])
     ogbild = ('\n<meta property="og:image" content="%sbilder/%s">' % (p, BILDER["portratt"]["fil"])
               if os.path.exists(ogfil) else "")

@@ -41,6 +41,27 @@ När du skriver en ny artikel: lägg markdownfilen i `artiklar/`, lägg till
 filnamnet i rätt pelare i listan `PELARE` överst i `scripts/bygg-sajt.py`, och
 kör skriptet igen.
 
+## Länkar i texten
+
+Skriv `[texten som syns](adressen)`. Adressen får se ut på fyra sätt.
+
+| Adress | Leder till |
+|---|---|
+| `artikel:a21-delegera-i-tre-nivaer` | En artikel, filnamnet utan `.md` |
+| `verktyg:flaskhalstestet` | Ett verktyg |
+| `kundcase:case-04-1982` | Ett kundcase |
+| `https://exempel.se` | En sida utanför sajten, öppnas i ny flik |
+
+Ett exempel:
+
+```
+Ramen säger vad som gäller. [Nästa text](artikel:a21-delegera-i-tre-nivaer)
+säger hur mycket frihet som följer med.
+```
+
+De tre första sorterna hittar rätt oavsett var på sajten sidan ligger. Skriv
+aldrig sökvägar med `../` för hand.
+
 Titta lokalt innan du publicerar:
 
 ```
