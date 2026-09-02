@@ -13,7 +13,7 @@ Ingen artikel står ensam. Allt pekar inåt mot pelaren, och pelaren pekar mot m
 
 | Pelare | Kundens helvete | Kundens himmel |
 |---|---|---|
-| 1. Sluta vara flaskhalsen | Tidsfällan | Tidsfrihet |
+| 1. Flaskhalsträsket | Tidsfällan | Tidsfrihet |
 | 2. Ledarskap går att lära sig | Ledarskapsgapet | Ledarskapsklarhet |
 | 3. Salongens ekonomi | Ekonomistressen | Ekonomisk trygghet |
 | 4. Ett team som stannar | Personalstrul | Personalstolthet |
@@ -57,7 +57,10 @@ kan, hen har bara aldrig fått lära sig ledarskap.
 
 ## 4. Artiklarna
 
-### Pelare 1 — Sluta vara flaskhalsen
+### Pelare 1 — Flaskhalsträsket
+
+Tillståndet där allt måste passera dig. Ju hårdare du jobbar, desto djupare
+sjunker du — för varje sak du löser själv lär teamet sig att fråga dig igen.
 
 **Pelarartikel:** Därför stannar allt när du inte är i salongen — och hur du bygger
 bort dig själv som flaskhals
