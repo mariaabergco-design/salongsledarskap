@@ -257,6 +257,18 @@ Fyra kontroller innan något publiceras.
 4. Visa startsidan för någon som känner till abergco.se. Säger hon att det är
    samma bolag utan att du frågar.
 
+## Beslut
+
+Fattade 2026-09-02.
+
+**Den gula accenten delas i två.** `#F6A315` till ren grafik, `#8A5A05` till allt
+som ska läsas. Avvikelsen från varumärket är godkänd, och skälet är kontrasten.
+
+**Åberg & Co står först i sidhuvudet**, sedan en tunn linje och ordet
+Salongsledarskap. Avsändaren före publikationen.
+
+**Sajten har mörkt läge** och följer läsarens systeminställning.
+
 ## Öppna frågor
 
 1. **Mappen profil.** Jag hittar ingen mapp med det namnet i din Drive. Logotypen
@@ -264,9 +276,4 @@ Fyra kontroller innan något publiceras.
    Salonger. Finns det en grafisk profil som pdf någonstans, säg var, så
    kontrollerar jag mot den.
 2. **Logotyp i svg.** Har du logotypen som svg, och finns det en version utan
-   taglinen. Annars gör jag dem ur eps-filerna.
-3. **Den gula accenten.** Förslaget är att dela den i en grafisk och en läsbar.
-   Det är en avvikelse från varumärket och den behöver ditt ja.
-4. **Ordningen i sidhuvudet.** Åberg & Co först och Salongsledarskap efter, eller
-   tvärtom.
-5. **Mörkt läge.** Ska sajten ha det alls, eller enbart ljust.
+   taglinen. Annars gör jag dem ur eps-filerna i `ÅbergCO Logo.zip`.
