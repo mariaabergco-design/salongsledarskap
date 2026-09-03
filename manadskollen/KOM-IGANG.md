@@ -19,6 +19,15 @@ inkorg som vanligt — allt annat fungerar ändå.
 
 ## Steg 1 och 2 — Google
 
+**Vad steg 2 egentligen är.** Efter steg 1 ligger koden i ditt kalkylark, men
+den har ingen adress. Formuläret på sajten måste kunna nå den, och att
+distribuera som webbapp är det som ger den en adress. "Kör som: Jag" gör att
+skriptet agerar med dina rättigheter så att det kommer åt ditt eget ark.
+"Åtkomst: Alla" gör att adressen svarar på anrop utifrån, vilket krävs eftersom
+kunderna öppnar formuläret från sajten — allt bakom adressen kräver ändå en
+kundkod eller din coachnyckel. Resultatet är en lång adress som slutar på
+`/exec`. Det är den jag behöver.
+
 Öppna [sheets.new](https://sheets.new), döp arket till **Månadskollen**, och gå
 till **Tillägg → Apps Script**. Radera koden som ligger där, klistra in hela
 `manadskollen/apps-script.gs`, spara.
@@ -36,25 +45,58 @@ Sedan: **Distribuera → Ny distribution → Webbapp**. Kör som **Jag**, åtkom
 Kunderna och baslinjen läggs in automatiskt. Du behöver inte klistra in några
 csv-filer — de ligger redan i skriptet.
 
-### Vill du att Claude i Chrome gör det
+### Uppdraget att klistra in i Claude i Chrome
 
-Öppna Claude i Chrome, ha `apps-script.gs` uppe i en flik, och klistra in:
+Klistra in hela texten nedan. Den klarar både steg 1 och steg 2, och hämtar
+koden själv från GitHub.
 
-> Jag ska installera ett Apps Script i ett Google-kalkylark. Gör så här, och
-> stanna och fråga mig om något ser annorlunda ut än beskrivet:
->
-> 1. Gå till sheets.new och döp arket till "Månadskollen".
-> 2. Öppna Tillägg → Apps Script.
-> 3. Radera all kod i redigeraren och klistra in koden jag ger dig i nästa
->    meddelande. Spara.
-> 4. Välj funktionen "installera" i listan högst upp och kör den. Godkänn
->    behörigheterna med mitt konto. Får du en varning om overifierad app,
->    välj Avancerat och fortsätt.
-> 5. Läs upp rutan som visas — den innehåller en coachnyckel som jag behöver.
-> 6. Gå till Distribuera → Ny distribution → Webbapp. Kör som: Jag. Åtkomst:
->    Alla. Distribuera, och ge mig adressen som slutar på /exec.
->
-> Skriv aldrig ut coachnyckeln någon annanstans än till mig i den här chatten.
+---
+
+Jag ska installera ett Apps Script i ett Google-kalkylark. Följ stegen i
+ordning. Stanna och fråga mig så fort något ser annorlunda ut än jag beskrivit
+— gissa inte.
+
+**Koden du ska använda** ligger här, öppna den och kopiera hela filen:
+https://github.com/mariaabergco-design/salongsledarskap/blob/claude/salon-coach-monthly-form-8kxp0b/manadskollen/apps-script.gs
+Använd knappen som kopierar råtexten, så att inga radnummer följer med.
+
+**Steg 1 — kalkylarket**
+1. Har jag redan ett kalkylark som heter "Månadskollen"? Kolla på
+   drive.google.com. Finns det, öppna det. Finns det inte, gå till sheets.new
+   och döp det till Månadskollen.
+2. Öppna menyn Tillägg → Apps Script.
+3. Ligger det redan kod där som innehåller ordet STARTKUNDER, är steg 1 klart
+   — hoppa till steg 2. Annars: markera allt i redigeraren, radera, och klistra
+   in koden du kopierade. Spara med diskettknappen.
+4. Välj funktionen "installera" i listan högst upp och tryck Kör.
+5. Google frågar om behörighet. Godkänn med mitt konto. Kommer en röd varning
+   om att appen inte är verifierad: klicka Avancerat och sedan "Fortsätt till
+   Månadskollen". Det är mitt eget skript som får tillgång till mitt eget ark.
+6. En ruta visar hur många kunder och baslinjerader som lagts in, plus en
+   coachnyckel. Läs upp allt som står i rutan för mig.
+
+**Steg 2 — publicera**
+7. Klicka Distribuera uppe till höger, sedan Ny distribution.
+8. Klicka kugghjulet vid "Välj typ" och välj Webbapp.
+9. Sätt "Kör som" till Jag, och "Vem har åtkomst" till Alla.
+10. Klicka Distribuera.
+11. Kopiera webbappens adress — den är lång och slutar på /exec — och ge den
+    till mig.
+
+**Om något går fel**
+- Hittar du inte Distribuera-knappen: koden är inte sparad. Spara först.
+- Säger den att behörighet saknas: kör funktionen installera en gång till och
+  godkänn.
+- Ser du en gammal distribution i stället för en ny: välj Distribuera → Hantera
+  distributioner, klicka pennan, och välj Ny version.
+
+Skriv aldrig ut coachnyckeln någon annanstans än till mig i den här chatten.
+
+---
+
+När du fått adressen: **skicka bara `/exec`-adressen till mig i Claude Code.**
+Coachnyckeln behåller du själv — jag behöver den inte, och den ska inte ligga i
+en chatt mer än nödvändigt.
 
 ## Steg 4 — Resend
 
