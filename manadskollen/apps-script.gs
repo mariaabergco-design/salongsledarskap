@@ -15,7 +15,11 @@ var SVARKOLUMNER = ["tidpunkt", "kod", "period",
                     "lon", "nya_kunder", "nya_varifran", "mal_antal", "mal_av",
                     "ledarskap", "leverans", "timmar_stol", "lediga_dagar", "energi",
                     "atagande_text", "atagande_status",
-                    "vinst", "nasta_omrade", "nasta_text"];
+                    "vinst", "nasta_omrade", "nasta_text",
+                    // Varifrån raden kommer. Formuläret sätter alltid "formular".
+                    // Rader du skriver in själv märker du "motesanteckning" eller
+                    // "uppskattning", så att härledda tal aldrig läses som kundens egna svar.
+                    "kalla"];
 
 /** Kör en gång för hand. Skapar flikarna och lägger in rubrikraderna. */
 function installera() {
@@ -161,6 +165,8 @@ function doPost(e) {
       if (k === "tidpunkt") return new Date();
       if (k === "kod") return String(kund.kod).trim();
       if (k === "period") return period;
+      // Källan sätts av servern, aldrig av det som skickas in.
+      if (k === "kalla") return "formular";
       var v = data[k];
       return (v === undefined || v === null) ? "" : v;
     });

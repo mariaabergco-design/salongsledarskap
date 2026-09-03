@@ -258,9 +258,15 @@ artiklar, eller så behåller du de två områdena som ren trend och tar bort de
 förslagslogiken. Att låtsas att gapet inte finns är det sämsta alternativet.
 
 **7. Systemet är värdelöst i tre månader.** Första månaden har ingen trend, andra
-har en linje mellan två punkter. Det blir bra först vid sex månader. Motmedel:
-fyll baslinjen retroaktivt vid uppstart, ur det du redan vet ur mötena. För flera
-kunder finns siffror från augusti redan.
+har en linje mellan två punkter. Det blir bra först vid sex månader.
+
+Motmedlet var att fylla baslinjen retroaktivt ur mötena. Det är nu prövat, och
+det höll inte. Hela mötesarkivet från juni till september gav fyra rader och sex
+tal, för tre kunder av åtta. Skälet är inte slarv i anteckningarna utan att ni
+pratar ledarskap på mötena, inte månadsstatistik — vilket är just därför
+formuläret behövs. Det som återstår är att kunderna fyller i juli och augusti
+själva, tio minuter per person, helst med dig bredvid. Länkarna ligger i
+`ikapp-lankar.md`.
 
 **8. Risken att formuläret flyttar samtalet från ledarskap till siffror.** Blir
 månadsmailet en resultatrapport tappar du din egen nisch. Motmedel: ordningen i
@@ -291,8 +297,15 @@ avstämningen och den 8:e för mailen. Ändra i `mailmall.md` om du vill ha andr
 produktförsäljning 15 %, beläggning 75 %, 25 timmar bakom stolen, 8 lediga dagar.
 De ska vara hennes egna, inte mina. Gå igenom dem innan du skickar ut länkarna.
 
-**Kundlistan i `kunder.csv`** är hämtad ur mötesanteckningarna och är ett utkast.
-Mejladresserna är tomma.
+**Kundlistan i `kunder.csv`** är hämtad ur mötesanteckningarna. Salonger, sökord
+och tre uttalade målnivåer är nu ifyllda, och två mejladresser hittades i
+anteckningarna. Resten av mejladresserna är tomma. Kontrollera hela listan innan
+du skickar ut något — jag har läst mig till den, du känner den.
+
+**Sökorden är skärpta efter tre namnkrockar.** Det finns två Ebbor, tre Eliner och
+två Matildor i mötesdatan, och en av dem är en anställd vars svaga
+ombokningsgrad diskuteras i detalj. Läs `baslinje-kallor.md` innan du litar på
+Circleback-delen av ett mail.
 
 ## 10. Filerna
 
@@ -304,7 +317,10 @@ Mejladresserna är tomma.
 | `manadskollen/stil.css` | Samma färger, typsnitt och luft som verktygen |
 | `manadskollen/konfig.js` | Adressen till kalkylarket. Enda stället du klistrar in något |
 | `manadskollen/apps-script.gs` | Lagringen. Klistras in i kalkylarkets Apps Script |
-| `manadskollen/kunder.csv` | Utkast till kundregistret. Klistras in i fliken Kunder |
+| `manadskollen/kunder.csv` | Kundregistret. Klistras in i fliken Kunder |
+| `manadskollen/baslinje.csv` | De fyra baslinjeraderna ur mötena. Klistras in i fliken Svar |
+| `manadskollen/baslinje-kallor.md` | Citat och källa för varje baslinjetal, och de tre namnkrockarna |
+| `manadskollen/ikapp-lankar.md` | Länkar per kund för att fylla i juli och augusti i efterhand |
 | `manadskollen/SA-HAR-INSTALLERAR-DU.md` | Installationen, steg för steg |
 | `manadskollen/mailmall.md` | Rytmen, mailets ordning och reglerna för Circleback-delen |
 
@@ -319,5 +335,6 @@ Byggskriptet kopierar html, css och js till `site/manadskollen/`. Sidorna har
 4. ~~Förslagslogiken mot artikelbiblioteket.~~
 5. ~~Underlaget till mailen, med Circleback-delen sist av allt.~~
 6. Installationen i Google. Din, en halvtimme.
-7. Baslinjen, retroaktivt ur mötena. Görs efter installationen — flera kunder
-   har siffror från augusti i mötesanteckningarna redan.
+7. ~~Baslinjen, retroaktivt ur mötena.~~ Genomförd, med magert resultat: fyra
+   rader och sex tal för tre kunder. Se `baslinje-kallor.md`. Resten av
+   baslinjen får kunderna fylla i själva, med länkarna i `ikapp-lankar.md`.

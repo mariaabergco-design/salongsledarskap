@@ -125,6 +125,12 @@
     { id: "energi", kort: "Energi", mal: null, bra: "upp" }
   ];
 
+  const KALLNAMN = {
+    motesanteckning: "hämtad ur ett mötesreferat, inte hennes eget svar",
+    uppskattning: "en uppskattning, inte en mätning"
+  };
+  const harledd = (r) => r && r.kalla && r.kalla !== "formular";
+
   const OMRADEN = MK.FRAGOR[9].val;
   const omradesnamn = (v) => (OMRADEN.find(o => o.v === v) || {}).t || "";
 
@@ -174,6 +180,12 @@
 
     let h = '<div class="rad-djup">';
 
+    if (harledd(s)) {
+      h += '<div class="notis"><span class="etikett">Baslinje</span><p>Raden för ' +
+        esc(MK.manadsnamn(s.period)) + ' är ' + esc(KALLNAMN[s.kalla] || "inte hennes eget svar") +
+        '. Läs den som en riktning, inte som ett mätvärde, och skriv inte ut den som en siffra i mailet.</p></div>';
+    }
+
     h += '<h3>Utveckling</h3><div class="kurvor">' +
          MK.TAL.map(t => kurvaHtml(rader, t, mal)).join("") + '</div>';
 
@@ -202,10 +214,13 @@
 
     h += '<h3>Hennes egna ord</h3><ul class="lasning">';
     h += '<li><strong>Vinsten:</strong> ' + (s.vinst ? esc(s.vinst) : '<span class="q-hjalp" style="display:inline">inget skrivet</span>') + '</li>';
-    h += '<li><strong>Åtagandet:</strong> ' + (s.atagande_text ? esc(s.atagande_text) : "–") +
-         ' — <em>' + esc({ gjort: "gjort", paborjat: "påbörjat", inte_gjort: "inte gjort" }[s.atagande_status] || "–") + '</em></li>';
-    h += '<li><strong>Vill ta först:</strong> ' + esc(omradesnamn(s.nasta_omrade)) +
-         (s.nasta_text ? " — " + esc(s.nasta_text) : "") + '</li>';
+    const status = { gjort: "gjort", paborjat: "påbörjat", inte_gjort: "inte gjort" }[s.atagande_status];
+    h += '<li><strong>Åtagandet:</strong> ' + (s.atagande_text || status
+      ? esc(s.atagande_text || "–") + (status ? ' — <em>' + status + '</em>' : "")
+      : '<span class="q-hjalp" style="display:inline">inget skrivet</span>') + '</li>';
+    const vart = esc(omradesnamn(s.nasta_omrade)) + (s.nasta_text ? " — " + esc(s.nasta_text) : "");
+    h += '<li><strong>Vill ta först:</strong> ' +
+      (vart || '<span class="q-hjalp" style="display:inline">inget angivet</span>') + '</li>';
     h += '</ul>';
 
     h += '</div>';
@@ -234,7 +249,9 @@
 
       if (s) {
         topp += TOPPTAL.map(t => cellHtml(t, s, mal)).join("");
-        topp += '<span class="flaggor">' + prickar + '</span>';
+        topp += '<span class="flaggor">' +
+          (harledd(s) ? '<span class="baslinje" title="Baslinje ur mötesreferat">baslinje</span>' : "") +
+          prickar + '</span>';
       } else {
         topp += '<div class="cell" style="grid-column:span 4"><span class="etikett">Status</span>' +
                 '<span class="v">Har inte svarat</span></div><span class="flaggor"></span>';
@@ -279,7 +296,12 @@
     let u = "## " + k.namn + (k.salong ? " — " + k.salong : "") + "\n";
     u += "Mejl: " + (k.mejl || "SAKNAS I KUNDREGISTRET") + "\n";
     u += "Sökord för Circleback: " + (k.sokord || []).join(", ") + "\n";
-    u += "Period: " + MK.manadsnamn(period) + "\n\n";
+    u += "Period: " + MK.manadsnamn(period) + "\n";
+    if (harledd(s)) {
+      u += "OBS: raden är " + (KALLNAMN[s.kalla] || "inte hennes eget svar") +
+           ". Skriv inga tal ur den i mailet.\n";
+    }
+    u += "\n";
 
     u += "**Hennes vinst, med egna ord**\n" + (s.vinst || "(hon skrev ingen)") + "\n\n";
 
@@ -293,8 +315,8 @@
     u += "**Åtagandet sedan sist**\n" + (s.atagande_text || "(inget skrivet)") + " — " +
          ({ gjort: "gjort", paborjat: "påbörjat", inte_gjort: "inte gjort" }[s.atagande_status] || "okänt") + "\n\n";
 
-    u += "**Vill ta först nästa gång**\n" + omradesnamn(s.nasta_omrade) +
-         (s.nasta_text ? ": " + s.nasta_text : "") + "\n\n";
+    const riktning = omradesnamn(s.nasta_omrade) + (s.nasta_text ? ": " + s.nasta_text : "");
+    u += "**Vill ta först nästa gång**\n" + (riktning || "(inget angivet)") + "\n\n";
 
     u += "**Att skicka med**\n";
     if (!forslag.length) {
