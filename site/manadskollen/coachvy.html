@@ -76,6 +76,7 @@
       <label for="period" style="font-size:.8rem;font-weight:600;letter-spacing:.04em">Månad</label>
       <select id="period"></select>
       <button id="underlag-alla">Underlag för alla mail</button>
+      <button id="oppna-skicka">Skicka ett mail</button>
       <button id="glom">Glöm nyckeln</button>
     </div>
 
@@ -93,6 +94,28 @@
         <span class="status" id="kopiestatus"></span>
       </div>
       <pre class="underlag" id="underlag-text"></pre>
+    </div>
+
+    <div class="kort dold" id="skickakort">
+      <h2>Skicka ett mail</h2>
+      <p class="sub">Går via Resend, inte via din vanliga inkorg. Texten som skickas är
+      exakt den som står i rutan — läs den en gång till innan du trycker.</p>
+      <div class="styr" style="margin:0 0 14px">
+        <label for="mottagare" style="font-size:.8rem;font-weight:600">Till</label>
+        <select id="mottagare"></select>
+      </div>
+      <div class="falt" style="margin-bottom:14px">
+        <label for="amne">Ämnesrad</label>
+        <input type="text" id="amne">
+      </div>
+      <div class="falt" style="margin-bottom:16px">
+        <label for="brodtext">Brödtext</label>
+        <textarea id="brodtext" style="min-height:320px"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="primar" id="skicka-mail">Skicka</button>
+        <span class="status" id="skickastatus"></span>
+      </div>
     </div>
   </div>
 
@@ -344,6 +367,60 @@
     return t;
   }
 
+  /* ------------------------------------------------------------ skicka mail */
+
+  function fyllMottagare() {
+    const med = kunder.filter(k => k.mejl && k.mejl.indexOf("@") > 0);
+    E("mottagare").innerHTML = med.length
+      ? med.map(k => '<option value="' + esc(k.kod) + '">' + esc(k.namn) + ' — ' + esc(k.mejl) + '</option>').join("")
+      : '<option value="">Ingen kund har en mejladress i registret</option>';
+    if (med.length) valdMottagare();
+  }
+
+  function valdMottagare() {
+    const k = kunder.find(x => x.kod === E("mottagare").value);
+    if (!k) return;
+    E("amne").value = "Din månad — " + MK.manadsnamn(period);
+    const u = underlagFor(k);
+    E("brodtext").value = u
+      ? "Hej " + k.namn.split(" ")[0] + ",\n\n" +
+        "[Skriv om underlaget nedan till ett mail innan du skickar. Vinsten först, sedan tre tal, " +
+        "sedan råden. Ta bort den här raden.]\n\n" + u
+      : "Hej " + k.namn.split(" ")[0] + ",\n\n" +
+        "Hon har inte svarat för " + MK.manadsnamn(period) + ", så det finns inget underlag.\n";
+  }
+
+  function skickaMailet() {
+    const till = (kunder.find(x => x.kod === E("mottagare").value) || {}).mejl;
+    if (!till) { E("skickastatus").className = "status fel"; E("skickastatus").textContent = "Ingen mottagare."; return; }
+
+    E("skicka-mail").disabled = true;
+    E("skickastatus").className = "status";
+    E("skickastatus").textContent = "Skickar …";
+
+    fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        ata: "skicka",
+        nyckel: localStorage.getItem(NYCKELPLATS),
+        till: till,
+        amne: E("amne").value,
+        text: E("brodtext").value
+      })
+    }).then(r => r.json()).then(function (r) {
+      E("skicka-mail").disabled = false;
+      E("skickastatus").className = r && r.ok ? "status" : "status fel";
+      E("skickastatus").textContent = r && r.ok
+        ? "Skickat till " + till + "."
+        : (r && r.fel) || "Det gick inte att skicka.";
+    }).catch(function () {
+      E("skicka-mail").disabled = false;
+      E("skickastatus").className = "status fel";
+      E("skickastatus").textContent = "Nådde inte kalkylarket.";
+    });
+  }
+
   /* ---------------------------------------------------------------- klick */
 
   document.addEventListener("click", function (e) {
@@ -378,6 +455,15 @@
       return;
     }
 
+    if (e.target.id === "oppna-skicka") {
+      fyllMottagare();
+      visa("skickakort", true);
+      E("skickakort").scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    if (e.target.id === "skicka-mail") { skickaMailet(); return; }
+
     if (e.target.id === "kopiera") {
       navigator.clipboard.writeText(E("underlag-text").textContent).then(function () {
         E("kopiestatus").textContent = "Kopierat.";
@@ -397,10 +483,13 @@
     }
   });
 
+  E("mottagare").addEventListener("change", valdMottagare);
+
   E("period").addEventListener("change", function () {
     period = this.value;
     oppen = null;
     visa("allt-underlag", false);
+    visa("skickakort", false);
     rita();
   });
 

@@ -1,6 +1,10 @@
 # Så här installerar du Månadskollen
 
-En gång, sedan aldrig mer. Räkna med en halvtimme.
+En gång, sedan aldrig mer. Räkna med tjugo minuter.
+
+**Snabbversionen med färdiga uppdrag till Claude i Chrome ligger i
+`KOM-IGANG.md`.** Den här filen är den utförliga varianten och referensen när
+något krånglar.
 
 ## 1. Skapa kalkylarket
 
@@ -21,11 +25,16 @@ En gång, sedan aldrig mer. Räkna med en halvtimme.
 
 Har du tappat bort nyckeln: kör funktionen `visaCoachnyckel` så visas den igen.
 
-## 3. Lägg in kunderna
+## 3. Kontrollera kunderna
 
-Öppna fliken **Kunder** i kalkylarket och fyll på under rubrikraden. Filen
-`manadskollen/kunder.csv` är ett utkast med de kunder jag kunde hitta i
-Circleback. Öppna den, kontrollera den, och klistra in de rader som stämmer.
+`installera()` har redan lagt in kunderna och de fyra baslinjeraderna. Du
+behöver inte klistra in några csv-filer. Filerna `kunder.csv` och `baslinje.csv`
+i repot är samma innehåll, sparat så att du kan se det utanför Google.
+
+Öppna fliken **Kunder** och gå igenom den. Mejladresserna saknas för de flesta,
+och målnivåerna är generiska för alla utom Sara, Rebecca och Christina.
+
+Kör du `installera()` igen rörs inget som redan står i flikarna.
 
 | Kolumn | Vad du skriver |
 |---|---|
