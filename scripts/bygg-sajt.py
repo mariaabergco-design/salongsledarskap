@@ -521,6 +521,18 @@ def bygg():
         sida("Verktyg · Salongsledarskap", "Fyra verktyg för salongsägare med anställda.",
              inne, 0, "verktyg"))
 
+    # Månadskollen. Kundernas eget månadsformulär och coachvyn.
+    # Ligger med i sajten men länkas inte från någon meny och har noindex i
+    # sidhuvudet. Man kommer dit bara med sin personliga länk. Filerna kopieras
+    # rakt av, de har sin egen stilmall och pekar på ../typsnitt/.
+    kalla_mk = os.path.join(ROOT, "manadskollen")
+    if os.path.isdir(kalla_mk):
+        mal_mk = os.path.join(OUT, "manadskollen")
+        os.makedirs(mal_mk, exist_ok=True)
+        for f in sorted(os.listdir(kalla_mk)):
+            if f.endswith((".html", ".css", ".js")):
+                shutil.copyfile(os.path.join(kalla_mk, f), os.path.join(mal_mk, f))
+
     # kundcase
     case_data = []
     for slug in CASE:
@@ -726,6 +738,8 @@ def bygg():
     print(" ", len(case_data), "kundcase")
     print(" ", len(VERKTYG), "verktyg")
     print(" ", 6, "översiktssidor")
+    if os.path.isdir(os.path.join(OUT, "manadskollen")):
+        print("  Månadskollen, olänkad")
 
 
 if __name__ == "__main__":

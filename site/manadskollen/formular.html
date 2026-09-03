@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Månadskollen · Åberg &amp; Co</title>
+<meta name="description" content="Tio frågor en gång i månaden. Fem minuter.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="../typsnitt/typsnitt.css">
+<link rel="stylesheet" href="stil.css">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Åberg &amp; Co · Månadskollen</span>
+    <h1 id="rubrik">Månadskollen</h1>
+    <p class="lede" id="ingress">Tio frågor om månaden som gick. Samma frågor varje gång, så att vi kan se hur det rör sig över tid. Svara som det faktiskt är, inte som du vill att det ska bli.</p>
+    <div class="meta"><span>10 frågor</span><span>Fem minuter</span><span id="period-meta"></span></div>
+  </header>
+
+  <div id="laddar" class="kort"><p class="sub" style="margin:0">Hämtar dina tidigare svar …</p></div>
+
+  <div id="ingen-kod" class="kort dold">
+    <h2>Länken saknar din kod</h2>
+    <p class="sub">Formuläret är personligt och känner igen dig på länken. Använd länken du fått av Maria, eller hör av dig så skickar hon en ny.</p>
+  </div>
+
+  <div id="redan" class="notis dold">
+    <span class="etikett">Du har redan svarat</span>
+    <p id="redan-text"></p>
+  </div>
+
+  <div id="formulardel" class="dold">
+
+    <div id="sist" class="notis dold">
+      <span class="etikett">Sist skrev du</span>
+      <p id="sist-text"></p>
+    </div>
+
+    <form id="mk" novalidate></form>
+
+    <div class="skicka">
+      <button type="button" class="primar" id="skicka">Skicka in</button>
+      <span class="status" id="status"></span>
+    </div>
+
+    <p class="q-hjalp" style="margin-top:22px">Svaren går till Maria Åberg och sparas i Åberg &amp; Co:s eget kalkylark. De används för din coachning och för din månadsuppdatering, ingenting annat.</p>
+  </div>
+
+  <div id="klart" class="dold">
+    <div class="kort">
+      <h2 id="klart-rubrik">Tack. Det är inskickat.</h2>
+      <p class="sub" id="klart-sub"></p>
+      <div class="kurvor" id="kurvor"></div>
+    </div>
+
+    <div class="kort dold" id="lasningskort">
+      <h2>Vad siffrorna säger</h2>
+      <p class="sub">Automatiskt läst ur dina egna svar. Maria går igenom det själv innan hon hör av sig.</p>
+      <ul class="lasning" id="lasning"></ul>
+    </div>
+  </div>
+
+  <footer>
+    <span>Åberg &amp; Co</span>
+    <span><a href="../dataskydd.html">Så hanteras uppgifterna</a></span>
+  </footer>
+
+</div>
+
+<script src="konfig.js"></script>
+<script src="fragor.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const API = window.MANADSKOLLEN_API || "";
+  const fraga = new URLSearchParams(location.search);
+  const kod = fraga.get("k") || "";
+  // ?p=2026-07 låter Maria skicka en länk för en månad som ska fyllas i i efterhand.
+  const onskad = fraga.get("p") || "";
+
+  const E = (id) => document.getElementById(id);
+  const visa = (id, pa) => E(id).classList.toggle("dold", !pa);
+
+  let kund = null;      // { namn, salong, mal }
+  let historik = [];    // tidigare rader, äldst först
+  let period = /^\d{4}-\d{2}$/.test(onskad) ? onskad : MK.forraManaden();
+
+  /* ------------------------------------------------------------ rendering */
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function faltHtml(f) {
+    return '<div class="falt">' +
+      '<label for="f-' + f.id + '">' + esc(f.etikett) +
+      (f.kalla ? ' <span class="kalla">' + esc(f.kalla) + '</span>' : '') + '</label>' +
+      '<div class="enhet">' +
+      '<input type="number" inputmode="decimal" id="f-' + f.id + '" name="' + f.id + '"' +
+      ' min="' + f.min + '" max="' + f.max + '" step="any">' +
+      '<span class="suffix">' + esc(f.suffix) + '</span></div></div>';
+  }
+
+  function valHtml(id, val, nr) {
+    return '<div class="val" role="radiogroup" aria-labelledby="rubrik-' + nr + '">' +
+      val.map(function (o) {
+        return '<label class="chip"><input type="radio" name="' + id + '" value="' + o.v + '">' +
+               '<span>' + esc(o.t) + '</span></label>';
+      }).join("") + '</div>';
+  }
+
+  function skalaHtml(f) {
+    let s = '<div class="skala" role="radiogroup" aria-labelledby="rubrik-' + f.nr + '">';
+    for (let i = 0; i <= 10; i++) {
+      s += '<label class="chip"><input type="radio" name="' + f.id + '" value="' + i + '" ' +
+           'aria-label="' + i + (i === 0 ? " · " + esc(f.lag) : i === 10 ? " · " + esc(f.hog) : "") + '">' +
+           '<span>' + i + '</span></label>';
+    }
+    s += '</div><div class="skala-etiketter"><span>0 · ' + esc(f.lag) + '</span><span>' + esc(f.hog) + ' · 10</span></div>';
+    return s;
+  }
+
+  function fragaHtml(f) {
+    let kropp = "";
+    if (f.typ === "tal" || f.typ === "av") {
+      kropp = '<div class="rutor">' + f.falt.map(faltHtml).join("") + '</div>';
+    } else if (f.typ === "tal_och_val") {
+      kropp = '<div class="rutor">' + f.falt.map(faltHtml).join("") + '</div>' +
+              '<div style="margin-top:14px">' + valHtml(f.id, f.val, f.nr) + '</div>';
+    } else if (f.typ === "val") {
+      kropp = valHtml(f.id, f.val, f.nr);
+    } else if (f.typ === "skala") {
+      kropp = skalaHtml(f);
+    } else if (f.typ === "text_och_val") {
+      kropp = '<textarea id="f-' + f.textid + '" name="' + f.textid + '" placeholder="' + esc(f.platshallare) + '"></textarea>' +
+              '<div style="margin-top:14px">' + valHtml(f.id, f.val, f.nr) + '</div>';
+    } else if (f.typ === "avslut") {
+      kropp = '<textarea id="f-' + f.textid + '" name="' + f.textid + '" placeholder="' + esc(f.platshallare) + '"></textarea>' +
+              '<div style="margin-top:18px">' + valHtml(f.id, f.val, f.nr) + '</div>' +
+              '<textarea style="margin-top:14px" id="f-' + f.textid2 + '" name="' + f.textid2 + '" placeholder="' + esc(f.platshallare2) + '"></textarea>';
+    }
+    return '<div class="q" id="q' + f.nr + '"><div class="q-huvud">' +
+      '<div class="q-num">' + f.nr + '</div><div>' +
+      '<span class="q-omrade">' + esc(f.omrade) + '</span>' +
+      '<p class="q-text" id="rubrik-' + f.nr + '">' + esc(f.text) + '</p>' +
+      (f.hjalp ? '<p class="q-hjalp">' + esc(f.hjalp) + '</p>' : '') +
+      '</div></div><div class="q-kropp">' + kropp + '</div></div>';
+  }
+
+  /* ------------------------------------------------------------ kurvorna */
+
+  function ritaKurvor(rader) {
+    const mal = (kund && kund.mal) || {};
+    const senast = rader[rader.length - 1];
+    const forra = rader.length > 1 ? rader[rader.length - 2] : null;
+
+    E("kurvor").innerHTML = MK.TAL.map(function (t) {
+      const nu = MK.tal(senast[t.id]);
+      if (nu === null) return "";
+      const fv = forra ? MK.tal(forra[t.id]) : null;
+      let pil = '<span class="pil lika">första månaden</span>';
+      if (fv !== null) {
+        const diff = nu - fv;
+        const bra = t.bra === "upp" ? diff > 0 : diff < 0;
+        const klass = diff === 0 ? "lika" : (bra ? "upp" : "ner");
+        const tecken = diff > 0 ? "+" : "";
+        pil = '<span class="pil ' + klass + '">' + (diff === 0 ? "oförändrat" :
+              tecken + (t.suffix === "kr" ? Math.round(diff).toLocaleString("sv-SE") : diff.toLocaleString("sv-SE"))) + '</span>';
+      }
+      const malv = t.mal ? mal[t.mal] : null;
+      return '<div class="kurva"><span class="namn">' + esc(t.namn) + '</span>' +
+        '<div class="rad"><span class="tal' + (t.suffix === "kr" ? " lang" : "") + '">' +
+          esc(MK.visa(nu, t.suffix)) + '</span>' + pil + '</div>' +
+        MK.sparkline(rader.map(r => MK.tal(r[t.id]))) +
+        (malv ? '<div class="mal">Ditt mål: ' + esc(MK.visa(malv, t.suffix)) + '</div>' : '') +
+        '</div>';
+    }).join("");
+  }
+
+  function ritaLasning(rader) {
+    const rad = MK.lasning(rader, (kund && kund.mal) || {});
+    visa("lasningskort", rad.length > 0);
+    E("lasning").innerHTML = rad.map(r =>
+      '<li class="' + (r.ton === "varning" ? "varning" : "") + '">' + esc(r.text) + '</li>').join("");
+  }
+
+  /* ------------------------------------------------------------- insamling */
+
+  function las() {
+    const form = E("mk");
+    const ut = { kod: kod, period: period };
+    MK.FRAGOR.forEach(function (f) {
+      (f.falt || []).forEach(function (fl) {
+        const el = form.elements[fl.id];
+        ut[fl.id] = el && el.value !== "" ? Number(el.value) : null;
+      });
+      [f.textid, f.textid2].forEach(function (t) {
+        if (t) ut[t] = (form.elements[t] && form.elements[t].value.trim()) || "";
+      });
+      if (f.id && (f.typ === "val" || f.typ === "skala" || f.typ === "tal_och_val" ||
+                   f.typ === "text_och_val" || f.typ === "avslut")) {
+        const vald = form.querySelector('input[name="' + f.id + '"]:checked');
+        ut[f.id] = vald ? (f.typ === "skala" ? Number(vald.value) : vald.value) : null;
+      }
+    });
+    return ut;
+  }
+
+  function granska(svar) {
+    const brister = [];
+    document.querySelectorAll(".fel").forEach(e => e.classList.remove("fel"));
+
+
+    MK.FRAGOR.forEach(function (f) {
+      (f.falt || []).forEach(function (fl) {
+        const v = svar[fl.id];
+        const el = E("f-" + fl.id);
+        if (v === null) { brister.push([f.nr, el]); return; }
+        if (v < fl.min || v > fl.max) { brister.push([f.nr, el]); }
+      });
+      if (f.typ === "skala" || f.typ === "val") {
+        if (svar[f.id] === null) brister.push([f.nr, E("q" + f.nr)]);
+      }
+      if (f.typ === "tal_och_val" && svar[f.id] === null) brister.push([f.nr, E("q" + f.nr)]);
+      if (f.typ === "text_och_val" && svar[f.id] === null) brister.push([f.nr, E("q" + f.nr)]);
+      if (f.typ === "avslut" && svar[f.id] === null) brister.push([f.nr, E("q" + f.nr)]);
+    });
+
+    return brister;
+  }
+
+  function orimligt(svar) {
+    if (svar.mal_av !== null && svar.mal_antal !== null && svar.mal_antal > svar.mal_av) {
+      return ["Fler nådde målet än ni är i teamet. Kontrollera fråga 4.", E("f-mal_antal")];
+    }
+    return null;
+  }
+
+  /* --------------------------------------------------------------- nätverk */
+
+  function hamta() {
+    return fetch(API + "?k=" + encodeURIComponent(kod), { method: "GET" })
+      .then(r => r.json());
+  }
+
+  function spara(svar) {
+    return fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(svar)
+    }).then(r => r.json());
+  }
+
+  /* ----------------------------------------------------------------- start */
+
+  function start() {
+    if (!API) {
+      visa("laddar", false);
+      visa("ingen-kod", true);
+      E("ingen-kod").innerHTML = '<h2>Formuläret är inte kopplat än</h2>' +
+        '<p class="sub">Adressen till kalkylarket saknas i <code>konfig.js</code>. ' +
+        'Instruktionen ligger i <code>manadskollen/SA-HAR-INSTALLERAR-DU.md</code>.</p>';
+      return;
+    }
+    if (!kod) { visa("laddar", false); visa("ingen-kod", true); return; }
+
+    hamta().then(function (r) {
+      visa("laddar", false);
+      if (!r || !r.ok) { visa("ingen-kod", true); return; }
+
+      kund = r.kund;
+      historik = r.svar || [];
+
+      E("rubrik").textContent = "Månadskollen — " + MK.manadsnamn(period);
+      E("period-meta").textContent = kund.namn;
+
+      const finns = historik.filter(x => x.period === period);
+      if (finns.length) {
+        visa("redan", true);
+        E("redan-text").textContent = "Du svarade för " + MK.manadsnamn(period) +
+          " den " + (finns[finns.length - 1].tidpunkt || "").slice(0, 10) +
+          ". Skickar du in igen ersätter det svaret det gamla.";
+      }
+
+      const tidigare = historik.filter(x => x.period !== period);
+      const sist = tidigare[tidigare.length - 1];
+      if (sist && (sist.nasta_text || sist.nasta_omrade)) {
+        visa("sist", true);
+        const omr = (MK.FRAGOR[9].val.find(v => v.v === sist.nasta_omrade) || {}).t || "";
+        E("sist-text").textContent =
+          "I " + MK.manadsnamn(sist.period) + " ville du att vi skulle ta " +
+          (omr ? omr.toLowerCase() : "nästa steg") + " först" +
+          (sist.nasta_text ? ": ” " + sist.nasta_text + " ”" : ".") +
+          " Fråga 9 handlar om det.";
+      }
+
+      E("mk").innerHTML = MK.FRAGOR.map(fragaHtml).join("");
+      visa("formulardel", true);
+    }).catch(function () {
+      visa("laddar", false);
+      visa("ingen-kod", true);
+      E("ingen-kod").innerHTML = '<h2>Kunde inte nå formuläret</h2>' +
+        '<p class="sub">Försök igen om en stund. Håller det i sig, hör av dig till Maria.</p>';
+    });
+  }
+
+  document.addEventListener("click", function (e) {
+    if (e.target.id !== "skicka") return;
+
+    const svar = las();
+    const brister = granska(svar);
+
+    if (brister.length) {
+      brister.forEach(function (b) {
+        if (b[1]) b[1].classList.add("fel");
+        const q = E("q" + b[0]);
+        if (q) q.classList.add("fel");
+      });
+      const nummer = brister.map(b => b[0]).filter((v, i, a) => a.indexOf(v) === i);
+      E("status").className = "status fel";
+      E("status").textContent = nummer.length > 3
+        ? nummer.length + " frågor saknar svar. De är markerade."
+        : "Fråga " + nummer.join(" och ") + " saknar svar.";
+      const forsta = E("q" + nummer[0]);
+      if (forsta) forsta.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    const orim = orimligt(svar);
+    if (orim) {
+      if (orim[1]) orim[1].classList.add("fel");
+      E("q4").classList.add("fel");
+      E("status").className = "status fel";
+      E("status").textContent = orim[0];
+      E("q4").scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    E("skicka").disabled = true;
+    E("status").className = "status";
+    E("status").textContent = "Skickar …";
+
+    spara(svar).then(function (r) {
+      if (!r || !r.ok) throw new Error("nej");
+      const rader = historik.filter(x => x.period !== period).concat([svar])
+        .sort((a, b) => a.period < b.period ? -1 : 1);
+      visa("formulardel", false);
+      visa("redan", false);
+      visa("klart", true);
+      E("klart-sub").textContent = rader.length > 1
+        ? "Här är din utveckling över de " + rader.length + " månader som finns."
+        : "Det här är din första månad. Nästa gång går det att se en rörelse.";
+      ritaKurvor(rader);
+      ritaLasning(rader);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }).catch(function () {
+      E("skicka").disabled = false;
+      E("status").className = "status fel";
+      E("status").textContent = "Det gick inte att skicka. Försök igen.";
+    });
+  });
+
+  start();
+})();
+</script>
+</body>
+</html>

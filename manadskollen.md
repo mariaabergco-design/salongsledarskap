@@ -1,8 +1,19 @@
 # Månadskollen
 
 Sanningen om månadssystemet för coachkunderna: formuläret, trenderna, urvalet av
-material och månadsmailet. Skrivet 2026-09-03. Inget är byggt än, det här är
-förslaget och besluten som ska tas först.
+material och månadsmailet. Skrivet 2026-09-03.
+
+**Byggt och testat.** Det som återstår är installationen i Google, som du gör
+själv en gång: `manadskollen/SA-HAR-INSTALLERAR-DU.md`.
+
+Besluten som låg till grund för bygget:
+
+| Fråga | Beslut |
+|---|---|
+| Var svaren landar | Eget formulär i din design, som sparar i ett Google-kalkylark du äger |
+| Vilka som fyller i | Mastermind-kunderna med långsiktigt avtal |
+| Hur mailet går ut | Underlag genereras, du läser och skickar själv. Aldrig automatiskt |
+| Nyckeltalen | Kunderna får fram alla tre ur sitt bokningssystem |
 
 ## 1. Vad systemet är
 
@@ -265,22 +276,48 @@ ett unikt Circleback-sammandrag per person. Antingen skickar du tio mail för ha
 ur Gmail, vilket är fullt rimligt vid tio till femton kunder, eller så blir mailet
 en personlig sida med unik länk och Kartra skickar bara länken.
 
-## 9. Besluten som behövs innan bygget
+## 9. Det som fortfarande är öppet
 
-1. Var svaren ska landa: eget ark via Apps Script, Google-formulär eller Kartra.
-2. Vilka som ska fylla i: bara enskilda coachkunder, eller även mastermind och
-   företagskunder.
-3. Hur mailet ska gå ut: utkast till dig för godkännande, eller något annat.
-4. Om kunderna faktiskt får fram ombokningsgrad, beläggningsgrad och
-   produktförsäljning ur sitt bokningssystem — och vilket system de använder.
-5. Marknadsföring och hälsa: två nya artiklar, eller två områden utan förslag.
-6. Vilken dag i månaden formuläret går ut och vilken dag mailet går.
+**Marknadsföring och hälsa har inget material.** Coachvyn flaggar utlösaren och
+säger rakt ut att artikeln saknas, i stället för att låtsas att gapet inte finns.
+Två artiklar täpper till det: en om var kunderna faktiskt kommer ifrån, en om
+ägarens egen ork. Produktförsäljning saknas också, trots att det är ett av de tal
+du oftast coachar på.
 
-## 10. Ordningen på bygget
+**Dagarna i månaden.** Jag har utgått från den 3:e för påminnelsen, den 6:e för
+avstämningen och den 8:e för mailen. Ändra i `mailmall.md` om du vill ha andra.
 
-1. Kundregistret. Utan det fungerar varken formuläret eller mailet.
-2. Formuläret, med lagring och kvitto till kunden.
-3. Baslinjen, retroaktivt ur mötena.
-4. Coachvyn med trender och flaggor.
-5. Förslagslogiken mot artikelbiblioteket.
-6. Mailutkastet, med Circleback-sammandraget sist av allt.
+**Målnivåerna i kundregistret** är satta till samma tal för alla: ombokning 40 %,
+produktförsäljning 15 %, beläggning 75 %, 25 timmar bakom stolen, 8 lediga dagar.
+De ska vara hennes egna, inte mina. Gå igenom dem innan du skickar ut länkarna.
+
+**Kundlistan i `kunder.csv`** är hämtad ur mötesanteckningarna och är ett utkast.
+Mejladresserna är tomma.
+
+## 10. Filerna
+
+| Fil | Vad den gör |
+|---|---|
+| `manadskollen/formular.html` | Kundens formulär. Personlig länk, tio frågor, egen kurva direkt efter inskick |
+| `manadskollen/coachvy.html` | Din vy. Alla kunder, trender, flaggor, förslag och underlaget till mailen |
+| `manadskollen/fragor.js` | Frågorna, nyckeltalen, läsningen av paren och förslagslogiken. Delas av båda sidorna |
+| `manadskollen/stil.css` | Samma färger, typsnitt och luft som verktygen |
+| `manadskollen/konfig.js` | Adressen till kalkylarket. Enda stället du klistrar in något |
+| `manadskollen/apps-script.gs` | Lagringen. Klistras in i kalkylarkets Apps Script |
+| `manadskollen/kunder.csv` | Utkast till kundregistret. Klistras in i fliken Kunder |
+| `manadskollen/SA-HAR-INSTALLERAR-DU.md` | Installationen, steg för steg |
+| `manadskollen/mailmall.md` | Rytmen, mailets ordning och reglerna för Circleback-delen |
+
+Byggskriptet kopierar html, css och js till `site/manadskollen/`. Sidorna har
+`noindex` och länkas inte från någon meny.
+
+## 11. Ordningen på bygget
+
+1. ~~Kundregistret.~~ Utkast finns i `kunder.csv`, du kontrollerar det.
+2. ~~Formuläret, med lagring och kvitto till kunden.~~
+3. ~~Coachvyn med trender och flaggor.~~
+4. ~~Förslagslogiken mot artikelbiblioteket.~~
+5. ~~Underlaget till mailen, med Circleback-delen sist av allt.~~
+6. Installationen i Google. Din, en halvtimme.
+7. Baslinjen, retroaktivt ur mötena. Görs efter installationen — flera kunder
+   har siffror från augusti i mötesanteckningarna redan.

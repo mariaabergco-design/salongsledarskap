@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coachvyn · Månadskollen</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="../typsnitt/typsnitt.css">
+<link rel="stylesheet" href="stil.css">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<style>
+  .rad-kund {
+    border: 1px solid var(--line-strong); border-radius: var(--radie);
+    background: var(--panel-2); margin-bottom: 12px; overflow: hidden;
+  }
+  .rad-topp {
+    display: grid; grid-template-columns: minmax(160px, 1.4fr) repeat(4, minmax(78px, 1fr)) auto;
+    gap: 14px; align-items: center; padding: 16px 18px; cursor: pointer;
+    background: none; border: 0; width: 100%; text-align: left; font-family: var(--body);
+    border-radius: 0;
+  }
+  .rad-topp:hover { background: var(--panel); }
+  .rad-namn { font-weight: 600; font-size: 1rem; color: var(--ink); }
+  .rad-namn small { display: block; font-weight: 400; font-size: .78rem; color: var(--ink-faint); }
+  .cell { font-variant-numeric: tabular-nums; }
+  .cell .etikett {
+    display: block; font-size: .6rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 3px;
+  }
+  .cell .v { font-size: 1.02rem; font-weight: 600; }
+  .cell .v.under { color: var(--ned); }
+  .cell .v.imal { color: var(--accent); }
+  .flaggor { display: flex; gap: 6px; align-items: center; justify-content: flex-end; }
+  .prick { width: 9px; height: 9px; border-radius: 50%; background: var(--ned); }
+  .prick.vinst { background: var(--accent-graf); }
+  .rad-djup { padding: 6px 18px 24px; border-top: 1px solid var(--line); }
+  .rad-djup h3 { font-size: 1rem; margin: 22px 0 10px; }
+  .ej-svarat { opacity: .62; }
+  .toppsiffror { display: flex; gap: 26px; flex-wrap: wrap; margin: 0 0 8px; }
+  .toppsiffror div span { display: block; font-size: .62rem; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; color: var(--ink-faint); }
+  .toppsiffror div strong { font-family: var(--display); font-size: 1.7rem; font-weight: 600; }
+  .styr { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 24px 0 26px; }
+  .styr select { width: auto; }
+  pre.underlag {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radie);
+    padding: 16px; font-size: .82rem; line-height: 1.5; overflow-x: auto; white-space: pre-wrap;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink-soft);
+  }
+  .saknas-notis { color: var(--ned); font-size: .88rem; }
+</style>
+</head>
+<body>
+
+<div class="wrap bred">
+
+  <header>
+    <span class="eyebrow">Åberg &amp; Co · Månadskollen</span>
+    <h1>Coachvyn</h1>
+    <p class="lede">Alla kunder på en sida. Trend, flaggor och förslag på vad du ska skicka. Bara du ser den här.</p>
+  </header>
+
+  <div id="nyckelfraga" class="kort dold">
+    <h2>Din coachnyckel</h2>
+    <p class="sub">Den skapades när du körde <code>installera()</code> i kalkylarket. Sparas i den här webbläsaren, inte någon annanstans.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <input type="text" id="nyckel" placeholder="Klistra in nyckeln" style="max-width:420px">
+      <button class="primar" id="spara-nyckel">Öppna</button>
+    </div>
+    <p class="status fel dold" id="nyckelfel" style="margin-top:12px">Nyckeln stämmer inte.</p>
+  </div>
+
+  <div id="laddar" class="kort"><p class="sub" style="margin:0">Hämtar …</p></div>
+
+  <div id="vy" class="dold">
+    <div class="styr">
+      <label for="period" style="font-size:.8rem;font-weight:600;letter-spacing:.04em">Månad</label>
+      <select id="period"></select>
+      <button id="underlag-alla">Underlag för alla mail</button>
+      <button id="glom">Glöm nyckeln</button>
+    </div>
+
+    <div class="toppsiffror" id="topp"></div>
+    <p class="q-hjalp" id="saknas-lista" style="margin:0 0 22px"></p>
+
+    <div id="lista"></div>
+
+    <div class="kort dold" id="allt-underlag">
+      <h2>Underlag för månadens mail</h2>
+      <p class="sub">Kopiera hela blocket och be mig fylla i råden ur Circleback. Skicka aldrig ut något du inte läst igenom först.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+        <button class="primar" id="kopiera">Kopiera</button>
+        <button id="ladda-ner">Spara som fil</button>
+        <span class="status" id="kopiestatus"></span>
+      </div>
+      <pre class="underlag" id="underlag-text"></pre>
+    </div>
+  </div>
+
+  <footer>
+    <span>Åberg &amp; Co</span>
+    <span>Månadskollen</span>
+  </footer>
+
+</div>
+
+<script src="konfig.js"></script>
+<script src="fragor.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const API = window.MANADSKOLLEN_API || "";
+  const NYCKELPLATS = "manadskollen-coachnyckel";
+  const E = (id) => document.getElementById(id);
+  const visa = (id, pa) => E(id).classList.toggle("dold", !pa);
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  let kunder = [], svar = [], period = MK.forraManaden(), oppen = null;
+
+  const TOPPTAL = [
+    { id: "ombokning", kort: "Ombok", mal: "ombokning", bra: "upp" },
+    { id: "belaggning", kort: "Belägg", mal: "belaggning", bra: "upp" },
+    { id: "timmar_stol", kort: "Stol", mal: "timmar_stol", bra: "ner" },
+    { id: "energi", kort: "Energi", mal: null, bra: "upp" }
+  ];
+
+  const OMRADEN = MK.FRAGOR[9].val;
+  const omradesnamn = (v) => (OMRADEN.find(o => o.v === v) || {}).t || "";
+
+  function radeFor(kod) {
+    return svar.filter(s => String(s.kod).trim() === String(kod).trim())
+               .sort((a, b) => a.period < b.period ? -1 : 1);
+  }
+
+  /* ------------------------------------------------------------- rendering */
+
+  function cellHtml(t, rad, mal) {
+    const v = MK.tal(rad[t.id]);
+    if (v === null) return '<div class="cell"><span class="etikett">' + t.kort + '</span><span class="v">–</span></div>';
+    const m = t.mal ? mal[t.mal] : null;
+    let klass = "";
+    if (m) klass = (t.bra === "upp" ? v >= m : v <= m) ? "imal" : "under";
+    const suffix = t.id === "energi" ? "" : (t.id === "timmar_stol" ? "h" : "%");
+    return '<div class="cell"><span class="etikett">' + t.kort + '</span>' +
+           '<span class="v ' + klass + '">' + v.toLocaleString("sv-SE") + suffix + '</span></div>';
+  }
+
+  function kurvaHtml(rader, t, mal) {
+    const nu = MK.tal(rader[rader.length - 1][t.id]);
+    if (nu === null) return "";
+    const fv = rader.length > 1 ? MK.tal(rader[rader.length - 2][t.id]) : null;
+    let pil = '<span class="pil lika">–</span>';
+    if (fv !== null) {
+      const diff = nu - fv;
+      const bra = t.bra === "upp" ? diff > 0 : diff < 0;
+      pil = '<span class="pil ' + (diff === 0 ? "lika" : (bra ? "upp" : "ner")) + '">' +
+            (diff === 0 ? "oförändrat" : (diff > 0 ? "+" : "") +
+             (t.suffix === "kr" ? Math.round(diff).toLocaleString("sv-SE") : diff.toLocaleString("sv-SE"))) + '</span>';
+    }
+    const malv = t.mal ? mal[t.mal] : null;
+    return '<div class="kurva"><span class="namn">' + esc(t.namn) + '</span>' +
+      '<div class="rad"><span class="tal' + (t.suffix === "kr" ? " lang" : "") + '">' +
+        esc(MK.visa(nu, t.suffix)) + '</span>' + pil + '</div>' +
+      MK.sparkline(rader.map(r => MK.tal(r[t.id]))) +
+      (malv ? '<div class="mal">Mål: ' + esc(MK.visa(malv, t.suffix)) + '</div>' : '') + '</div>';
+  }
+
+  function djupHtml(kund, rader) {
+    const s = rader[rader.length - 1];
+    const mal = kund.mal || {};
+    const las = MK.lasning(rader, mal);
+    const forslag = MK.forslag(s, mal);
+
+    let h = '<div class="rad-djup">';
+
+    h += '<h3>Utveckling</h3><div class="kurvor">' +
+         MK.TAL.map(t => kurvaHtml(rader, t, mal)).join("") + '</div>';
+
+    if (las.length) {
+      h += '<h3>Läsning</h3><ul class="lasning">' + las.map(r =>
+        '<li class="' + (r.ton === "varning" ? "varning" : "") + '">' + esc(r.text) + '</li>').join("") + '</ul>';
+    }
+
+    h += '<h3>Att skicka</h3>';
+    if (!forslag.length) {
+      h += '<p class="q-hjalp">Inget flaggat den här månaden. Välj själv, eller skicka inget.</p>';
+    } else {
+      h += '<ul class="lasning">' + forslag.slice(0, 3).map(function (f) {
+        if (!f.material.length) {
+          return '<li class="varning"><strong>' + esc(f.rubrik) + '</strong><br>' +
+                 '<span class="saknas-notis">' + esc(f.saknas) + '</span></li>';
+        }
+        return '<li><strong>' + esc(f.rubrik) + '</strong><br>' +
+          f.material.map(m => esc(m.namn) + ' <span class="q-hjalp" style="display:inline">(' +
+            (m.typ === "verktyg" ? "verktyg" : "artikel") + ')</span>').join(" · ") + '</li>';
+      }).join("") + '</ul>';
+      if (forslag.length > 3) {
+        h += '<p class="q-hjalp">' + (forslag.length - 3) + ' till flaggades. Skicka ett, aldrig fler.</p>';
+      }
+    }
+
+    h += '<h3>Hennes egna ord</h3><ul class="lasning">';
+    h += '<li><strong>Vinsten:</strong> ' + (s.vinst ? esc(s.vinst) : '<span class="q-hjalp" style="display:inline">inget skrivet</span>') + '</li>';
+    h += '<li><strong>Åtagandet:</strong> ' + (s.atagande_text ? esc(s.atagande_text) : "–") +
+         ' — <em>' + esc({ gjort: "gjort", paborjat: "påbörjat", inte_gjort: "inte gjort" }[s.atagande_status] || "–") + '</em></li>';
+    h += '<li><strong>Vill ta först:</strong> ' + esc(omradesnamn(s.nasta_omrade)) +
+         (s.nasta_text ? " — " + esc(s.nasta_text) : "") + '</li>';
+    h += '</ul>';
+
+    h += '</div>';
+    return h;
+  }
+
+  function rita() {
+    const svarat = [], utan = [];
+
+    E("lista").innerHTML = kunder.map(function (k) {
+      const rader = radeFor(k.kod);
+      const iManaden = rader.filter(r => r.period === period);
+      const s = iManaden[iManaden.length - 1];
+      const historik = rader.filter(r => r.period <= period);
+
+      if (s) svarat.push(k); else utan.push(k);
+
+      const mal = k.mal || {};
+      const flaggor = s ? MK.lasning(historik, mal) : [];
+      const prickar = flaggor.slice(0, 5).map(f =>
+        '<span class="prick' + (f.ton === "vinst" ? " vinst" : "") + '" title="' + esc(f.text) + '"></span>').join("");
+
+      let topp = '<button class="rad-topp" data-kod="' + esc(k.kod) + '" aria-expanded="' + (oppen === k.kod) + '">' +
+        '<span class="rad-namn">' + esc(k.namn) +
+        (k.salong ? '<small>' + esc(k.salong) + '</small>' : '') + '</span>';
+
+      if (s) {
+        topp += TOPPTAL.map(t => cellHtml(t, s, mal)).join("");
+        topp += '<span class="flaggor">' + prickar + '</span>';
+      } else {
+        topp += '<div class="cell" style="grid-column:span 4"><span class="etikett">Status</span>' +
+                '<span class="v">Har inte svarat</span></div><span class="flaggor"></span>';
+      }
+      topp += '</button>';
+
+      return '<div class="rad-kund' + (s ? "" : " ej-svarat") + '">' + topp +
+             (s && oppen === k.kod ? djupHtml(k, historik) : "") + '</div>';
+    }).join("");
+
+    E("topp").innerHTML =
+      '<div><span>Svarat</span><strong>' + svarat.length + ' av ' + kunder.length + '</strong></div>' +
+      '<div><span>Månad</span><strong>' + esc(MK.manadsnamn(period)) + '</strong></div>';
+
+    E("saknas-lista").textContent = utan.length
+      ? "Har inte svarat: " + utan.map(k => k.namn).join(", ") + "."
+      : "Alla har svarat.";
+  }
+
+  /* --------------------------------------------------------------- underlag */
+
+  function underlagFor(k) {
+    const rader = radeFor(k.kod).filter(r => r.period <= period);
+    const s = rader.filter(r => r.period === period)[0];
+    if (!s) return null;
+
+    const mal = k.mal || {};
+    const las = MK.lasning(rader, mal);
+    const forslag = MK.forslag(s, mal).slice(0, 1);
+    const forra = rader.length > 1 ? rader[rader.length - 2] : null;
+
+    const rad = (t) => {
+      const nu = MK.tal(s[t.id]);
+      if (nu === null) return null;
+      const fv = forra ? MK.tal(forra[t.id]) : null;
+      const diff = fv === null ? "" : (nu - fv === 0 ? " (oförändrat)" :
+        " (" + (nu - fv > 0 ? "+" : "") + (nu - fv).toLocaleString("sv-SE") + " mot förra)");
+      const m = t.mal ? mal[t.mal] : null;
+      return "- " + t.namn + ": " + MK.visa(nu, t.suffix) + diff + (m ? ", mål " + MK.visa(m, t.suffix) : "");
+    };
+
+    let u = "## " + k.namn + (k.salong ? " — " + k.salong : "") + "\n";
+    u += "Mejl: " + (k.mejl || "SAKNAS I KUNDREGISTRET") + "\n";
+    u += "Sökord för Circleback: " + (k.sokord || []).join(", ") + "\n";
+    u += "Period: " + MK.manadsnamn(period) + "\n\n";
+
+    u += "**Hennes vinst, med egna ord**\n" + (s.vinst || "(hon skrev ingen)") + "\n\n";
+
+    u += "**Månaden i tal**\n" + MK.TAL.map(rad).filter(Boolean).join("\n") + "\n\n";
+
+    if (las.length) {
+      u += "**Läsning ur svaren**\n" + las.map(r =>
+        "- " + (r.ton === "varning" ? "[flagga] " : r.ton === "vinst" ? "[vinst] " : "") + r.text).join("\n") + "\n\n";
+    }
+
+    u += "**Åtagandet sedan sist**\n" + (s.atagande_text || "(inget skrivet)") + " — " +
+         ({ gjort: "gjort", paborjat: "påbörjat", inte_gjort: "inte gjort" }[s.atagande_status] || "okänt") + "\n\n";
+
+    u += "**Vill ta först nästa gång**\n" + omradesnamn(s.nasta_omrade) +
+         (s.nasta_text ? ": " + s.nasta_text : "") + "\n\n";
+
+    u += "**Att skicka med**\n";
+    if (!forslag.length) {
+      u += "Inget flaggat. Välj själv eller hoppa över.\n\n";
+    } else if (!forslag[0].material.length) {
+      u += forslag[0].rubrik + " — " + forslag[0].saknas + " Skriv något eget eller hoppa över.\n\n";
+    } else {
+      u += forslag[0].rubrik + ": " + forslag[0].material.map(m => m.namn).join(" och ") + "\n\n";
+    }
+
+    u += "**Råden ur Circleback**\n";
+    u += "<!-- FYLLS I: högst tre råd som Maria gav henne under " + MK.manadsnamn(period) +
+         ", ett per område, med datum. Aldrig namn på hennes anställda. Aldrig något ur ett möte som inte är hennes. -->\n";
+
+    return u;
+  }
+
+  function byggAllt() {
+    const delar = kunder.map(underlagFor).filter(Boolean);
+    let t = "# Underlag för månadsmailen — " + MK.manadsnamn(period) + "\n\n";
+    t += "Läs igenom varje mail innan det går ut. Kontrollera särskilt att inget ur\n";
+    t += "Circleback rör en annan kund eller nämner någon anställd vid namn.\n\n";
+    t += delar.join("\n---\n\n");
+    if (!delar.length) t += "Ingen har svarat för den här månaden än.\n";
+    return t;
+  }
+
+  /* ---------------------------------------------------------------- klick */
+
+  document.addEventListener("click", function (e) {
+    const knapp = e.target.closest(".rad-topp");
+    if (knapp) {
+      oppen = oppen === knapp.dataset.kod ? null : knapp.dataset.kod;
+      rita();
+      return;
+    }
+
+    if (e.target.id === "spara-nyckel") {
+      const n = E("nyckel").value.trim();
+      if (!n) return;
+      localStorage.setItem(NYCKELPLATS, n);
+      visa("nyckelfel", false);
+      visa("nyckelfraga", false);
+      visa("laddar", true);
+      start();
+      return;
+    }
+
+    if (e.target.id === "glom") {
+      localStorage.removeItem(NYCKELPLATS);
+      location.reload();
+      return;
+    }
+
+    if (e.target.id === "underlag-alla") {
+      E("underlag-text").textContent = byggAllt();
+      visa("allt-underlag", true);
+      E("allt-underlag").scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    if (e.target.id === "kopiera") {
+      navigator.clipboard.writeText(E("underlag-text").textContent).then(function () {
+        E("kopiestatus").textContent = "Kopierat.";
+      }, function () {
+        E("kopiestatus").textContent = "Kunde inte kopiera. Markera texten själv.";
+      });
+      return;
+    }
+
+    if (e.target.id === "ladda-ner") {
+      const blob = new Blob([E("underlag-text").textContent], { type: "text/markdown" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "manadskollen-" + period + ".md";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+  });
+
+  E("period").addEventListener("change", function () {
+    period = this.value;
+    oppen = null;
+    visa("allt-underlag", false);
+    rita();
+  });
+
+  /* ----------------------------------------------------------------- start */
+
+  function fyllPerioder() {
+    const finns = Array.from(new Set(svar.map(s => s.period).filter(Boolean)));
+    if (finns.indexOf(period) === -1) finns.push(period);
+    finns.sort().reverse();
+    E("period").innerHTML = finns.map(p =>
+      '<option value="' + p + '"' + (p === period ? " selected" : "") + '>' + MK.manadsnamn(p) + '</option>').join("");
+  }
+
+  function start() {
+    const nyckel = localStorage.getItem(NYCKELPLATS);
+    if (!API) {
+      visa("laddar", false);
+      E("nyckelfraga").innerHTML = '<h2>Inte kopplat än</h2><p class="sub">Adressen till kalkylarket saknas i <code>konfig.js</code>.</p>';
+      visa("nyckelfraga", true);
+      return;
+    }
+    if (!nyckel) { visa("laddar", false); visa("nyckelfraga", true); return; }
+
+    fetch(API + "?alla=1&nyckel=" + encodeURIComponent(nyckel))
+      .then(r => r.json())
+      .then(function (r) {
+        visa("laddar", false);
+        if (!r || !r.ok) {
+          localStorage.removeItem(NYCKELPLATS);
+          visa("nyckelfraga", true);
+          visa("nyckelfel", true);
+          return;
+        }
+        kunder = r.kunder || [];
+        svar = (r.svar || []).filter(s => s.period);
+        fyllPerioder();
+        visa("vy", true);
+        rita();
+      })
+      .catch(function () {
+        visa("laddar", false);
+        visa("nyckelfraga", true);
+        visa("nyckelfel", true);
+      });
+  }
+
+  start();
+})();
+</script>
+</body>
+</html>

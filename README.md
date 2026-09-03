@@ -15,11 +15,13 @@ Kunskapssajt för salongsägare med fyra anställda eller fler. Innehållet ägs
 | `typsnitt/` | Montserrat och Playfair Display som filer, med licenser |
 | `designbrief.md` | Färger, typsnitt, luft och logotyp. Sanningen om designen |
 | `dataskydd.md` | Texten på dataskyddssidan, redigeras som vanlig markdown |
+| `manadskollen/` | Månadsformuläret till coachkunderna, coachvyn och lagringen |
 | `nisch.md` | Målgrupp, nisch, kundens helvete och himmel |
 | `innehallsplan.md` | Pelare, publiceringsrytm, trappan till kartläggningsmöte |
 | `fas1-research.md` | Research med källa och verifieringsgrad per påstående |
 | `fas2-problemkarta.md` | Sju teman sorterade efter medvetandenivå |
 | `fas3-rubriker.md` | Rubriker och ingresser |
+| `manadskollen.md` | Månadskollen: frågorna, trenderna, mailet och kvalitetskontrollen |
 
 ## Bygga om sajten
 
@@ -118,6 +120,16 @@ DNS tar mellan några minuter och ett dygn på sig.
 
 **Sedan.** Varje push till `main` bygger om sajten. Du kan också köra
 arbetsflödet för hand under Actions, Bygg och publicera sajten, Run workflow.
+
+## Månadskollen
+
+Coachkundernas månadsformulär. Ligger i `manadskollen/` och byggs med i sajten,
+men länkas inte från någon meny — kunderna kommer dit med sin personliga länk.
+Svaren sparas i ett Google-kalkylark du äger.
+
+Installationen görs en gång och står i `manadskollen/SA-HAR-INSTALLERAR-DU.md`.
+Hela tanken bakom systemet, inklusive invändningarna mot det, står i
+`manadskollen.md`.
 
 ## Nyhetsbrevet
 
