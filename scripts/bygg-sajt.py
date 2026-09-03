@@ -108,6 +108,13 @@ BILDER = {
     "skoljning": {"fil": "maria-skoljning.jpg",
                   "alt": "Maria Åberg sköljer en kunds hår, båda skrattar"},
     "avatar": {"fil": "maria-avatar.jpg", "alt": "Maria Åberg"},
+    # Fotograf Louise Ernerhav, 2026.
+    "kaffe": {"fil": "maria-kaffe.jpg",
+              "alt": "Maria Åberg i dörröppningen med två koppar kaffe"},
+    "klipper": {"fil": "maria-klipper.jpg",
+                "alt": "Maria Åberg klipper en kund i salongen"},
+    "nara": {"fil": "maria-nara.jpg",
+             "alt": "Maria Åberg vid produkthyllan i salongen"},
 }
 
 
@@ -442,12 +449,16 @@ def bygg():
 </section>""".format(nr=pel["nr"], namn=html.escape(pel["namn"]), gloss=html.escape(pel["gloss"]),
                      h=pel["helvete"], him=pel["himmel"], rader="".join(rader)))
 
-    inne = """<div class="sidhuvud">
-  <span class="ovan">Alla artiklar</span>
-  <h1>Fem pelare, {n} artiklar</h1>
-  <p class="ingress">Varje pelare tar sig an ett dyrt och återkommande problem. Börja med pelarartikeln, den ligger först.</p>
+    inne = """<div class="sidhuvud herogrid">
+  <div>
+    <span class="ovan">Alla artiklar</span>
+    <h1>Fem pelare, {n} artiklar</h1>
+    <p class="ingress">Varje pelare tar sig an ett dyrt och återkommande problem. Börja med pelarartikeln, den ligger först.</p>
+  </div>
+  {sidbild}
 </div>
-{delar}""".format(n=len(artiklar), delar="".join(delar))
+{delar}""".format(n=len(artiklar), delar="".join(delar),
+                 sidbild=bild("nara", "sidbild").format(p=""))
     open(os.path.join(OUT, "artiklar.html"), "w", encoding="utf-8").write(
         sida("Artiklar · Salongsledarskap",
              "Alla artiklar om ledarskap, ekonomi och personal i salong med anställda.",
@@ -491,15 +502,21 @@ def bygg():
                   nav=nav(1, "verktyg"), kropp=kropp, foot="")
         open(os.path.join(OUT, "verktyg", v["slug"] + ".html"), "w", encoding="utf-8").write(full)
 
-    kort = "".join("""<li><a href="verktyg/{slug}.html">
-    <span class="rubrik">{namn}</span><span class="ing">{text}</span>
-    <span class="dags">Öppna verktyget</span></a></li>""".format(**v) for v in VERKTYG)
-    inne = """<div class="sidhuvud">
-  <span class="ovan">Verktyg</span>
-  <h1>Fyra saker du kan göra i veckan</h1>
-  <p class="ingress">Verktygen räknar och håller ordning. De sparar allt i din egen webbläsare och skickar ingenting vidare.</p>
+    kort = "".join("""<a class="vkort" href="verktyg/{slug}.html">
+    <span class="pnr">{nr:02d}</span>
+    <span class="vnamn">{namn}</span><span class="vtext">{text}</span>
+    <span class="pantal">Öppna verktyget</span></a>""".format(nr=i, **v)
+        for i, v in enumerate(VERKTYG, 1))
+    inne = """<div class="sidhuvud herogrid">
+  <div>
+    <span class="ovan">Verktyg</span>
+    <h1>Fyra saker du kan göra i veckan</h1>
+    <p class="ingress">Verktygen räknar och håller ordning. De sparar allt i din egen webbläsare och skickar ingenting vidare.</p>
+  </div>
+  {sidbild}
 </div>
-<ol class="lista stor">{kort}</ol>""".format(kort=kort)
+<div class="block"><div class="vkortgrid">{kort}</div></div>""".format(
+        kort=kort, sidbild=bild("klipper", "sidbild").format(p=""))
     open(os.path.join(OUT, "verktyg.html"), "w", encoding="utf-8").write(
         sida("Verktyg · Salongsledarskap", "Fyra verktyg för salongsägare med anställda.",
              inne, 0, "verktyg"))
@@ -525,16 +542,18 @@ def bygg():
         open(os.path.join(OUT, "kundcase", slug + ".html"), "w", encoding="utf-8").write(
             sida(d["title"] + " · Salongsledarskap", d["deck"], inne, 1, "kundcase"))
 
-    kort = "".join("""<li><a href="kundcase/{slug}.html">
-    <span class="rubrik">{titel}</span><span class="ing">{deck}</span>
-    <span class="dags">Läs caset</span></a></li>""".format(
-        slug=c["slug"], titel=html.escape(c["title"]), deck=inline(c["deck"])) for c in case_data)
+    kort = "".join("""<a class="vkort" href="kundcase/{slug}.html">
+    <span class="pnr">{nr:02d}</span>
+    <span class="vnamn">{titel}</span><span class="vtext">{deck}</span>
+    <span class="pantal">Läs caset</span></a>""".format(
+        nr=i, slug=c["slug"], titel=html.escape(c["title"]), deck=inline(c["deck"]))
+        for i, c in enumerate(case_data, 1))
     inne = """<div class="sidhuvud">
   <span class="ovan">Kundcase</span>
   <h1>Fyra salonger, dokumenterade</h1>
   <p class="ingress">Siffrorna kommer ur salongernas egna uppföljningar. Medarbetare är anonyma.</p>
 </div>
-<ol class="lista stor">{kort}</ol>""".format(kort=kort)
+<div class="block"><div class="vkortgrid fyra">{kort}</div></div>""".format(kort=kort)
     open(os.path.join(OUT, "kundcase.html"), "w", encoding="utf-8").write(
         sida("Kundcase · Salongsledarskap", "Fyra dokumenterade kundcase.", inne, 0, "kundcase"))
 
@@ -606,20 +625,23 @@ def bygg():
     <span class="vnamn">{namn}</span><span class="vtext">{text}</span></a>""".format(**v)
         for v in VERKTYG)
 
-    inne = """<section class="hero">
-  <span class="ovan">För dig som äger salong och har anställda</span>
-  <h1>Ditt team är inte omotiverat. De har lärt sig att du löser det.</h1>
-  <p class="ingress">Här finns {n} artiklar om ledarskap, ekonomi och personal i salong. Alla utgår från samma sak: att ledarskap är ett hantverk som går att lära sig, precis som klippning.</p>
-  <div class="heroknappar">
-    <a class="knapp" href="verktyg/flaskhalstestet.html">Gör Flaskhalstestet</a>
-    <a class="knapp tunn" href="artiklar.html">Läs artiklarna</a>
+    inne = """<section class="hero herogrid">
+  <div>
+    <span class="ovan">För dig som äger salong och har anställda</span>
+    <h1>Ditt team är inte omotiverat. De har lärt sig att du löser det.</h1>
+    <p class="ingress">Här finns {n} artiklar om ledarskap, ekonomi och personal i salong. Alla utgår från samma sak: att ledarskap är ett hantverk som går att lära sig, precis som klippning.</p>
+    <div class="heroknappar">
+      <a class="knapp" href="verktyg/flaskhalstestet.html">Gör Flaskhalstestet</a>
+      <a class="knapp tunn" href="artiklar.html">Läs artiklarna</a>
+    </div>
+    <div class="fakta">
+      <div><strong>{n}</strong><span>artiklar</span></div>
+      <div><strong>5</strong><span>pelare</span></div>
+      <div><strong>4</strong><span>verktyg</span></div>
+      <div><strong>3 min</strong><span>tar testet</span></div>
+    </div>
   </div>
-  <div class="fakta">
-    <div><strong>{n}</strong><span>artiklar</span></div>
-    <div><strong>5</strong><span>pelare</span></div>
-    <div><strong>4</strong><span>verktyg</span></div>
-    <div><strong>3 min</strong><span>tar testet</span></div>
-  </div>
+  {herobild}
 </section>
 
 <section class="block">
@@ -651,6 +673,7 @@ def bygg():
   {brevform}
 </section>""".format(n=len(artiklar), pelarkort=pelarkort, utvalda=utvalda, vkort=vkort,
            brevform=brevform(),
+           herobild=bild("kaffe", "herobild").format(p=""),
            band=('<section class="band">%s<div class="bandtext"><span class="label">Vem som skriver</span>'
                  '<h2>Maria Åberg</h2><p>Trettio år i branschen, tjugo som salongsledare. Driver fortfarande '
                  'en säsongssalong varje sommar och står själv på golvet.</p>'
