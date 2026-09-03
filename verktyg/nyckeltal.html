@@ -4,44 +4,40 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap">
 <style>
   :root {
-    --ground: #FCF9F6;
-    --panel: #F5EDE5;
-    --panel-2: #FFFFFF;
-    --ink: #241811;
-    --ink-soft: #6B584C;
-    --ink-faint: #9B8779;
-    --line: #EADFD4;
-    --line-strong: #D8C7B7;
-    --accent: #BF5308;
-    --accent-tint: #FBE7D6;
-    --good: #2F6B4F;
-    --good-tint: #DFEDE5;
-    --warn: #9A4A16;
-    --warn-tint: #FAE3D2;
-    --shadow: 0 1px 2px rgba(36, 24, 17, .06);
-    --display: "Playfair Display", Georgia, serif;
-    --body: "Montserrat", "Helvetica Neue", Arial, sans-serif;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --ground: #17110C; --panel: #241A12; --panel-2: #1D150F;
-      --ink: #F3EAE2; --ink-soft: #BCA899; --ink-faint: #93806F;
-      --line: #332519; --line-strong: #4A3625;
-      --accent: #FF8C42; --accent-tint: #3A2013;
-      --good: #7FC7A2; --good-tint: #172A20;
-      --warn: #F0A06A; --warn-tint: #35200F;
-      --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+      --ground: #F7F5F1;
+      --panel: #FCF9F4;
+      --panel-2: #FFFFFF;
+      --ink: #33302C;
+      --ink-soft: #55514B;
+      --ink-faint: #878787;
+      --line: #E3DED6;
+      --line-strong: #D6CEC2;
+      --accent: #B06E00;
+      --accent-graf: #F6A313;
+      --accent-tint: #FCE7BC;
+      --radie: 10px;
+      --display: "Playfair Display", Georgia, "Times New Roman", serif;
+      --body: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+      --shadow: 0 1px 2px rgba(46, 46, 46, .06);
     }
-  }
-  :root[data-theme="dark"] {
-    --ground: #17110C; --panel: #241A12; --panel-2: #1D150F;
-    --ink: #F3EAE2; --ink-soft: #BCA899; --ink-faint: #93806F;
-    --line: #332519; --line-strong: #4A3625;
-    --accent: #FF8C42; --accent-tint: #3A2013;
-    --good: #7FC7A2; --good-tint: #172A20;
-    --warn: #F0A06A; --warn-tint: #35200F;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .35);
-  }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --ground: #1B1714; --panel: #241F1A; --panel-2: #201B17;
+        --ink: #F2EBE1; --ink-soft: #C4B8A9; --ink-faint: #A79B8C;
+        --line: #332B24; --line-strong: #4A3E33;
+        --accent: #FFC661; --accent-graf: #FFB43D; --accent-tint: #3A2C12;
+        --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --ground: #1B1714; --panel: #241F1A; --panel-2: #201B17;
+      --ink: #F2EBE1; --ink-soft: #C4B8A9; --ink-faint: #A79B8C;
+      --line: #332B24; --line-strong: #4A3E33;
+      --accent: #FFC661; --accent-graf: #FFB43D; --accent-tint: #3A2C12;
+        --shadow: 0 1px 2px rgba(0, 0, 0, .35);
+    }
 
   * { box-sizing: border-box; }
 
@@ -136,7 +132,13 @@
     font-size: .76rem; color: var(--ink-faint);
     display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
   }
-</style>
+
+    /* Rubrikvikt enligt profilen. */
+    h1, h2, h3, .score-n, .band-name, .pct, .big, .step-n, .q-num { font-weight: 600; }
+  
+    .card, .step, .aside, .out, .result, .opt, ul.check .item, .field input,
+    .field select, button, .primary { border-radius: var(--radie); }
+  </style>
 
 <div class="wrap">
 
