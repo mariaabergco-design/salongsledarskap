@@ -2678,6 +2678,15 @@
       pill.className = 'pill ' + (denied ? 'warn' : 'steel');
       months = loadMonthsLocal(); loadDraft(logDraft.month); renderLog(); loadFaktLocal(); renderFakt(); renderFaktStatus(); return;
     }
+    // Kan den här personen skriva i molnet? Den som fått länken från en annan Claude-organisation kan läsa men inte spara.
+    let kanSkriva = true;
+    try { const probe = db.doc('salonger/' + SALONG + '/klienter/' + CLIENT); await probe.set({ t: new Date().toISOString() }); probe.delete().catch(() => {}); } catch (e) { kanSkriva = false; }
+    if (!kanSkriva) {
+      db = null;
+      pill.textContent = 'Molnet tillhör en annan Claude-organisation, så dina siffror sparas i den här webbläsaren. Dela med knappen "Kopiera länk med mina siffror".';
+      pill.className = 'pill warn';
+      months = loadMonthsLocal(); loadDraft(logDraft.month); renderLog(); loadFaktLocal(); renderFakt(); renderFaktStatus(); return;
+    }
     salongRef = db.doc('salonger/' + SALONG);
     monthsRef = db.collection('salonger/' + SALONG + '/manader');
     faktRef = db.collection('salonger/' + SALONG + '/fakturor');
