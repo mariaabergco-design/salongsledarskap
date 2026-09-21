@@ -51,7 +51,11 @@ export default async function handler(req, res) {
   } catch (e) {
     if (e instanceof Anthropic.AuthenticationError) return svara(res, 500, { fel: 'nyckel', message: 'API-nyckeln i Vercel godtas inte av Anthropic. Kontrollera ANTHROPIC_API_KEY.' });
     if (e instanceof Anthropic.RateLimitError) return svara(res, 429, { fel: 'rate_limited', message: 'För många anrop just nu.' });
-    if (e instanceof Anthropic.BadRequestError) return svara(res, 400, { fel: 'claude', message: 'Claude kunde inte ta emot filen: ' + e.message });
+    if (e instanceof Anthropic.BadRequestError) {
+      // Slut på krediter kommer som ett vanligt 400 utan egen felklass
+      if (/credit balance/i.test(e.message || '')) return svara(res, 402, { fel: 'kredit', message: 'Läsningen kunde inte göras: Åberg & Co behöver fylla på krediter hos Anthropic. Hör av dig till Åberg & Co.' });
+      return svara(res, 400, { fel: 'claude', message: 'Claude kunde inte ta emot filen. Prova en annan pdf eller ett mindre foto.' });
+    }
     if (e instanceof Anthropic.APIError) return svara(res, 502, { fel: 'claude', message: 'Claude svarade med fel ' + e.status + '. Försök igen om en stund.' });
     console.error(e);
     return svara(res, 500, { fel: 'server', message: 'Något gick fel på servern.' });
