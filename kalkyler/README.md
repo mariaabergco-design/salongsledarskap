@@ -17,7 +17,8 @@ sajtbygget för salongsledarskap.se.
 På salongskalkylen.vercel.app läses fakturorna av funktionen `api/las.js`
 med Åberg & Co:s egen nyckel, så salongsledaren behöver inget Claude-konto.
 Funktionen kräver två miljövariabler i Vercel (Settings, Environment
-Variables), och Vercel måste byggas om efter att de lagts in:
+Variables). Variablerna gäller först efter nästa bygge: gör Redeploy i Vercel
+eller pusha valfri ändring till `main`.
 
 | Variabel | Innehåll |
 |---|---|
