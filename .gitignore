@@ -12,3 +12,6 @@ Thumbs.db
 *.swp
 __pycache__/
 .venv/
+
+# Beroenden för Vercel-funktionen i kalkyler/ installeras vid bygget
+node_modules/

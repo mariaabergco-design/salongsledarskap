@@ -1,11 +1,4 @@
-<!doctype html>
-<html lang="sv">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-</head>
-<body>
-<meta charset="utf-8">
+<!doctype html><html lang="sv"><meta charset="utf-8">
 <title>Salongskalkylen</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap">
 <style>
@@ -451,9 +444,12 @@
           <input type="file" id="fakt-file" accept="application/pdf,image/*" multiple hidden>
           <b>Släpp fakturorna här</b>
           <div class="row"><span>eller</span><button class="btn primary" type="button" id="fakt-pick">Välj filer</button></div>
-          <span class="small muted">Pdf från leverantören, eller ett foto av pappersfakturan. Flera filer går bra. Första gången frågar sidan om Claude får användas, och läsningen räknas på ditt eget Claude-konto.</span>
+          <span class="small muted" id="fakt-drop-hint">Pdf från leverantören, eller ett foto av pappersfakturan. Flera filer går bra. Första gången frågar sidan om Claude får användas, och läsningen räknas på ditt eget Claude-konto.</span>
         </div>
-        <div class="note warn" id="fakt-noclaude" hidden style="margin-top:10px">Fakturorna läses av Claude på ditt eget Claude-konto. <a href="https://claude.ai/artifact/SXqZNUbTbDVUyUPZbrWF87" target="_blank" rel="noopener">Öppna Salongskalkylen på claude.ai</a>, inloggad, och godkänn när sidan frågar om Claude får användas. Sparade fakturor och artikelregistret visas ändå.</div>
+        <div class="note warn" id="fakt-noclaude" hidden style="margin-top:10px">Claude gick inte att koppla på i den här visningen. Det kräver ett Claude-konto som får köra Claude i sidan, och det har inte alla. Öppna i stället <a href="https://salongskalkylen.vercel.app/" target="_blank" rel="noopener">salongskalkylen.vercel.app</a> och skriv in salongskoden du fått av Åberg &amp; Co, så läses fakturorna där utan Claude-konto. Sparade fakturor och artikelregistret visas ändå här.</div>
+        <div class="note" id="fakt-kod" hidden style="margin-top:10px"><b>Salongskod.</b> Här läses fakturorna av Claude via Åberg &amp; Co, så du behöver inget eget Claude-konto. Skriv in salongskoden du fått av Åberg &amp; Co. Den sparas i den här webbläsaren.
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px"><input type="text" id="fakt-kod-in" placeholder="Salongskod" autocomplete="off" autocapitalize="off" spellcheck="false" style="max-width:220px" aria-label="Salongskod"><button class="btn primary" type="button" id="fakt-kod-spara">Spara koden</button><span class="small muted" id="fakt-kod-msg" aria-live="polite"></span></div>
+        </div>
         <div id="fakt-progress"></div>
         <div class="fk-tools">
           <label><span class="eyebrow">Period</span><select id="fakt-periodval"></select></label>
@@ -2111,6 +2107,44 @@
   const FKEY = KEY + ':fakturor', RKEY = KEY + ':artiklar';
   const KAT = { forsaljning: 'Försäljningsprodukt', material: 'Material till tjänsterna', ovrigt: 'Övrigt, inte varor' };
   const KATS = ['forsaljning', 'material', 'ovrigt'];
+  // Två sätt att nå Claude: 'sample' inne på claude.ai (läsningen går på besökarens Claude-konto) eller
+  // 'server' när sidan ligger på salongskalkylen.vercel.app (läsningen går via Åberg & Co:s funktion /api/las
+  // och kräver salongskoden). Båda ger ett sampleFn med samma form: fn(prompt, opts), fn.json, fn.limits.
+  const KODKEY = 'salongskalkyl-salongskod';
+  const serverLage = !window.claude && /^https?:$/.test(location.protocol);
+  const lasLage = serverLage ? 'server' : 'sample';
+  const SERVER_BILDER = 4;
+  function sparadKod() { try { return localStorage.getItem(KODKEY) || ''; } catch (e) { return ''; } }
+  function blobB64(b) { return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(',')[1] || ''); fr.onerror = () => rej({ code: 'image_rejected' }); fr.readAsDataURL(b); }); }
+  async function serverAnrop(kod, body) {
+    let r;
+    try { r = await fetch('/api/las', { method: 'POST', headers: { 'content-type': 'application/json', 'x-salongskod': kod }, body: JSON.stringify(body) }); }
+    catch (e) { throw { code: 'natverk', message: 'Servern svarade inte. Kontrollera nätet och försök igen.' }; }
+    let j = null; try { j = await r.json(); } catch (e) {}
+    if (r.status === 401) throw { code: 'kod', message: 'Salongskoden stämmer inte.' };
+    if (!r.ok) throw { code: (j && j.fel) || 'server', message: (j && j.message) || ('Servern svarade med fel ' + r.status + '.') };
+    return j || {};
+  }
+  function serverLasare(kod) {
+    const fn = async function (prompt, opts) {
+      const images = [];
+      for (const b of ((opts && opts.images) || []).slice(0, SERVER_BILDER)) images.push({ media_type: b.type || 'image/jpeg', data: await blobB64(b) });
+      if (images.reduce((s, i) => s + i.data.length, 0) > 4000000) throw { code: 'stor', message: 'Bilderna är för stora att skicka. Prova en pdf med text, eller dela upp filen.' };
+      const j = await serverAnrop(kod, { prompt, images });
+      return { text: String(j.text || '') };
+    };
+    fn.json = async (prompt, opts) => { const svar = await fn(prompt, opts); const res = parseJsonLoose(svar.text); if (!res) throw { code: 'invalid_json' }; return res; };
+    fn.limits = async () => ({ images: { maxCount: SERVER_BILDER } });
+    return fn;
+  }
+  function kopplaServer() {
+    const kod = sparadKod();
+    if (kod) { sampleFn = serverLasare(kod); sampleCaps = { images: { maxCount: SERVER_BILDER } }; sampleState = 'ok'; } else { sampleFn = null; sampleCaps = null; sampleState = 'none'; }
+    const inp = $('#fakt-kod-in'); if (inp && !inp.value) inp.value = kod;
+    renderFaktStatus();
+  }
+  function glomKod() { try { localStorage.removeItem(KODKEY); } catch (e) {} kopplaServer(); }
+  const saknasText = () => sampleState === 'pending' ? 'Sidan har inte fått kontakt med Claude ännu. Vänta några sekunder och försök igen.' : lasLage === 'server' ? 'Skriv in salongskoden i rutan ovanför och spara den först.' : 'Fakturor kan bara läsas när sidan är öppen på claude.ai med Claude tillåten, eller på salongskalkylen.vercel.app med salongskod.';
   let sampleFn = null, sampleCaps = null, sampleState = 'pending', faktRef = null, regRef = null, fakturor = {}, register = { artiklar: {} }, faktOpen = {}, regWriteTimer = null, regChain = Promise.resolve(), faktBusy = false;
   const klon = o => JSON.parse(JSON.stringify(o == null ? {} : o));
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -2196,6 +2230,7 @@
   function faktFel(e) {
     const c = e && e.code;
     if (c === 'not_granted' || c === 'sampling_disabled' || c === 'not_declared' || c === 'capability_disabled') { sampleFn = null; sampleState = 'none'; renderFaktStatus(); return 'Claude är inte tillåten i den här visningen. Ladda om sidan och godkänn när den frågar.'; }
+    if (c === 'kod') { glomKod(); return 'Salongskoden stämmer inte längre. Skriv in den igen och spara.'; }
     if (c === 'rate_limited') return 'För många anrop just nu. Vänta en stund och försök igen.';
     if (c === 'prompt_too_large') return 'Fakturan är för lång för en läsning. Dela upp pdf:en i flera filer.';
     if (c === 'invalid_json' || c === 'empty_completion') return 'Claude svarade i ett format som inte gick att tolka. Försök igen.';
@@ -2249,7 +2284,7 @@
     files = files.filter(f => f && (/(pdf|image)/i.test(f.type) || /\.pdf$/i.test(f.name)));
     if (!files.length) return;
     const prog = $('#fakt-progress');
-    if (!sampleFn) { prog.className = 'fk-prog'; prog.innerHTML = '<div><span class="pill warn">Claude saknas</span><span>' + (sampleState === 'pending' ? 'Sidan har inte fått kontakt med Claude ännu. Vänta några sekunder och släpp filerna igen.' : 'Fakturor kan bara läsas när sidan är öppen på claude.ai och Claude är tillåten.') + '</span></div>'; return; }
+    if (!sampleFn) { prog.className = 'fk-prog'; prog.innerHTML = '<div><span class="pill warn">Claude saknas</span><span>' + saknasText() + '</span></div>'; return; }
     if (faktBusy) { prog.appendChild(el('div', null, '<span class="pill warn">Vänta</span><span>En läsning pågår redan. Släpp filerna igen när den är klar.</span>')); return; }
     faktBusy = true; prog.innerHTML = ''; prog.className = 'fk-prog';
     for (const f of files) {
@@ -2282,9 +2317,12 @@
     const pill = $('#fakt-status'); if (!pill) return;
     const lagring = faktRef ? 'sparas i molnet' : 'sparas i den här webbläsaren';
     if (sampleState === 'pending') { pill.textContent = 'Ansluter till Claude…'; pill.className = 'pill steel'; }
-    else if (sampleFn) { pill.textContent = 'Claude läser fakturorna · ' + lagring; pill.className = 'pill good'; }
+    else if (sampleFn) { pill.textContent = (lasLage === 'server' ? 'Claude läser fakturorna via Åberg & Co' : 'Claude läser fakturorna') + ' · ' + lagring; pill.className = 'pill good'; }
+    else if (lasLage === 'server') { pill.textContent = 'Skriv in salongskoden för att läsa fakturor · ' + lagring; pill.className = 'pill warn'; }
     else { pill.textContent = 'Claude är inte tillgänglig här · ' + lagring; pill.className = 'pill warn'; }
-    $('#fakt-noclaude').hidden = sampleState === 'pending' || !!sampleFn;
+    $('#fakt-noclaude').hidden = sampleState === 'pending' || !!sampleFn || lasLage === 'server';
+    const kodBox = $('#fakt-kod'); if (kodBox) kodBox.hidden = lasLage !== 'server';
+    const hint = $('#fakt-drop-hint'); if (hint && lasLage === 'server') hint.textContent = 'Pdf från leverantören, eller ett foto av pappersfakturan. Flera filer går bra. Läsningen går via Åberg & Co och kräver salongskoden.';
   }
   const FAKT_EXEMPEL = '<div class="note" style="margin-top:12px"><b>Så här ser en sorterad faktura ut. Exempel, inte dina siffror.</b><div class="table-scroll" style="margin-top:8px"><table class="costs fk"><thead><tr><th>Artikel</th><th class="num">Antal</th><th class="num">Belopp exkl. moms</th><th>Kategori</th><th>Varifrån</th></tr></thead><tbody>' +
     '<tr><td>Hårfärg 60 ml, nyans 7/0</td><td class="num">12</td><td class="num">1 044 kr</td><td>Material till tjänsterna</td><td><span class="pill good">Ditt beslut</span></td></tr>' +
@@ -2398,7 +2436,18 @@
     $('#fakt-periodval').addEventListener('change', e => { if (!S.fakt) S.fakt = {}; S.fakt.period = e.target.value; save(); renderFakt(); });
     $('#fakt-apply').addEventListener('click', applyFaktToNt);
     $('#fakt-reg-sok').addEventListener('input', renderRegister);
-    useCap('sample').then(async s => { sampleFn = (typeof s === 'function') ? s : null; sampleState = sampleFn ? 'ok' : 'none'; if (sampleFn && typeof sampleFn.limits === 'function') sampleCaps = await sampleFn.limits().catch(() => null); renderFaktStatus(); });
+    $('#fakt-kod-spara').addEventListener('click', async () => {
+      const inp = $('#fakt-kod-in'), msg = $('#fakt-kod-msg'), kod = inp.value.trim();
+      if (!kod) { msg.textContent = 'Skriv in koden först.'; inp.focus(); return; }
+      msg.textContent = 'Kontrollerar koden…';
+      try { await serverAnrop(kod, { ping: true }); } catch (e) { msg.textContent = e && e.code === 'kod' ? 'Koden stämmer inte. Kontrollera stavningen.' : (e && e.message) || 'Något gick fel.'; return; }
+      try { localStorage.setItem(KODKEY, kod); } catch (e) {}
+      msg.textContent = 'Koden är sparad. Nu kan du släppa fakturor här ovanför.';
+      kopplaServer();
+    });
+    $('#fakt-kod-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#fakt-kod-spara').click(); } });
+    if (lasLage === 'server') kopplaServer();
+    else useCap('sample').then(async s => { sampleFn = (typeof s === 'function') ? s : null; sampleState = sampleFn ? 'ok' : 'none'; if (sampleFn && typeof sampleFn.limits === 'function') sampleCaps = await sampleFn.limits().catch(() => null); renderFaktStatus(); });
     renderFakt(); renderFaktStatus();
   }
 
@@ -2459,7 +2508,7 @@
   }
   async function handleKassa(file, pasted) {
     const out = $('#kassa-progress'); out.className = 'fk-prog'; out.innerHTML = '';
-    if (!sampleFn) { out.innerHTML = '<div><span class="pill warn">Claude saknas</span><span>' + (sampleState === 'pending' ? 'Sidan har inte fått kontakt med Claude ännu. Vänta några sekunder och försök igen.' : 'Listan kan bara läsas när sidan är öppen på claude.ai och Claude är tillåten.') + '</span></div>'; return; }
+    if (!sampleFn) { out.innerHTML = '<div><span class="pill warn">Claude saknas</span><span>' + saknasText() + '</span></div>'; return; }
     if (kassaBusy || faktBusy) { out.innerHTML = '<div><span class="pill warn">Vänta</span><span>En läsning pågår redan.</span></div>'; return; }
     kassaBusy = true;
     const row = el('div'); const pill = el('span', { class: 'pill accent' }, 'Pågår'); const txt = el('span', null, 'Läser listan…'); row.appendChild(pill); row.appendChild(txt); out.appendChild(row);
@@ -2793,6 +2842,4 @@
   initPanels(); buildSettings(); buildNt(); buildTim(); buildLs(); buildJf(); buildBel(); buildFte(); buildPr(); buildEx(); buildLog(); buildFakt(); buildKassa(); rebuildAll(); initStore();
 })();
 </script>
-
-</body>
 </html>
