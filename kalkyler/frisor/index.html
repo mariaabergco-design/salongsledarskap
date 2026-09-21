@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<meta charset="utf-8">
+<title>Frisörkalkylen</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #F4F4F2;
+    --surface: #FFFFFF;
+    --surface-2: #F8F8F6;
+    --ink: #3D3D3D;
+    --muted: #767676;
+    --line: #E1E1DD;
+    --line-strong: #C4C4BE;
+    --accent: #F6A313;
+    --accent-ink: #FFFFFF;
+    --tint: #FEF3E0;
+    --brand-yellow: #FCBE04;
+    --brand-grey: #878787;
+    --logo-light: block;
+    --logo-dark: none;
+    --steel: #6F6F6F;
+    --steel-tint: #EEEEEA;
+    --good: #2C7A57;
+    --good-tint: #E4F2EB;
+    --warn: #B7791F;
+    --warn-tint: #FBF1DE;
+    --bad: #B23A31;
+    --bad-tint: #F9E5E3;
+    --shadow: 0 1px 2px rgba(27,36,40,.06), 0 8px 24px rgba(27,36,40,.06);
+    --radius: 10px;
+    --display: "Playfair Display", Georgia, "Times New Roman", serif;
+    --body: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1C1C1B; --surface: #262624; --surface-2: #2D2D2A;
+      --ink: #EFEDE8; --muted: #A5A39D; --line: #3A3A37; --line-strong: #55554F;
+      --accent: #F6A313; --accent-ink: #1C1C1B; --tint: #3A2E17; --brand-grey: #A5A39D; --logo-light: none; --logo-dark: block;
+      --steel: #A9A9A3; --steel-tint: #33332F;
+      --good: #63C293; --good-tint: #1B3229; --warn: #E2AA4F; --warn-tint: #3A2E17; --bad: #E4766C; --bad-tint: #3B211F;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1C1C1B; --surface: #262624; --surface-2: #2D2D2A;
+    --ink: #EFEDE8; --muted: #A5A39D; --line: #3A3A37; --line-strong: #55554F;
+    --accent: #F6A313; --accent-ink: #1C1C1B; --tint: #3A2E17; --brand-grey: #A5A39D; --logo-light: none; --logo-dark: block;
+    --steel: #A9A9A3; --steel-tint: #33332F;
+    --good: #63C293; --good-tint: #1B3229; --warn: #E2AA4F; --warn-tint: #3A2E17; --bad: #E4766C; --bad-tint: #3B211F;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { overflow-x: hidden; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--body); font-size: 13px; line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+  h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; letter-spacing: 0; font-weight: 500; }
+  h1 { font-size: 30px; line-height: 1.1; }
+  h2 { font-size: 20px; }
+  h3 { font-size: 16px; }
+  p { margin: 0; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  input, select { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 6px; padding: 6px 8px; min-width: 0; }
+  input:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  input[type="number"] { text-align: right; width: 100%; }
+  input[type="text"] { width: 100%; }
+  input.ro { background: var(--surface-2); color: var(--muted); border-style: dashed; text-align: right; }
+  input[type="range"] { width: 100%; accent-color: var(--accent); padding: 0; border: 0; background: transparent; }
+  input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .muted { color: var(--muted); }
+  .small { font-size: 12px; }
+
+  /* Header */
+  header.top {
+    background: var(--surface); border-bottom: 6px solid var(--brand-yellow);
+  }
+  .brand { margin-bottom: 16px; }
+  .brand img { height: 56px; width: auto; }
+  .brand .logo-light { display: var(--logo-light); }
+  .brand .logo-dark { display: var(--logo-dark); }
+  .top-inner {
+    max-width: 1180px; margin: 0 auto; padding: 22px 48px 18px;
+    display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: flex-end; justify-content: space-between;
+  }
+  .top-inner .lede { max-width: 62ch; color: var(--muted); margin-top: 6px; }
+  .top-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .top-controls label { display: flex; flex-direction: column; gap: 3px; }
+  .btn {
+    border: 1px solid var(--line-strong); background: var(--surface); border-radius: 6px; padding: 7px 12px; font-weight: 600; font-size: 13px;
+  }
+  .btn:hover { background: var(--surface-2); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn { font-family: var(--body); letter-spacing: .02em; }
+  .btn.ghost { border-color: transparent; color: var(--accent); padding: 4px 6px; }
+  .btn.danger { color: var(--bad); }
+
+  /* Layout */
+  .wrap {
+    max-width: 1180px; margin: 0 auto; padding: 24px 48px 40px;
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; align-items: start;
+  }
+  main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; min-width: 0; }
+  main > section { min-width: 0; max-width: 100%; }
+  .table-scroll { max-width: 100%; }
+  /* Resultatpanel fäst vid högerkanten, kan fällas in */
+  aside {
+    position: fixed; top: 0; right: 0; bottom: 0; width: 380px; max-width: 92vw; z-index: 30;
+    overflow-y: auto; padding: 16px; display: grid; gap: 16px; align-content: start;
+    background: var(--bg); border-left: 1px solid var(--line); box-shadow: -8px 0 24px rgba(0,0,0,.08);
+    transition: transform .25s ease;
+  }
+  body:not(.panel-open) aside { transform: translateX(100%); box-shadow: none; }
+  body { transition: padding-right .25s ease; }
+  body.panel-open { padding-right: 380px; }
+  #panel-toggle {
+    position: fixed; right: 0; top: 38%; z-index: 31; writing-mode: vertical-rl; transform: rotate(180deg);
+    background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 0 8px 8px 0; padding: 14px 8px;
+    font-family: var(--body); font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+    transition: right .25s ease; box-shadow: 0 2px 10px rgba(0,0,0,.15);
+  }
+  body.panel-open #panel-toggle { right: 380px; }
+  @media (max-width: 720px) { .wrap, .top-inner { padding-left: 16px; padding-right: 16px; } }
+  @media (max-width: 960px) {
+    aside { position: static; width: auto; max-width: none; transform: none !important; border-left: 0; box-shadow: none; padding: 0; order: -1; }
+    body.panel-open { padding-right: 0; }
+    #panel-toggle { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { aside, body, #panel-toggle { transition: none; } }
+
+  /* Panels */
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+  .panel > .head { padding: 16px 20px 12px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+  .panel > .head p { color: var(--muted); max-width: 70ch; }
+  .panel > .body { padding: 16px 20px 20px; }
+
+  /* Field grid */
+  .fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px 16px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field > span { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .fields > .field { justify-content: flex-end; }
+  .fields > .check { align-self: end; }
+
+  .field .unit { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px; }
+  .field .unit em { font-style: normal; color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .check { display: flex; align-items: center; gap: 8px; font-weight: 500; padding: 6px 0; }
+  .range-row { display: grid; grid-template-columns: 1fr 64px; gap: 10px; align-items: center; }
+  .range-row output { font-family: var(--display); font-weight: 600; font-size: 18px; text-align: right; }
+
+  /* Person card */
+  .person { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); overflow: hidden; }
+  .person + .person { margin-top: 14px; }
+  .person .p-head { display: flex; gap: 10px; align-items: center; padding: 12px 16px; background: var(--surface-2); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .person .p-head input[type="text"] { width: 200px; font-weight: 600; font-family: var(--display); font-size: 15px; }
+  .person .p-head .spacer { flex: 1; }
+  .person .p-body { padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr); gap: 18px; }
+  @media (max-width: 720px) { .person .p-body { grid-template-columns: 1fr; } }
+  .p-inputs { display: grid; gap: 14px; }
+  .p-inputs .group { display: grid; gap: 8px; }
+
+  /* Pay slip */
+  .slip { background: var(--surface-2); border-radius: 8px; padding: 12px 14px; align-self: start; }
+  .slip .eyebrow { margin-bottom: 8px; }
+  .slip table { width: 100%; border-collapse: collapse; }
+  .slip td { padding: 3px 0; vertical-align: top; }
+  .slip td:last-child { text-align: right; white-space: nowrap; }
+  .slip tr.sum td { border-top: 1px solid var(--line-strong); padding-top: 6px; font-weight: 700; }
+  .slip tr.total td { font-family: var(--display); font-size: 16px; font-weight: 700; padding-top: 8px; }
+  .slip tr.sub td { color: var(--muted); font-size: 12px; }
+  .slip tr.sub td:first-child { padding-left: 12px; }
+  .slip .kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .slip .kpi div { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+  .slip .kpi b { display: block; font-family: var(--display); font-size: 16px; }
+  .slip .kpi span { font-size: 11px; color: var(--muted); }
+  .slip .kpi div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .pill.good { background: var(--good-tint); color: var(--good); }
+  .pill.warn { background: var(--warn-tint); color: var(--warn); }
+  .pill.bad { background: var(--bad-tint); color: var(--bad); }
+  .pill.steel { background: var(--steel-tint); color: var(--steel); }
+  .pill.accent { background: var(--tint); color: var(--accent); }
+
+  /* Costs table */
+  .costs { width: 100%; border-collapse: collapse; }
+  .costs th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 6px 6px; border-bottom: 1px solid var(--line); }
+  .costs td { padding: 4px 6px; border-bottom: 1px solid var(--line); }
+  .costs td.amt { width: 130px; }
+  .costs td.cat { width: 160px; }
+  .costs td.del { width: 36px; text-align: right; }
+  .costs tr.group-row td { background: var(--surface-2); font-weight: 700; font-family: var(--display); padding: 8px 6px 4px; border-bottom: 1px solid var(--line-strong); }
+  .costs tr.group-row td:last-child { text-align: right; font-family: var(--body); font-weight: 600; }
+  .costs tr.group-row td .eyebrow { display: inline; }
+  .costs tr.admin-row td { background: var(--tint); }
+  .costs tr.foot td { font-weight: 700; border-bottom: 0; padding-top: 10px; font-family: var(--display); font-size: 15px; }
+  .costs tr.foot td:last-child { text-align: right; }
+  .costs .x { border: 0; background: transparent; color: var(--muted); font-size: 16px; line-height: 1; padding: 2px 6px; border-radius: 4px; }
+  .costs .x:hover { color: var(--bad); background: var(--bad-tint); }
+  .costs input[type="text"] { border-color: transparent; background: transparent; padding: 4px 6px; }
+  .costs input[type="text"]:hover, .costs input[type="text"]:focus { border-color: var(--line-strong); background: var(--surface); }
+  .costs select { padding: 4px 6px; }
+  .table-scroll { overflow-x: auto; }
+  .ex-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr); gap: 18px; }
+  @media (max-width: 720px) { .ex-grid { grid-template-columns: 1fr; } }
+  .ex-bar { display: flex; height: 18px; border-radius: 4px; overflow: hidden; margin: 10px 0 6px; background: var(--line); }
+  .ex-bar div { height: 100%; }
+  .ex-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 10px; font-size: 11px; color: var(--muted); }
+  .ex-legend span::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; background: var(--c); }
+
+  /* Summary */
+  .summary .row { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; }
+  .summary .row.sub { color: var(--muted); font-size: 12px; padding: 2px 0 2px 12px; }
+  .summary .row.line { border-top: 1px solid var(--line); margin-top: 4px; padding-top: 8px; font-weight: 700; }
+  .summary .row b { white-space: nowrap; }
+  .summary .result { margin-top: 10px; padding: 14px; border-radius: 8px; background: var(--tint); display: grid; gap: 4px; }
+  .summary .result.pos { background: var(--good-tint); }
+  .summary .result.neg { background: var(--bad-tint); }
+  .summary .result .big { font-family: var(--display); font-size: 30px; font-weight: 700; line-height: 1; }
+  .summary .result .big.pos { color: var(--good); }
+  .summary .result .big.neg { color: var(--bad); }
+  .summary .toggle { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; }
+  .summary .toggle button { border: 0; background: transparent; padding: 4px 10px; font-size: 12px; font-weight: 600; color: var(--muted); }
+  .summary .toggle button.on { background: var(--ink); color: var(--bg); }
+
+  .bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--line); margin: 10px 0 8px; }
+  .bar div { height: 100%; min-width: 0; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 12px; }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; background: var(--c); }
+
+  .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .kpis div { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+  .kpis b { display: block; font-family: var(--display); font-size: 20px; font-weight: 700; line-height: 1.1; }
+  .kpis span { font-size: 11px; color: var(--muted); }
+
+  .note { background: var(--steel-tint); color: var(--ink); border-left: 3px solid var(--steel); padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13px; }
+  .note.warn { background: var(--warn-tint); border-left-color: var(--warn); }
+  .rules { columns: 2; column-gap: 24px; font-size: 13px; }
+  .rules p { break-inside: avoid; margin-bottom: 8px; }
+  @media (max-width: 720px) { .rules { columns: 1; } }
+  footer { max-width: 1180px; margin: 0 auto; padding: 8px 48px 40px; color: var(--muted); font-size: 12px; max-width: 80ch; }
+  details summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+  .bel-table td, .bel-table th { text-align: right; padding: 5px 8px; white-space: nowrap; }
+  .bel-table th:first-child, .bel-table td:first-child { text-align: left; }
+  .bel-table tr.cur td { background: var(--tint); font-weight: 700; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+  .bel-chart { width: 100%; height: auto; display: block; margin: 6px 0 4px; }
+  .goal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 12px; }
+  .goal { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; background: var(--surface); }
+  .goal .eyebrow { margin-bottom: 6px; }
+  .goal b { display: block; font-family: var(--display); font-size: 22px; font-weight: 700; line-height: 1.1; }
+  .goal span.sub { display: block; font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .goal.accent { background: var(--tint); border-color: var(--accent); }
+  .jf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+  .jf-col { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; background: var(--surface-2); display: grid; gap: 8px; align-content: start; }
+  .jf-col p { margin: 0; }
+  .jf table.costs th, .jf table.costs td { text-align: right; white-space: nowrap; }
+  .jf table.costs th:first-child, .jf table.costs td:first-child { text-align: left; white-space: normal; }
+  .jf tr.hi td { font-family: var(--display); font-size: 15px; font-weight: 700; background: var(--surface-2); }
+  .jf td.best { color: var(--good); }
+  .pr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .pr-grid { grid-template-columns: 1fr; } }
+  .pr-col { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; gap: 10px; background: var(--surface-2); }
+  .pr-col:last-child { border-color: var(--accent); background: var(--tint); }
+  .pr-col .range-row output { font-size: 16px; }
+  .cmp th, .cmp td { text-align: right; }
+  .cmp th:first-child, .cmp td:first-child { text-align: left; }
+  .cmp tr.hi td { font-family: var(--display); font-size: 16px; font-weight: 700; background: var(--surface-2); }
+  .costs.log input[type="number"] { width: 110px; }
+  .costs.log td.num { text-align: right; white-space: nowrap; }
+  .costs.log th.num { text-align: right; }
+  .costs.log tr.tot td { font-weight: 700; border-bottom: 0; background: var(--surface-2); }
+  .head-inline { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; }
+  .lchart { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; height: 170px; align-items: end; margin: 8px 0 4px; }
+  .lchart .m { display: flex; gap: 2px; align-items: flex-end; height: 100%; border-bottom: 1px solid var(--line-strong); position: relative; }
+  .lchart .m div { flex: 1; border-radius: 2px 2px 0 0; min-height: 0; }
+  .lchart .m .oms { background: var(--steel); }
+  .lchart .m .kost { background: var(--accent); }
+  .lchart .m span { position: absolute; bottom: -18px; left: 0; right: 0; text-align: center; font-size: 10px; color: var(--muted); }
+  .lchart-legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); margin: 22px 0 10px; }
+  .lchart-legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; background: var(--c); vertical-align: -1px; }
+  .year-table td, .year-table th { padding: 5px 8px; }
+
+  .fk-wrap { max-width: 1100px; margin: 0 auto; padding: 24px 48px 48px; display: grid; gap: 20px; }
+  @media (max-width: 720px) { .fk-wrap { padding: 16px; } }
+  .fk-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr); gap: 20px; align-items: start; }
+  @media (max-width: 860px) { .fk-hero { grid-template-columns: 1fr; } }
+  .lonbox { background: var(--surface); border: 2px solid var(--accent); border-radius: 10px; padding: 18px 20px; position: sticky; top: 16px; }
+  .lonbox .big { font-family: var(--display); font-size: 40px; font-weight: 700; line-height: 1; color: var(--ink); margin: 6px 0 2px; }
+  .lonbox .sub { color: var(--muted); font-size: 13px; }
+  .lonbox table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  .lonbox td { padding: 3px 0; }
+  .lonbox td:last-child { text-align: right; white-space: nowrap; }
+  .lonbox tr.sum td { border-top: 1px solid var(--line-strong); font-weight: 700; padding-top: 6px; }
+  .lonbox tr.sub td { color: var(--muted); font-size: 12px; }
+  .tiers { display: grid; gap: 8px; margin-top: 8px; }
+  .tier { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
+  .tier .x { border: 0; background: transparent; color: var(--muted); font-size: 18px; cursor: pointer; padding: 6px; }
+  .tier .x:hover { color: var(--bad); }
+  dialog#kost-dialog { border: 0; border-radius: 12px; padding: 0; max-width: min(92vw, 640px); width: 100%; background: var(--surface); color: var(--ink); box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+  dialog#kost-dialog::backdrop { background: rgba(0,0,0,.45); }
+  .dlg { padding: 20px 22px 22px; max-height: 85vh; overflow: auto; }
+  .dlg-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .dlg table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .dlg td { padding: 4px 6px; border-bottom: 1px solid var(--line); }
+  .dlg td:last-child { text-align: right; white-space: nowrap; }
+  .dlg tr.grp td { font-family: var(--display); font-weight: 600; background: var(--surface-2); padding-top: 8px; }
+  .dlg tr.tot td { font-weight: 700; border-bottom: 0; font-size: 15px; font-family: var(--display); }
+  .slip tr.why td { padding: 0 0 8px 0; }
+  .slip tr.why td { color: var(--muted); font-size: 11.5px; line-height: 1.4; padding: 0 0 8px 10px; border-left: 2px solid var(--line-strong); white-space: normal !important; text-align: left !important; }
+  #kostar-slip table { table-layout: fixed; width: 100%; }
+  #kostar-slip col.lbl { width: 72%; } #kostar-slip col.amt { width: 28%; }
+  #kostar-slip td:first-child { white-space: normal; overflow-wrap: normal; }
+  #kostar-slip tr.sum td, #kostar-slip tr.total td { vertical-align: baseline; }
+  .stack { display: flex; height: 26px; border-radius: 6px; overflow: hidden; background: var(--line); margin: 8px 0 6px; }
+  .stack div { height: 100%; }
+  .stack-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 4px 12px; font-size: 12px; }
+  .stack-legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; background: var(--c); vertical-align: -1px; }
+  .kund { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin-top: 8px; }
+  .kund div { border-radius: 8px; padding: 10px 10px 8px; color: #fff; min-height: 70px; display: flex; flex-direction: column; justify-content: space-between; }
+  .kund b { font-family: var(--display); font-size: 22px; font-weight: 700; display: block; }
+  .kund span { font-size: 11px; opacity: .95; line-height: 1.3; }
+  .top-controls { flex-wrap: nowrap; align-items: flex-end; }
+  .top-controls > label { flex: 0 0 auto; }
+  .top-controls .btn { white-space: nowrap; }
+  @media (max-width: 760px) { .top-controls { flex-wrap: wrap; } }
+  #tim-table input[type="number"] { width: 90px; }
+  #tim-table input[type="text"] { min-width: 140px; }
+  #tim-table td.num { text-align: right; white-space: nowrap; }
+  #tim-table th.num { text-align: right; }
+  #tim-table .x { border: 0; background: transparent; color: var(--muted); font-size: 16px; cursor: pointer; }
+  #tim-table .x:hover { color: var(--bad); }
+  .fusk td, .fusk th { text-align: right; padding: 5px 10px; }
+  .fusk td:first-child, .fusk th:first-child { text-align: left; }
+  .formel { margin-top: 14px; padding: 14px 16px; border-radius: 8px; background: var(--tint); border: 1px solid var(--accent); font-size: 14px; line-height: 1.7; }
+  .formel .f { font-family: var(--display); font-size: 17px; font-weight: 600; display: block; }
+  .formel .ex { color: var(--muted); font-size: 12.5px; }
+  .three { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+  .three div { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--surface); }
+  .three b { display: block; font-family: var(--display); font-size: 20px; }
+  .three span { font-size: 11px; color: var(--muted); }
+
+  /* Hopfällbara sektioner: stängda vid första besöket, pilen öppnar */
+  .chev { border: 0; background: transparent; color: var(--accent); font-size: 15px; line-height: 1; padding: 4px 6px; cursor: pointer; border-radius: 4px; transition: transform .15s ease; display: inline-block; }
+  .chev:hover { background: var(--tint); }
+  .fk-wrap section.panel > .head { cursor: pointer; }
+  .fk-wrap section.panel > .head h2 { display: flex; align-items: center; gap: 4px; }
+  .fk-wrap section.panel.collapsed > .body { display: none; }
+  .fk-wrap section.panel.collapsed > .head { border-bottom: 0; }
+  .fk-wrap section.panel.collapsed > .head p { display: none; }
+  .fk-wrap section.panel.collapsed .chev { transform: rotate(-90deg); }
+  @media (prefers-reduced-motion: reduce) { .chev { transition: none; } }
+</style>
+
+<header class="top">
+  <div class="top-inner" style="max-width:1100px">
+    <div>
+      <div class="brand"><img class="logo-light" alt="Åberg & Co" src="data:image/png;base64,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"><img class="logo-dark" alt="" src="data:image/png;base64,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"></div>
+      <div class="eyebrow">För dig som är anställd frisör · Frisörbranschens avtal 2025–2027</div>
+      <h1>Frisörkalkylen</h1>
+      <p class="lede">Din lön är inte en slump. Dra i beläggning, timpris och arbetstid och se direkt vad det gör med din lön. Alla belopp du ser här är inklusive moms, precis som när du tar betalt av kunden. Lönen visas som bruttolön och ungefärlig nettolön.</p>
+    </div>
+    <div class="top-controls">
+      <label><span class="eyebrow">Avtalsår</span><select data-f="period"><option value="2025">1 apr 2025 – 31 mar 2026</option><option value="2026">1 apr 2026 – 31 mar 2027</option></select></label>
+      <button class="btn primary" id="share" type="button">Kopiera länk med mina siffror</button>
+      <button class="btn" id="toggle-all" type="button">Öppna alla</button>
+      <button class="btn" id="reset" type="button">Börja om</button>
+      <div id="msg" class="small muted" style="flex-basis:100%"></div>
+    </div>
+  </div>
+</header>
+
+<div class="fk-wrap">
+  <section class="panel" id="sec-tim">
+    <div class="head"><div><h2>Min äkta timdebitering</h2><p>Prislistan säger en sak, kassan en annan. Här räknar du ut vad ditt timpris är på papperet, vad du faktiskt får ut per timme med kund, och hur mycket som försvinner i omjobb, utdragna tider och bortbjudna tjänster. Allt inklusive moms, med det momsfria beloppet bredvid. Börja här: den äkta timdebiteringen avgör vad du drar in, och därmed din lön i beräkningarna längre ner. Timpriset du jämför med ställer du in under "Så jobbar jag" nedanför.</p></div></div>
+    <div class="body">
+      <h3>1. Prislistans timpris</h3>
+      <p class="small muted">Pris delat med tidsåtgång ger timpriset för varje behandling. Fyll i era vanligaste behandlingar och ungefär hur många du gör per månad, så får du ett snitt som är viktat efter vad du faktiskt gör.</p>
+      <div class="table-scroll"><table class="costs" id="tim-table"></table></div>
+      <button class="btn" type="button" id="add-beh" style="margin-top:10px">+ Lägg till behandling</button>
+      <div class="three" id="tim-snitt" style="margin-top:14px"></div>
+
+      <h3 style="margin-top:26px">2. Min verkliga timdebitering</h3>
+      <p class="small muted">Din äkta timdebitering är vad du faktiskt tog betalt per timme du stod med kund. Titta i kassan och bokningssystemet för en dag, en vecka eller en månad och fyll i tre saker: hur många timmar du jobbade, hur många av dem som var luckor utan kund, och vad du debiterade i tjänster. De grå förslagen kommer från dina inställningar ovan.</p>
+      <div class="fields">
+        <label class="field"><span>Period</span><select data-t="period"><option value="dag">En dag</option><option value="vecka">En vecka</option><option value="manad">En månad</option></select></label>
+        <label class="field"><span>Arbetade timmar</span><div class="unit"><input type="number" step="0.5" data-t="arbTimmar" placeholder="enligt kalkylen"><em>h</em></div></label>
+        <label class="field"><span>Varav luckor utan kund</span><div class="unit"><input type="number" step="0.5" data-t="luckor" placeholder="enligt kalkylen"><em>h</em></div></label>
+        <label class="field"><span>Debiterat i tjänster, inkl. moms</span><div class="unit"><input type="number" step="500" data-t="inslaget" placeholder="enligt kalkylen"><em>kr</em></div></label>
+      </div>
+      <div class="formel" id="tim-formel"></div>
+      <div class="three" id="tim-akta" style="margin-top:14px"></div>
+      <div id="tim-gap" class="note" style="margin-top:12px"></div>
+
+      <h3 style="margin-top:26px">3. Fuskmall: dagskassa till beläggning</h3>
+      <p class="small muted">En lapp för fikarummet. Med ditt timpris och dina timmar per dag ser du direkt vilken beläggning en dagskassa motsvarar. Skriv ut och sätt upp.</p>
+      <div class="fields"><div class="field"><span>Timmar per arbetsdag</span><div class="range-row"><input type="range" min="4" max="10" step="0.5" data-t="dagTimmar"><output id="dagTimmar-out"></output></div></div></div>
+      <div class="table-scroll" id="fusk"></div>
+    </div>
+  </section>
+
+  <div class="fk-hero">
+    <div style="display:grid;gap:20px">
+      <section class="panel" id="sec-jobb">
+        <div class="head"><h2>Så jobbar jag</h2><p>Beläggning är den del av din arbetstid som du har tagit betalt för. Tar du 1 000 kr i timmen och jobbar 8 timmar är 8 000 kr in 100 %, 4 000 kr är 50 %.</p></div>
+        <div class="body">
+          <div class="fields">
+            <label class="field"><span>Jag är</span><select data-f="typ"><option value="beh">Behörig frisör (gesällbrev)</option><option value="obeh">Obehörig frisör</option></select></label>
+            <label class="field"><span>Tjänstgöringsgrad</span><select data-f="grad"><option value="100">100 % (40 h/v)</option><option value="90">90 % (36 h/v)</option><option value="80">80 % (32 h/v)</option><option value="75">75 % (30 h/v)</option><option value="70">70 % (28 h/v)</option><option value="60">60 % (24 h/v)</option><option value="50">50 % (20 h/v)</option></select></label>
+            <label class="field"><span>Mitt timpris ut till kund inkl. moms</span><div class="unit"><input type="number" step="25" data-f="pris"><em>kr/h</em></div></label>
+            <div class="field"><span>Min beläggning</span><div class="range-row"><input type="range" min="0" max="100" step="5" data-f="bel"><output id="bel-out"></output></div></div>
+            <label class="field"><span>Produkter jag säljer per månad inkl. moms</span><div class="unit"><input type="number" step="500" data-f="produkt"><em>kr</em></div></label>
+            <label class="field"><span>Ungefärlig skatt</span><div class="unit"><input type="number" step="1" data-f="skatt"><em>%</em></div></label>
+          </div>
+          <div class="eyebrow" style="margin:16px 0 6px">Tillägg och OB enligt avtalet</div>
+          <div class="fields">
+            <label class="check"><input type="checkbox" data-f="prov"><span>Provanställning (garantilön 87 %)</span></label>
+            <label class="check"><input type="checkbox" data-f="bv1"><span>Branschvana 1 (5 000 h efter gesällprov)</span></label>
+            <label class="check"><input type="checkbox" data-f="bv2"><span>Branschvana 2 (mästarbrev)</span></label>
+            <label class="check"><input type="checkbox" data-f="tt"><span>Tjänstetidstillägg (över 5 år hos samma arbetsgivare)</span></label>
+            <label class="field"><span>OB-timmar vardag efter 18 (50 %)</span><div class="unit"><input type="number" step="1" data-f="ob50"><em>h/mån</em></div></label>
+            <label class="field"><span>OB-timmar lördag 12–13 (70 %)</span><div class="unit"><input type="number" step="1" data-f="ob70"><em>h/mån</em></div></label>
+            <label class="field"><span>OB-timmar lördag efter 13, sön- och helgdag (100 %)</span><div class="unit"><input type="number" step="1" data-f="ob100"><em>h/mån</em></div></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="sec-bonus">
+        <div class="head"><div><h2>Salongens bonussystem</h2><p>Många salonger ger extra procent på det du omsätter över en viss nivå. Lägg in era nivåer och se vad de ger ovanpå avtalet.</p></div></div>
+        <div class="body">
+          <label class="check"><input type="checkbox" data-f="bonusOn"><span>Vi har ett bonussystem</span></label>
+          <div id="bonus-box">
+            <div class="fields" style="margin-top:8px">
+              <label class="field"><span>Typ av system</span><select data-f="bonusMode"><option value="extra">Extra procent ovanpå avtalslönen</option><option value="ersatt">Provisionstrappa som ersätter avtalets provision</option></select></label>
+              <label class="field"><span>Räknas på</span><select data-f="bonusBas"><option value="tj">Omsättning i tjänster inkl. moms</option><option value="alla">Tjänster + produkter inkl. moms</option></select></label>
+            </div>
+            <div class="tiers" id="tiers"></div>
+            <button class="btn" type="button" id="add-tier" style="margin-top:10px">+ Lägg till nivå</button>
+            <p class="small muted" style="margin-top:8px" id="bonus-help"></p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="lonbox" id="lonbox"></div>
+  </div>
+
+
+  <section class="panel" id="sec-drom">
+    <div class="head"><div><h2>Min drömlön</h2><p>Skriv in den lön du vill ha. Kalkylen räknar baklänges: vad du behöver omsätta inklusive moms, vilken beläggning det motsvarar med ditt timpris, och vad det blir per vecka och dag.</p></div></div>
+    <div class="body">
+      <div class="fields"><label class="field"><span>Min drömlön, brutto per månad</span><div class="unit"><input type="number" step="1000" data-f="dromlon"><em>kr</em></div></label></div>
+      <div class="three" id="drom" style="margin-top:14px"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="sec-kostar">
+    <div class="head"><div><h2>Vad kostar jag salongen?</h2><p>Det du får på kontot är bara en del. Salongen betalar också arbetsgivaravgifter, semester, pension, friskvård och utbildning, materialet du använder, och de fasta kostnader som ska drivas runt varje månad oavsett hur många kunder som kommer.</p></div></div>
+    <div class="body">
+      <div class="fields" style="margin-bottom:12px">
+        <label class="field"><span>Salongens fasta kostnader per månad (fråga din salongsledare)</span><div class="unit"><input type="number" step="5000" data-f="fasta"><em>kr</em></div></label>
+        <label class="field"><span>Så många är vi som delar på dem</span><div class="unit"><input type="number" step="1" min="1" data-f="delar"><em>st</em></div></label>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px"><button class="btn" type="button" id="open-kost">Läs mer: salongens fasta kostnader</button><span class="small muted" id="kost-status"></span></div>
+      <div class="fk-hero" style="grid-template-columns:minmax(0,1.2fr) minmax(0,0.8fr)">
+        <div class="slip" id="kostar-slip"></div>
+        <div class="three" id="kostar-kpi" style="grid-template-columns:1fr;align-content:start"></div>
+      </div>
+      <h3 style="margin-top:22px">Så fördelas det jag kostar</h3>
+      <div id="kostar-bar"></div>
+      <h3 style="margin-top:22px">Vart tar kundens 1 000 kr vägen?</h3>
+      <p class="small muted">När en kund betalar 1 000 kr till dig i kassan, så här delas pengarna upp med dina siffror just nu.</p>
+      <div id="kund-bar"></div>
+      <p class="small muted">Tumregler i branschen: personalkostnaderna är ungefär 60 % av omsättningen, materialet 10 %, och vinsten som blir kvar för salongen är oftast 5–10 %.</p>
+    </div>
+  </section>
+
+  <section class="panel" id="sec-bel">
+    <div class="head"><div><h2>Min lön vid olika beläggning</h2><p>Under en viss beläggning är lönen densamma: då betalas garantilönen. Därefter stiger den för varje debiterad timme.</p></div></div>
+    <div class="body"><div id="chart"></div><div class="table-scroll" id="beltable"></div></div>
+  </section>
+
+  <section class="panel" id="sec-vad">
+    <div class="head"><div><h2>Vad händer om jag …</h2><p>Höjer priset, fyller schemat eller ändrar arbetstiden? Jämför dagens läge med ett nytt.</p></div></div>
+    <div class="body">
+      <div class="pr-grid">
+        <div class="pr-col"><div class="eyebrow">Idag (från inställningarna ovan)</div><div id="idag-summary" class="small"></div></div>
+        <div class="pr-col"><div class="eyebrow">Nytt läge</div>
+          <label class="field"><span>Timpris inkl. moms</span><div class="unit"><input type="number" step="25" data-f="nyPris"><em>kr/h</em></div></label>
+          <div class="field"><span>Beläggning</span><div class="range-row"><input type="range" min="0" max="100" step="5" data-f="nyBel"><output id="nyBel-out"></output></div></div>
+          <label class="field"><span>Tjänstgöringsgrad</span><select data-f="nyGrad"><option value="100">100 %</option><option value="90">90 %</option><option value="80">80 %</option><option value="75">75 %</option><option value="70">70 %</option><option value="60">60 %</option><option value="50">50 %</option></select></label>
+          <label class="field"><span>Produkter per månad inkl. moms</span><div class="unit"><input type="number" step="500" data-f="nyProdukt"><em>kr</em></div></label>
+        </div>
+      </div>
+      <div class="table-scroll" id="cmp" style="margin-top:14px"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="sec-mal">
+    <div class="head"><div><h2>Mitt mål per vecka och dag</h2><p>Välj den beläggning du siktar på. Då vet du vad du ska omsätta varje vecka och dag, och vad en extra behandling om dagen ger.</p></div></div>
+    <div class="body">
+      <div class="fields">
+        <div class="field"><span>Målbeläggning</span><div class="range-row"><input type="range" min="0" max="100" step="5" data-f="malBel"><output id="malBel-out"></output></div></div>
+        <label class="field"><span>Snittpris per såld produkt inkl. moms</span><div class="unit"><input type="number" step="10" data-f="produktPris"><em>kr</em></div></label>
+        <label class="field"><span>Extra värde per dag, t.ex. en inpackning</span><div class="unit"><input type="number" step="50" data-f="extraDag"><em>kr inkl. moms</em></div></label>
+      </div>
+      <div class="three" id="goals" style="margin-top:14px"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="sec-avtal">
+    <div class="head"><h2>Så räknar avtalet</h2></div>
+    <div class="body rules" id="rules"></div>
+  </section>
+  <p class="small muted" style="max-width:80ch">Kalkylen visar bruttolön enligt Frisörbranschens avtal och ett ungefärligt nettobelopp efter skatt. Semesterlön tillkommer med 13 % och betalas ut vid semester. Kontrollera alltid mot din lönespecifikation. Salongsledare hittar hela salongens ekonomi i <a href="https://salongskalkylen.vercel.app/">Salongskalkylen</a>.</p>
+</div>
+
+<dialog id="kost-dialog">
+  <div class="dlg">
+    <div class="dlg-head"><h2 id="kost-title">Salongens fasta kostnader</h2><button class="btn" type="button" id="close-kost">Stäng</button></div>
+    <div id="kost-body"></div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  const T = {
+    '2025': { label: '2025-04-01 – 2026-03-31', beh: { bb40: 16735, gl40: 28713, prov: 17.67, bv1: 500, bv2: 295, tt: 774, obBas: 144.39 }, obeh: { bb40: 15423, gl40: 20099, prov: 10.35, bv1: 0, bv2: 0, tt: 0, obBas: 116.18 }, provanst: 0.87, salesProv: 7 },
+    '2026': { label: '2026-04-01 – 2027-03-31', beh: { bb40: 16860, gl40: 29574, prov: 17.77, bv1: 555, bv2: 320, tt: 804, obBas: 148.72 }, obeh: { bb40: 15613, gl40: 20702, prov: 10.45, bv1: 0, bv2: 0, tt: 0, obBas: 119.66 }, provanst: 0.87, salesProv: 7 }
+  };
+  const VECKOR = 4.325, MOMS = 25;
+  const def = () => ({ period: '2026', typ: 'beh', grad: 100, pris: 1000, bel: 75, produkt: 6000, skatt: 25, prov: false, bv1: false, bv2: false, tt: false, ob50: 6, ob70: 2, ob100: 6,
+    bonusOn: false, bonusBas: 'tj', bonusMode: 'extra', tiers: [{ trosk: 80000, pct: 2 }], dromlon: 35000, fasta: 100000, delar: 4, tim: { period: 'manad', inslaget: null, kundTimmar: null, luckor: null, arbTimmar: null, dagTimmar: 8, beh: [{ namn: 'Klippning 30 min', pris: 550, min: 30, antal: 20 }, { namn: 'Klippning 45 min', pris: 750, min: 45, antal: 15 }, { namn: 'Luggklippning', pris: 185, min: 15, antal: 8 }, { namn: 'Klipp och färg', pris: 2500, min: 150, antal: 12 }, { namn: 'Slingor', pris: 3100, min: 180, antal: 6 }, { namn: 'Inpackning', pris: 250, min: 15, antal: 10 }] }, ag: 31.42, semester: 13, pension: 4.5, loneskatt: 24.26, friskvard: 3400, utbildning: 1000, marginal: 30, nyPris: 1100, nyBel: 85, nyGrad: 100, nyProdukt: 8000, malBel: 85, produktPris: 350, extraDag: 200 });
+  const KEY = 'frisorkalkylen-v1';
+  let F;
+  try { const raw = localStorage.getItem(KEY); F = raw ? Object.assign(def(), JSON.parse(raw)) : def(); } catch (e) { F = def(); }
+  if (!F.tim || !F.tim.beh) F.tim = def().tim; else F.tim = Object.assign(def().tim, F.tim);
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(F)); } catch (e) {} };
+  const $ = s => document.querySelector(s);
+  const kr = n => Math.round(n).toLocaleString('sv-SE') + ' kr';
+  const num = n => Math.round(n).toLocaleString('sv-SE');
+  const pct = n => n.toLocaleString('sv-SE', { maximumFractionDigits: 1 }) + ' %';
+  const exkl = v => v / (1 + MOMS / 100);
+
+  function calc(o) {
+    const t = T[o.period]; const tab = t[o.typ] || t.beh;
+    const veckotid = 40 * o.grad / 100; const share = o.grad / 100;
+    const hours = veckotid * VECKOR; const deb = hours * o.bel / 100;
+    const tjInkl = deb * o.pris; const tj = exkl(tjInkl); const prod = exkl(o.produkt || 0);
+    const bb = tab.bb40 * share; let arbProv = tj * tab.prov / 100;
+    const bonusBas = o.bonusBas === 'alla' ? tjInkl + (o.produkt || 0) : tjInkl;
+    const tiersS = (o.bonusOn && o.tiers ? [...o.tiers] : []).filter(x => x.trosk != null).sort((a, b) => a.trosk - b.trosk);
+    if (o.bonusOn && o.bonusMode === 'ersatt' && tiersS.length) {
+      const under = Math.min(bonusBas, tiersS[0].trosk); let prov = exkl(under) * tab.prov / 100;
+      tiersS.forEach((x, i) => { const upper = i + 1 < tiersS.length ? tiersS[i + 1].trosk : Infinity; const amt = Math.max(0, Math.min(bonusBas, upper) - x.trosk); prov += exkl(amt) * (x.pct || 0) / 100; });
+      arbProv = prov;
+    }
+    let gl = tab.gl40 * share; if (o.prov) gl *= t.provanst;
+    const modell = bb + arbProv; const garanti = modell < gl; const grund = Math.max(modell, gl);
+    const sales = prod * t.salesProv / 100;
+    const bv1 = o.bv1 ? tab.bv1 * share : 0, bv2 = (o.bv1 && o.bv2) ? tab.bv2 * share : 0, tt = o.tt ? tab.tt * share : 0;
+    const ob = ((o.ob50 || 0) * 0.5 + (o.ob70 || 0) * 0.7 + (o.ob100 || 0)) * tab.obBas;
+    let bonus = 0;
+    if (o.bonusOn && o.bonusMode !== 'ersatt' && tiersS.length) {
+      tiersS.forEach((x, i) => { const upper = i + 1 < tiersS.length ? tiersS[i + 1].trosk : Infinity; const amt = Math.max(0, Math.min(bonusBas, upper) - x.trosk); bonus += exkl(amt) * (x.pct || 0) / 100; });
+    }
+    const brutto = grund + sales + bv1 + bv2 + tt + ob + bonus;
+    // vad jag kostar salongen
+    const semester = brutto * o.semester / 100, under = brutto + semester, ag = under * o.ag / 100, pension = under * o.pension / 100 * (1 + o.loneskatt / 100), friskvard = o.friskvard / 12 * Math.min(1, share), utbildning = o.utbildning;
+    const lonekostnad = brutto + semester + ag + pension + friskvard + utbildning;
+    const material = tj * 0.10, inkop = prod * (100 - o.marginal) / 100;
+    const andel = (o.delar || 1) > 0 ? (o.fasta || 0) / (o.delar || 1) : 0;
+    const kvar = tj + prod - material - inkop - lonekostnad - andel;
+    return { veckotid, hours, deb, tjInkl, tj, prod, bb, arbProv, gl, garanti, grund, sales, bv1, bv2, tt, ob, bonus, brutto, netto: brutto * (1 - o.skatt / 100), timlon: hours > 0 ? brutto / hours : 0, tab,
+      semester, ag, pension, friskvard, utbildning, lonekostnad, material, inkop, andel, kvar };
+  }
+
+  function bind() {
+    document.querySelectorAll('[data-f]').forEach(i => {
+      const k = i.dataset.f;
+      if (i.type === 'checkbox') { i.checked = !!F[k]; i.addEventListener('change', () => { F[k] = i.checked; render(); }); }
+      else if (i.tagName === 'SELECT') { i.value = String(F[k]); i.addEventListener('change', () => { F[k] = isNaN(parseFloat(i.value)) || k === 'period' ? i.value : parseFloat(i.value); render(); }); }
+      else if (i.type === 'range') { i.value = F[k]; i.addEventListener('input', () => { F[k] = parseFloat(i.value); render(); }); }
+      else { i.value = F[k]; i.addEventListener('input', () => { F[k] = parseFloat(i.value) || 0; render(); }); }
+    });
+    document.querySelectorAll('[data-t]').forEach(i => {
+      const k = i.dataset.t; i.value = F.tim[k] == null ? '' : F.tim[k];
+      const ev = i.tagName === 'SELECT' ? 'change' : 'input';
+      i.addEventListener(ev, () => { F.tim[k] = i.tagName === 'SELECT' ? i.value : (i.value === '' ? null : (parseFloat(i.value) || 0)); render(); });
+    });
+    $('#add-beh').addEventListener('click', () => { F.tim.beh.push({ namn: 'Ny behandling', pris: 500, min: 30, antal: 5 }); buildBeh(); render(); const inputs = document.querySelectorAll('#tim-table input[type="text"]'); const last = inputs[inputs.length - 1]; if (last) { last.focus(); last.select(); } });
+    $('#add-tier').addEventListener('click', () => { const last = F.tiers[F.tiers.length - 1]; F.tiers.push({ trosk: last ? last.trosk + 20000 : 80000, pct: last ? last.pct + 1 : 2 }); buildTiers(); render(); });
+    $('#reset').addEventListener('click', () => { if (confirm('Börja om med startvärdena?')) { F = def(); save(); location.hash = ''; location.reload(); } });
+    $('#share').addEventListener('click', async () => {
+      const data = await encodeShare(F); const url = location.href.split('#')[0] + '#data=' + data;
+      const show = label => { const m = $('#msg'); m.innerHTML = label + ' '; const i = document.createElement('input'); i.type = 'text'; i.readOnly = true; i.value = url; i.style.cssText = 'width:min(100%,520px);font-size:12px'; i.addEventListener('focus', () => i.select()); m.appendChild(i); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(() => show('Länk kopierad. Den som öppnar den ser dina siffror:'), () => show('Markera och kopiera:')); else show('Markera och kopiera:');
+    });
+  }
+  function buildBeh() {
+    const t = $('#tim-table');
+    t.innerHTML = '<thead><tr><th>Behandling</th><th class="num">Pris inkl. moms</th><th class="num">Tid (min)</th><th class="num">Antal per månad</th><th class="num">Timpris inkl. moms</th><th class="num">Timpris exkl. moms</th><th></th></tr></thead>';
+    const tb = document.createElement('tbody');
+    F.tim.beh.forEach((b, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td><input type="text" value="' + b.namn.replace(/"/g, '&quot;') + '"></td><td class="num"><input type="number" step="10" value="' + b.pris + '"></td><td class="num"><input type="number" step="5" value="' + b.min + '"></td><td class="num"><input type="number" step="1" value="' + b.antal + '"></td><td class="num" data-c="inkl"></td><td class="num" data-c="exkl"></td><td><button class="x" type="button" aria-label="Ta bort">×</button></td>';
+      const [n, pr, mi, an] = tr.querySelectorAll('input');
+      n.addEventListener('input', () => { b.namn = n.value; save(); });
+      pr.addEventListener('input', () => { b.pris = parseFloat(pr.value) || 0; render(); });
+      mi.addEventListener('input', () => { b.min = parseFloat(mi.value) || 0; render(); });
+      an.addEventListener('input', () => { b.antal = parseFloat(an.value) || 0; render(); });
+      tr.querySelector('.x').addEventListener('click', () => { F.tim.beh.splice(i, 1); buildBeh(); render(); });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+  }
+  function buildTiers() {
+    const box = $('#tiers'); box.innerHTML = '';
+    F.tiers.forEach((x, i) => {
+      const row = document.createElement('div'); row.className = 'tier';
+      row.innerHTML = '<label class="field"><span>Omsättning över (inkl. moms, per månad)</span><div class="unit"><input type="number" step="5000" value="' + x.trosk + '"><em>kr</em></div></label><label class="field"><span>Extra procent på beloppet över</span><div class="unit"><input type="number" step="0.5" value="' + x.pct + '"><em>%</em></div></label><button class="x" type="button" aria-label="Ta bort nivå">×</button>';
+      const [a, b] = row.querySelectorAll('input');
+      a.addEventListener('input', () => { x.trosk = parseFloat(a.value) || 0; render(); });
+      b.addEventListener('input', () => { x.pct = parseFloat(b.value) || 0; render(); });
+      row.querySelector('.x').addEventListener('click', () => { F.tiers.splice(i, 1); buildTiers(); render(); });
+      box.appendChild(row);
+    });
+  }
+
+  function render() {
+    save();
+    $('#bel-out').textContent = F.bel + ' %'; $('#nyBel-out').textContent = F.nyBel + ' %'; $('#malBel-out').textContent = F.malBel + ' %';
+    $('#bonus-box').hidden = !F.bonusOn;
+    const r = calc(F);
+    const rows = [
+      ['Schemalagda timmar per månad', num(r.hours) + ' h', 'sub'], ['Debiterade timmar (' + F.bel + ' %)', num(r.deb) + ' h', 'sub'],
+      ['Jag omsätter i tjänster inkl. moms', kr(r.tjInkl)], ['Inarbetat exkl. moms', kr(r.tj), 'sub'],
+      ['Basbelopp (' + num(r.veckotid) + ' h/v)', kr(r.bb)], [F.bonusOn && F.bonusMode === 'ersatt' ? 'Arbetsprovision enligt salongens trappa' : 'Arbetsprovision ' + pct(r.tab.prov), kr(r.arbProv)],
+      [r.garanti ? 'Garantilönen gäller (högre än basbelopp + provision)' : 'Garantilön ' + kr(r.gl) + ' (nås)', r.garanti ? kr(r.gl) : '', 'sub'],
+      ['Lön för tjänster', kr(r.grund), 'sum']
+    ];
+    if (r.sales) rows.push(['Försäljningsprovision 7 %', kr(r.sales)]);
+    if (r.bv1) rows.push(['Branschvana 1', kr(r.bv1)]); if (r.bv2) rows.push(['Branschvana 2', kr(r.bv2)]); if (r.tt) rows.push(['Tjänstetidstillägg', kr(r.tt)]);
+    if (r.ob) rows.push(['OB-ersättning', kr(r.ob)]);
+    if (F.bonusOn) rows.push(['Bonus enligt salongens system', kr(r.bonus)]);
+    rows.push(['Din bruttolön', kr(r.brutto), 'sum']); rows.push(['Din nettolön, ca', kr(r.netto), 'sub']);
+    $('#lonbox').innerHTML = '<div class="eyebrow">Din bruttolön per månad · ' + T[F.period].label + '</div><div class="big">' + kr(r.brutto) + '</div><div class="eyebrow" style="margin-top:10px">Din nettolön, ungefär utbetalt efter ' + F.skatt + ' % skatt</div><div class="big" style="font-size:30px;color:var(--good)">' + kr(r.netto) + '</div><div class="sub">' + kr(r.timlon) + ' brutto per arbetad timme · du omsätter ' + kr(r.tjInkl) + ' inkl. moms</div>' +
+      '<table>' + rows.map(x => '<tr class="' + (x[2] || '') + '"><td>' + x[0] + '</td><td>' + x[1] + '</td></tr>').join('') + '</table>';
+
+    $('#bonus-help').textContent = F.bonusMode === 'ersatt'
+      ? 'Under den första gränsen gäller avtalets provision (' + pct(r.tab.prov) + '). Varje nivå gäller för omsättningen från sin gräns upp till nästa. Basbelopp, garantilön och tillägg gäller som vanligt. Exempel från en salong: avtal upp till 75 000, 18 % upp till 80 000, 19 % upp till 90 000, 21 % över.'
+      : 'Varje nivå gäller för omsättningen från sin gräns upp till nästa. Procenten räknas på beloppet exklusive moms och läggs ovanpå avtalslönen.';
+
+    // äkta timdebitering
+    (function () {
+      const x = F.tim; const rows = document.querySelectorAll('#tim-table tbody tr');
+      let sumPris = 0, sumMin = 0, sumPrisV = 0, sumMinV = 0, n = 0;
+      F.tim.beh.forEach((b, i) => {
+        const h = b.min > 0 ? b.pris / (b.min / 60) : 0; const tr = rows[i]; if (tr) { const c1 = tr.querySelector('[data-c="inkl"]'), c2 = tr.querySelector('[data-c="exkl"]'); c1.textContent = kr(h); c2.textContent = kr(exkl(h)); c1.style.color = h >= F.pris ? 'var(--good)' : h >= F.pris * 0.85 ? 'var(--warn)' : 'var(--bad)'; c1.style.fontWeight = '700'; }
+        if (b.min > 0) { sumPris += b.pris; sumMin += b.min; n++; sumPrisV += b.pris * (b.antal || 0); sumMinV += b.min * (b.antal || 0); }
+      });
+      const enkelt = sumMin > 0 ? sumPris / (sumMin / 60) : 0; const viktat = sumMinV > 0 ? sumPrisV / (sumMinV / 60) : 0;
+      const g = (l, b, s2, cls) => '<div class="' + (cls || '') + '"><span class="eyebrow">' + l + '</span><b>' + b + '</b><span>' + s2 + '</span></div>';
+      $('#tim-snitt').innerHTML = g('Prislistans snitt-timpris', kr(enkelt), kr(exkl(enkelt)) + ' exkl. moms · alla behandlingar räknas lika') + g('Viktat efter vad jag gör', kr(viktat), kr(exkl(viktat)) + ' exkl. moms · ' + num(sumMinV / 60) + ' timmar kund per månad') + g('Mitt timpris i kalkylen', kr(F.pris), kr(exkl(F.pris)) + ' exkl. moms · ' + (viktat >= F.pris ? 'prislistan når upp' : 'prislistan ligger ' + kr(F.pris - viktat) + ' under'));
+      // verklig
+      const per = x.period; const fac = per === 'dag' ? 1 / (F.grad / 100 * 5 * VECKOR) : per === 'vecka' ? 1 / VECKOR : 1;
+      const inslaget = x.inslaget != null ? x.inslaget : r.tjInkl * fac; const arbT = x.arbTimmar != null ? x.arbTimmar : r.hours * fac;
+      if (x.luckor == null && x.kundTimmar != null) { x.luckor = Math.max(0, arbT - x.kundTimmar); x.kundTimmar = null; const li = $('[data-t="luckor"]'); if (li) li.value = x.luckor; }
+      const luckor = x.luckor != null ? x.luckor : Math.max(0, (r.hours - r.deb) * fac); const kundT = Math.max(0, arbT - luckor);
+      const h1 = v => v.toLocaleString('sv-SE', { maximumFractionDigits: 1 });
+      $('[data-t="inslaget"]').placeholder = num(r.tjInkl * fac); $('[data-t="luckor"]').placeholder = h1((r.hours - r.deb) * fac); $('[data-t="arbTimmar"]').placeholder = h1(r.hours * fac);
+      const akta = kundT > 0 ? inslaget / kundT : 0; const perArb = arbT > 0 ? inslaget / arbT : 0; const bel = (F.pris > 0 && arbT > 0) ? inslaget / (F.pris * arbT) * 100 : 0; const belTid = arbT > 0 ? kundT / arbT * 100 : 0;
+      $('#tim-formel').innerHTML = '<span class="f">Äkta timdebitering = debiterat ÷ (arbetade timmar − luckor)</span>' + (kundT > 0 ? kr(inslaget) + ' ÷ (' + h1(arbT) + ' h − ' + h1(luckor) + ' h) = ' + kr(inslaget) + ' ÷ ' + h1(kundT) + ' h med kund = <b>' + kr(akta) + ' per timme inkl. moms</b>, det vill säga ' + kr(exkl(akta)) + ' exkl. moms.' : 'Fyll i arbetade timmar och luckor så att det blir timmar med kund kvar.') + '<br><span class="ex">Exempel: har du stått med kund i 10 timmar och debiterat 10 000 kr, tar du 1 000 kr i timmen inklusive moms, 800 kr exklusive moms.</span>';
+      $('#tim-akta').innerHTML = g('Min äkta timdebitering', kr(akta), kr(exkl(akta)) + ' exkl. moms · per timme jag stod med kund (' + h1(kundT) + ' h)', 'accent') + g('Per arbetad timme, luckor inräknade', kr(perArb), kr(exkl(perArb)) + ' exkl. moms · ' + h1(luckor) + ' h luckor av ' + h1(arbT) + ' h') + g('Ekonomisk beläggning', pct(bel), 'debiterat delat med ' + num(F.pris) + ' kr × ' + h1(arbT) + ' h. Tid med kund: ' + pct(belTid));
+      const diff = F.pris - akta; const manadT = kundT / fac; const bortMan = diff * manadT; const provPct = r.tab.prov; const lonEffekt = exkl(Math.abs(bortMan)) * provPct / 100;
+      const gap = $('#tim-gap');
+      if (kundT <= 0) { gap.className = 'note'; gap.textContent = 'Fyll i arbetade timmar, luckor och vad du debiterat för att se skillnaden mot prislistan.'; }
+      else if (diff > 5) { gap.className = 'note warn'; gap.innerHTML = '<b>Du ligger ' + kr(diff) + ' per timme under ditt timpris.</b> På en månad med ' + num(manadT) + ' timmar kund är det ' + kr(bortMan) + ' inkl. moms som inte kommer in, och ungefär ' + kr(lonEffekt) + ' mindre i din lön. Vanliga orsaker: tider som dras ut utan att kosta mer, extra nyanseringar och omjobb som inte debiteras, rabatter och behandlingar man bjuder på. Fråga dig efter varje dag: höll jag timpriset i dag?'; }
+      else if (diff < -5) { gap.className = 'note'; gap.innerHTML = '<b>Du ligger ' + kr(-diff) + ' per timme över ditt timpris.</b> Du tar betalt för din tid och lite till. På en månad är det ' + kr(-bortMan) + ' inkl. moms extra in, och runt ' + kr(lonEffekt) + ' mer i din lön.'; }
+      else { gap.className = 'note'; gap.innerHTML = '<b>Du håller ditt timpris.</b> Skillnaden är bara ' + kr(Math.abs(diff)) + ' per timme. Bra jobbat.'; }
+      // fuskmall
+      $('#dagTimmar-out').textContent = x.dagTimmar + ' h';
+      const full = F.pris * x.dagTimmar; const steps = [];
+      for (let k = 1000; k <= Math.ceil(full / 1000) * 1000 + 1000; k += 1000) steps.push(k);
+      $('#fusk').innerHTML = '<table class="costs fusk"><thead><tr><th>Dagskassa i tjänster, inkl. moms</th><th>Beläggning</th><th>Timmar med kund</th><th>Ger i lön, ca per dag</th></tr></thead><tbody>' + steps.map(k => { const b = k / full * 100; const rd = calc(Object.assign({}, F, { bel: b })); const dagar = F.grad / 100 * 5 * VECKOR; return '<tr' + (b >= 100 ? ' style="font-weight:700"' : '') + '><td>' + kr(k) + '</td><td style="color:var(--' + (b >= 75 ? 'good' : b >= 55 ? 'warn' : 'bad') + ')">' + Math.round(b) + ' %</td><td>' + (k / F.pris).toLocaleString('sv-SE', { maximumFractionDigits: 1 }) + ' h av ' + x.dagTimmar + '</td><td>' + kr(rd.brutto / dagar) + '</td></tr>'; }).join('') + '</tbody></table><p class="small muted" style="margin-top:6px">100 % beläggning = ' + kr(full) + ' på en dag med ' + x.dagTimmar + ' timmar och ' + num(F.pris) + ' kr per timme. Lönen per dag är månadslönen vid den beläggningen delad med dina arbetsdagar.</p>';
+    })();
+
+    // drömlön: sök beläggning/omsättning som ger drömlönen
+    const solve = fn => { let lo = 0, hi = 300; if (fn(hi) < F.dromlon) return null; for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (fn(mid) >= F.dromlon) hi = mid; else lo = mid; } return hi; };
+    const belNeed = solve(b => calc(Object.assign({}, F, { bel: b })).brutto);
+    const dagarV0 = F.grad / 100 * 5, dagarM0 = dagarV0 * VECKOR;
+    let dromHtml;
+    if (belNeed == null) dromHtml = '<div><span class="eyebrow">Drömlön ' + kr(F.dromlon) + '</span><b>Nås inte</b><span>inte ens vid 300 % beläggning med ditt timpris. Höj timpriset eller drömmen.</span></div>';
+    else {
+      const rd = calc(Object.assign({}, F, { bel: belNeed }));
+      const prisNeed = belNeed > 100 ? (() => { let lo = F.pris, hi = F.pris * 5; for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (calc(Object.assign({}, F, { bel: 100, pris: mid })).brutto >= F.dromlon) hi = mid; else lo = mid; } return hi; })() : null;
+      dromHtml = '<div class="accent" style="background:var(--tint);border-color:var(--accent)"><span class="eyebrow">Drömlön ' + kr(F.dromlon) + ' brutto</span><b>ca ' + kr(F.dromlon * (1 - F.skatt / 100)) + ' netto</b><span>med ' + F.grad + ' % tjänst och ' + num(F.pris) + ' kr/h inkl. moms</span></div>' +
+        '<div><span class="eyebrow">Du behöver omsätta</span><b>' + kr(rd.tjInkl) + '</b><span>i tjänster inkl. moms per månad' + (F.produkt ? ', plus ' + kr(F.produkt) + ' i produkter' : '') + '</span></div>' +
+        '<div><span class="eyebrow">Det motsvarar beläggning</span><b' + (belNeed > 100 ? ' style="color:var(--bad)"' : '') + '>' + Math.round(belNeed) + ' %</b><span>' + (belNeed > 100 ? 'går inte: du behöver ' + kr(prisNeed) + ' per timme inkl. moms vid 100 %' : 'idag har du ' + F.bel + ' %') + '</span></div>' +
+        '<div><span class="eyebrow">Per arbetad vecka</span><b>' + kr(rd.tjInkl / VECKOR) + '</b><span>' + num(dagarV0) + ' arbetsdagar</span></div>' +
+        '<div><span class="eyebrow">Per arbetsdag</span><b>' + kr(dagarM0 > 0 ? rd.tjInkl / dagarM0 : 0) + '</b><span>' + (dagarM0 > 0 ? rd.deb / dagarM0 : 0).toLocaleString('sv-SE', { maximumFractionDigits: 1 }) + ' debiterade timmar per dag</span></div>' +
+        '<div><span class="eyebrow">Då kostar du salongen</span><b>' + kr(rd.lonekostnad) + '</b><span>i lön med alla avgifter, per månad</span></div>';
+    }
+    $('#drom').innerHTML = dromHtml;
+
+    // vad kostar jag
+    const totalKost = r.lonekostnad + r.material + r.inkop + r.andel;
+    const kRows = [
+      ['Din bruttolön', kr(r.brutto), 'sum', 'Det som står på din lönespecifikation före skatt. Ungefär ' + kr(r.netto) + ' landar på ditt konto, resten är skatt som salongen betalar in åt dig.'],
+      ['Arbetsgivaravgift ' + pct(F.ag), kr(r.ag), 'sub', 'Lagstadgad avgift till staten på all lön, inklusive semesterersättningen. Den finansierar din allmänna pension, sjukförsäkring och föräldraförsäkring. Salongen betalar den ovanpå din lön, den syns aldrig på din lönespecifikation.'],
+      ['Semesterersättning ' + pct(F.semester), kr(r.semester), 'sub', 'Enligt frisöravtalet tjänar du in 13 % av allt du får i lön till din semester. Salongen lägger undan det varje månad och betalar ut det när du är ledig.'],
+      ['Avtalspension ' + pct(F.pension) + ' + särskild löneskatt', kr(r.pension), 'sub', 'Salongen sparar 4,5 % av din lön till din tjänstepension via Fora (Avtalspension SAF-LO). Staten tar dessutom 24,26 % i särskild löneskatt på det beloppet.'],
+      ['Friskvård', kr(r.friskvard), 'sub', num(F.friskvard) + ' kr per år enligt avtalet, för träningskort, massage eller annan friskvård mot kvitto.'],
+      ['Utbildning', kr(r.utbildning), 'sub', 'Avtalet ger dig minst två betalda utbildningsdagar per år. Här räknas kurser, produktutbildningar och mässor som en snittkostnad per månad.'],
+      ['Så mycket kostar min lön salongen', kr(r.lonekostnad), 'sum', 'För varje krona du får i bruttolön betalar salongen ungefär ' + (r.brutto > 0 ? (r.lonekostnad / r.brutto).toLocaleString('sv-SE', { maximumFractionDigits: 2 }) : '–') + ' kr. Räknat mot det som landar på ditt konto är det ungefär det dubbla.'],
+      ['Material jag använder', kr(r.material), 'sub', 'Färg, blekning, folie, schampo, balsam, handskar och annat som går åt när du jobbar. Branschens schablon är 10 % av det du omsätter i tjänster exklusive moms, alltså ' + kr(r.tj) + '. Använder du mer eller bjuder på behandlingar stiger den här posten.']
+    ];
+    if (r.inkop) kRows.push(['Inköp av produkterna jag säljer', kr(r.inkop), 'sub', 'Produkterna du säljer för ' + kr(F.produkt) + ' inkl. moms har salongen köpt in. Med ' + F.marginal + ' % marginal är inköpspriset ' + (100 - F.marginal) + ' % av försäljningspriset exklusive moms.']);
+    kRows.push(['Min andel av salongens fasta kostnader', kr(r.andel), 'sub', 'Hyra, el, bokningssystem, försäkringar, städ, kaffe, redovisning och ledarens tid för att driva salongen: ' + kr(F.fasta) + ' i månaden, delat på ' + F.delar + ' personer. De kostnaderna finns oavsett hur många kunder som kommer. Tryck på "Läs mer" ovan för hela listan.']);
+    kRows.push(['Jag kostar totalt per månad', kr(totalKost), 'total', 'Det här måste du dra in, med moms ovanpå, innan salongen tjänar en enda krona på dig.']);
+    $('#kostar-slip').innerHTML = '<div class="eyebrow">Vad jag kostar, per månad, och varför</div><table><colgroup><col class="lbl"><col class="amt"></colgroup>' + kRows.map(x => '<tr class="' + (x[2] || '') + '"><td>' + x[0] + '</td><td>' + x[1] + '</td></tr>' + (x[3] ? '<tr class="why"><td colspan="2">' + x[3] + '</td></tr>' : '')).join('') + '</table>';
+    // stapel: fördelning av det jag kostar
+    const parts = [['Bruttolön', r.brutto, 'accent'], ['Arbetsgivaravgift', r.ag, 'warn'], ['Semester', r.semester, 'brand-yellow'], ['Pension + löneskatt', r.pension, 'steel'], ['Friskvård + utbildning', r.friskvard + r.utbildning, 'good'], ['Material', r.material, 'ink'], ['Produktinköp', r.inkop, 'line-strong'], ['Andel fasta kostnader', r.andel, 'bad']].filter(x => x[1] > 0);
+    $('#kostar-bar').innerHTML = '<div class="stack">' + parts.map(x => '<div style="width:' + (x[1] / totalKost * 100) + '%;background:var(--' + x[2] + ')" title="' + x[0] + ' ' + kr(x[1]) + '"></div>').join('') + '</div><div class="stack-legend">' + parts.map(x => '<span style="--c:var(--' + x[2] + ')">' + x[0] + ' ' + kr(x[1]) + ' (' + pct(x[1] / totalKost * 100) + ')</span>').join('') + '</div>';
+    // kundens 1 000 kr
+    const omsInkl = r.tjInkl + (F.produkt || 0); const omsExkl = r.tj + r.prod;
+    if (omsExkl > 0) {
+      const per = v => v / omsExkl * 800;
+      const kund = [['Moms till staten', 200, '#6F6F6F', 'går aldrig till salongen'], ['Din lön på kontot', per(r.netto), '#F6A313', 'din nettolön'], ['Skatt på din lön', per(r.brutto - r.netto), '#E0A84C', 'dras från din lön'], ['Avgifter och pension', per(r.lonekostnad - r.brutto), '#8FA6B0', 'arbetsgivaravgift, semester, pension, friskvård, utbildning'], ['Material och inköp', per(r.material + r.inkop), '#3D3D3D', 'färg, folie, schampo, sålda produkter'], ['Fasta kostnader', per(r.andel), '#B23A31', 'din andel av hyra, system, försäkringar'], ['Kvar till salongen', per(r.kvar), r.kvar >= 0 ? '#2C7A57' : '#B23A31', r.kvar >= 0 ? 'vinst, buffert och investeringar' : 'salongen går back på dig']];
+      $('#kund-bar').innerHTML = '<div class="stack" style="height:34px">' + kund.map(x => '<div style="width:' + (Math.max(0, x[1]) / 1000 * 100) + '%;background:' + x[2] + '" title="' + x[0] + ' ' + kr(x[1]) + '"></div>').join('') + '</div><div class="kund">' + kund.map(x => '<div style="background:' + x[2] + '"><b>' + (x[1] < 0 ? '−' : '') + kr(Math.abs(x[1])) + '</b><span><b style="font-size:12px;font-family:var(--body)">' + x[0] + '</b>' + x[3] + '</span></div>').join('') + '</div>';
+    } else $('#kund-bar').innerHTML = '';
+    const needK = (() => { let lo = 0, hi = 2000000; if (calc(Object.assign({}, F, { bel: 100, pris: hi / 100 })).kvar < 0) return null; for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; const b = mid / (F.pris || 1) / (40 * F.grad / 100 * VECKOR) * 100; if (calc(Object.assign({}, F, { bel: b })).kvar >= 0) hi = mid; else lo = mid; } return hi; })();
+    $('#kostar-kpi').innerHTML =
+      '<div><span class="eyebrow">Jag omsätter idag</span><b>' + kr(r.tjInkl + (F.produkt || 0)) + '</b><span>inkl. moms, tjänster och produkter</span></div>' +
+      '<div><span class="eyebrow">Kvar till salongen idag</span><b style="color:var(--' + (r.kvar >= 0 ? 'good' : 'bad') + ')">' + (r.kvar < 0 ? '−' : '') + kr(Math.abs(r.kvar)) + '</b><span>' + (r.kvar >= 0 ? 'efter min lön, mitt material och min andel av de fasta kostnaderna. Det är salongens vinst och buffert.' : 'jag täcker inte min egen kostnad och min andel av de fasta kostnaderna ännu.') + '</span></div>' +
+      '<div><span class="eyebrow">För att gå jämnt upp måste jag omsätta</span><b>' + (needK != null ? kr(needK) : '–') + '</b><span>i tjänster inkl. moms per månad, ' + (needK != null && F.pris > 0 ? Math.round(needK / F.pris / (40 * F.grad / 100 * VECKOR) * 100) + ' % beläggning' : '') + '</span></div>' +
+      '<div><span class="eyebrow">Så här räknar salongen</span><b style="font-size:14px">1 kr lön ≈ ' + (r.brutto > 0 ? (r.lonekostnad / r.brutto).toLocaleString('sv-SE', { maximumFractionDigits: 2 }) : '–') + ' kr kostnad</b><span>Det jag får på kontot är ungefär hälften av vad salongen betalar för mig.</span></div>';
+
+    // beläggningstabell + diagram
+    const steps = [30, 40, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+    const rs = steps.map(b => ({ b, r: calc(Object.assign({}, F, { bel: b })) }));
+    const W = 760, H = 210, padL = 56, padB = 28, padT = 14; const maxLon = Math.max(...rs.map(x => x.r.brutto)) * 1.12; const y = v => padT + (H - padT - padB) * (1 - v / maxLon); const bw = (W - padL - 10) / rs.length;
+    const cur = Math.round(F.bel / 5) * 5;
+    let svg = '<svg class="bel-chart" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bruttolön vid olika beläggning">';
+    [0.25, 0.5, 0.75, 1].forEach(f => { const v = Math.round(maxLon * f / 1000) * 1000; svg += '<line x1="' + padL + '" x2="' + W + '" y1="' + y(v) + '" y2="' + y(v) + '" stroke="var(--line)"/><text x="' + (padL - 6) + '" y="' + (y(v) + 4) + '" text-anchor="end" font-size="10" fill="var(--muted)">' + (v / 1000) + ' tkr</text>'; });
+    rs.forEach((x, i) => { const xx = padL + i * bw + 4; svg += '<rect x="' + xx + '" y="' + y(x.r.brutto) + '" width="' + (bw - 8) + '" height="' + (y(0) - y(x.r.brutto)) + '" rx="3" fill="var(--' + (x.b === cur ? 'accent' : 'steel') + ')" opacity="' + (x.b === cur ? 1 : 0.55) + '"/><text x="' + (xx + (bw - 8) / 2) + '" y="' + (H - padB + 14) + '" text-anchor="middle" font-size="10" fill="var(--muted)">' + x.b + ' %</text><text x="' + (xx + (bw - 8) / 2) + '" y="' + (y(x.r.brutto) - 4) + '" text-anchor="middle" font-size="9" fill="var(--ink)">' + Math.round(x.r.brutto / 1000) + '</text>'; });
+    const gl = rs[0].r.gl; svg += '<line x1="' + padL + '" x2="' + W + '" y1="' + y(gl) + '" y2="' + y(gl) + '" stroke="var(--ink)" stroke-dasharray="4 4"/><text x="' + (W - 4) + '" y="' + (y(gl) - 5) + '" text-anchor="end" font-size="10" fill="var(--ink)">Garantilön ' + kr(gl) + '</text></svg>';
+    $('#chart').innerHTML = svg;
+    $('#beltable').innerHTML = '<table class="costs bel-table"><thead><tr><th>Beläggning</th><th>Debiterade h av ' + num(r.hours) + '</th><th>Omsättning inkl. moms</th><th>Bruttolön</th><th>Ca utbetalt</th><th>Per arbetad timme</th></tr></thead><tbody>' +
+      rs.map(x => '<tr class="' + (x.b === cur ? 'cur' : '') + '"><td>' + x.b + ' %</td><td>' + num(x.r.deb) + ' h</td><td>' + kr(x.r.tjInkl) + '</td><td>' + kr(x.r.brutto) + (x.r.garanti ? ' <span class="small muted">garanti</span>' : '') + (F.bonusOn && x.r.bonus ? ' <span class="small muted">varav bonus ' + kr(x.r.bonus) + '</span>' : '') + '</td><td>' + kr(x.r.netto) + '</td><td>' + kr(x.r.timlon) + '</td></tr>').join('') + '</tbody></table>';
+
+    // jämförelse
+    const n = calc(Object.assign({}, F, { pris: F.nyPris, bel: F.nyBel, grad: F.nyGrad, produkt: F.nyProdukt }));
+    $('#idag-summary').innerHTML = '<b>' + num(F.pris) + ' kr/h</b> inkl. moms · <b>' + F.bel + ' %</b> beläggning · <b>' + F.grad + ' %</b> tjänst · produkter <b>' + kr(F.produkt) + '</b><br><span class="muted">Bruttolön ' + kr(r.brutto) + '</span>';
+    const d = (a, b, f) => { const df = b - a; return '<td style="color:var(--' + (df >= 0 ? 'good' : 'bad') + ')">' + (df < 0 ? '−' : '+') + f(Math.abs(df)) + '</td>'; };
+    const row = (l, k, f, cls) => '<tr class="' + (cls || '') + '"><td>' + l + '</td><td>' + f(r[k]) + '</td><td>' + f(n[k]) + '</td>' + d(r[k], n[k], f) + '</tr>';
+    const h = v => num(v) + ' h';
+    $('#cmp').innerHTML = '<table class="costs cmp"><thead><tr><th>Per månad</th><th>Idag</th><th>Nytt</th><th>Skillnad</th></tr></thead><tbody>' + row('Schemalagda timmar', 'hours', h) + row('Debiterade timmar', 'deb', h) + row('Omsättning i tjänster inkl. moms', 'tjInkl', kr) + row('Arbetsprovision', 'arbProv', kr) + (F.bonusOn ? row('Bonus', 'bonus', kr) : '') + row('Bruttolön', 'brutto', kr, 'hi') + row('Ca utbetalt', 'netto', kr) + row('Per arbetad timme', 'timlon', kr) + '</tbody></table>' + (n.garanti ? '<p class="small muted" style="margin-top:8px">I det nya läget når basbelopp + provision inte upp till garantilönen, så garantilönen betalas.</p>' : '');
+
+    // mål
+    const m = calc(Object.assign({}, F, { bel: F.malBel })); const dagarV = F.grad / 100 * 5, dagarM = dagarV * VECKOR;
+    const extraM = calc(Object.assign({}, F, { bel: F.malBel })); const extraExkl = exkl(F.extraDag) * dagarM; const extraLon = extraExkl * r.tab.prov / 100;
+    const g = (l, b, s, cls) => '<div class="' + (cls || '') + '"><span class="eyebrow">' + l + '</span><b>' + b + '</b><span>' + s + '</span></div>';
+    $('#goals').innerHTML = g('Lön vid ' + F.malBel + ' %', kr(m.brutto), 'ca ' + kr(m.netto) + ' utbetalt') + g('Omsätt per månad', kr(m.tjInkl), 'i tjänster inkl. moms') + g('Per arbetad vecka', kr(m.tjInkl / VECKOR), num(dagarV) + ' arbetsdagar') + g('Per arbetsdag', kr(dagarM > 0 ? m.tjInkl / dagarM : 0), (dagarM > 0 ? m.deb / dagarM : 0).toLocaleString('sv-SE', { maximumFractionDigits: 1 }) + ' debiterade timmar') + g('Produkter per dag', (F.produktPris > 0 && dagarM > 0 ? F.produkt / F.produktPris / dagarM : 0).toLocaleString('sv-SE', { maximumFractionDigits: 1 }) + ' st', 'för ' + kr(F.produkt) + ' i månaden') + g('Extra ' + kr(F.extraDag) + ' per dag ger', '+' + kr(extraLon) + ' i lön', 'per månad, i provision');
+
+    const t = T[F.period]; const tab = t[F.typ] || t.beh;
+    $('#rules').innerHTML = '<p><b>Lönen består av två delar.</b> Basbelopp ' + kr(tab.bb40) + ' vid heltid, proportionellt vid deltid, plus arbetsprovision ' + pct(tab.prov) + ' på det du arbetar in exklusive moms. Summan får aldrig understiga garantilönen ' + kr(tab.gl40) + ' per månad vid heltid.</p><p><b>Tillägg.</b> 7 % på egen produktförsäljning. Branschvana 1: ' + kr(tab.bv1) + ', branschvana 2: ' + kr(tab.bv2) + ', tjänstetidstillägg: ' + kr(tab.tt) + ' per månad vid heltid.</p><p><b>OB.</b> Vardag efter 18: 50 %. Lördag 12–13: 70 %. Lördag efter 13 samt söndag och helgdag: 100 %. Beräkningsgrund ' + tab.obBas.toLocaleString('sv-SE') + ' kr/h.</p><p><b>Semester.</b> 13 % av bruttolönen, betalas vid semester. Friskvårdsbidrag och två utbildningsdagar per år ingår i avtalet.</p>';
+  }
+
+  // Dela via länk
+  const b64u = { enc: bytes => { let bin = ''; for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]); return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }, dec: str => { const bin = atob(str.replace(/-/g, '+').replace(/_/g, '/')); const out = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i); return out; } };
+  async function encodeShare(obj) { let bytes = new TextEncoder().encode(JSON.stringify(obj)); let mode = 'j'; try { if (window.CompressionStream) { const cs = new CompressionStream('gzip'); const w = cs.writable.getWriter(); w.write(bytes); w.close(); bytes = new Uint8Array(await new Response(cs.readable).arrayBuffer()); mode = 'g'; } } catch (e) {} return mode + b64u.enc(bytes); }
+  async function decodeShare(str) { const mode = str[0]; let bytes = b64u.dec(str.slice(1)); if (mode === 'g') { const ds = new DecompressionStream('gzip'); const w = ds.writable.getWriter(); w.write(bytes); w.close(); bytes = new Uint8Array(await new Response(ds.readable).arrayBuffer()); } return JSON.parse(new TextDecoder().decode(bytes)); }
+  // Kostnadslista från salongsledaren (länk från Salongskalkylen, #kost=...)
+  const KKEY = KEY + ':kost';
+  let KOST = null; try { KOST = JSON.parse(localStorage.getItem(KKEY) || 'null'); } catch (e) {}
+  function renderKost() {
+    const st = $('#kost-status');
+    if (!KOST) { st.textContent = 'Ingen lista inläst ännu. Be din salongsledare om länken från Salongskalkylen.'; return; }
+    st.textContent = KOST.namn + ' · uppdaterad ' + KOST.datum + ' · ' + kr(KOST.total) + ' per månad, ' + KOST.antal + ' personer delar.';
+  }
+  function openKost() {
+    const d = $('#kost-dialog'); const b = $('#kost-body');
+    if (!KOST) {
+      b.innerHTML = '<p>Din salongsledare har hela listan i Salongskalkylen och kan skicka dig en länk som lägger in den här automatiskt. Så här brukar en salongs fasta kostnader se ut:</p><ul class="small" style="margin:8px 0 0 18px;line-height:1.8"><li>Hyra, el, städ, larm och sophämtning</li><li>Bokningssystem, kassasystem och kortdragare</li><li>Telefon, internet, programvaror och hemsida</li><li>Salongsförsäkring, Stim och Sami för musiken, medlemskap i Frisörföretagarna</li><li>Redovisning och bankkostnader</li><li>Kaffe, frukt, toalettpapper, handskar och annan förbrukning</li><li>Reklam, reparationer, inventarier och utbildning</li><li>Salongsledarens lön för timmarna som går till att driva salongen i stället för att stå med kund</li></ul><p class="small muted" style="margin-top:10px">En vanlig salong ligger på 60 000–120 000 kr i månaden. Kostnaderna löper alla tolv månader men jobbas in på ungefär 10,5, eftersom salongen har semester och röda dagar.</p>';
+    } else {
+      const grupper = {}; [...KOST.poster, KOST.admin].forEach(x => { (grupper[x.kat] = grupper[x.kat] || []).push(x); });
+      let h = '<p class="small muted">Från ' + KOST.namn + 's Salongskalkyl, uppdaterad ' + KOST.datum + '. Belopp per månad.</p><table>';
+      Object.keys(grupper).forEach(k => { const sum = grupper[k].reduce((a, x) => a + (x.belopp || 0), 0); h += '<tr class="grp"><td>' + k + '</td><td>' + kr(sum) + '</td></tr>' + grupper[k].filter(x => x.belopp > 0).map(x => '<tr><td>' + x.namn + '</td><td>' + kr(x.belopp) + '</td></tr>').join(''); });
+      h += '<tr class="tot"><td>Summa per månad</td><td>' + kr(KOST.total) + '</td></tr>';
+      if (KOST.perArbetadManad && KOST.perArbetadManad !== KOST.total) h += '<tr><td class="small muted">Per arbetad månad, kostnaderna löper 12 månader men jobbas in på ' + (KOST.arbMan || 10.5).toLocaleString('sv-SE') + '</td><td>' + kr(KOST.perArbetadManad) + '</td></tr>';
+      h += '<tr><td class="small muted">Delat på ' + KOST.antal + ' personer</td><td>' + kr(KOST.total / KOST.antal) + ' var</td></tr></table>';
+      b.innerHTML = h;
+    }
+    if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+  }
+  $('#open-kost').addEventListener('click', openKost);
+  $('#close-kost').addEventListener('click', () => $('#kost-dialog').close());
+  $('#kost-dialog').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.close(); });
+  const KOSTIN = (location.hash.match(/kost=([^&]+)/) || [])[1];
+  if (KOSTIN) { decodeShare(KOSTIN).then(obj => { if (obj && obj.poster) { localStorage.setItem(KKEY, JSON.stringify(obj)); const cur = (() => { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; } })(); cur.fasta = obj.total; cur.delar = obj.antal; localStorage.setItem(KEY, JSON.stringify(Object.assign(def(), cur))); } history.replaceState(null, '', location.pathname + location.search); location.reload(); }).catch(() => {}); }
+  renderKost();
+  const DATA = (location.hash.match(/data=([^&]+)/) || [])[1];
+  if (DATA) { decodeShare(DATA).then(obj => { localStorage.setItem(KEY, JSON.stringify(Object.assign(def(), obj))); history.replaceState(null, '', location.pathname + location.search); location.reload(); }).catch(() => {}); }
+
+  // Hopfällbara sektioner. Första besöket: inget sparat läge finns, och då är alla stängda tills man öppnar dem med pilen.
+  (function initPanels() {
+    const CKEY = 'frisorkalkylen-collapsed'; let COL = {}; let forsta = true;
+    try { const raw = localStorage.getItem(CKEY); forsta = raw == null; COL = JSON.parse(raw || '{}'); } catch (e) {}
+    const secs = [...document.querySelectorAll('.fk-wrap section.panel')];
+    const setCollapsed = (sec, v) => { sec.classList.toggle('collapsed', v); COL['s:' + sec.id] = v; try { localStorage.setItem(CKEY, JSON.stringify(COL)); } catch (e) {} const c = sec.querySelector('.chev'); if (c) c.setAttribute('aria-expanded', String(!v)); };
+    const label = () => { const allaStangda = secs.every(x => x.classList.contains('collapsed')); $('#toggle-all').textContent = allaStangda ? 'Öppna alla' : 'Fäll ihop alla'; };
+    secs.forEach(sec => {
+      const head = sec.querySelector(':scope > .head'); const h2 = head && head.querySelector('h2'); if (!h2) return;
+      const b = document.createElement('button'); b.className = 'chev'; b.type = 'button'; b.setAttribute('aria-label', 'Visa eller dölj sektionen'); b.setAttribute('aria-expanded', 'true'); b.textContent = '▾'; h2.prepend(b);
+      head.addEventListener('click', e => { if (e.target.closest('button:not(.chev), input, select, a, label')) return; setCollapsed(sec, !sec.classList.contains('collapsed')); label(); });
+      const sparat = COL['s:' + sec.id];
+      if (sparat != null ? sparat : forsta) setCollapsed(sec, true);
+    });
+    label();
+    $('#toggle-all').addEventListener('click', () => { const anyOpen = secs.some(x => !x.classList.contains('collapsed')); secs.forEach(x => setCollapsed(x, anyOpen)); label(); });
+  })();
+  bind(); buildTiers(); buildBeh(); render();
+})();
+</script>
+
+</body>
+</html>

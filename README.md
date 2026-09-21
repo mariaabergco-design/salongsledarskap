@@ -10,6 +10,7 @@ Kunskapssajt för salongsägare med fyra anställda eller fler. Innehållet ägs
 | `artiklar/` | 46 artiklar som markdown, fem pelarartiklar och resten stödartiklar |
 | `kundcase/` | Fyra kundcase |
 | `verktyg/` | Fyra interaktiva verktyg i html, plus Flaskhalstestets text |
+| `kalkyler/` | Salongskalkylen och Frisörkalkylen, färdiga html-sidor som Vercel publicerar på salongskalkylen.vercel.app. Ingår inte i sajtbygget |
 | `site/` | Den färdiga sajten, genererad. Redigera aldrig här, ändringar skrivs över |
 | `scripts/` | Byggskript och stilmall |
 | `typsnitt/` | Montserrat och Playfair Display som filer, med licenser |
@@ -20,6 +21,14 @@ Kunskapssajt för salongsägare med fyra anställda eller fler. Innehållet ägs
 | `fas1-research.md` | Research med källa och verifieringsgrad per påstående |
 | `fas2-problemkarta.md` | Sju teman sorterade efter medvetandenivå |
 | `fas3-rubriker.md` | Rubriker och ingresser |
+
+## Kalkylerna på Vercel
+
+`kalkyler/index.html` är Salongskalkylen och `kalkyler/frisor/index.html` är
+Frisörkalkylen. Vercel-projektet salongskalkylen är kopplat till det här repot
+med `kalkyler` som rotmapp, så varje push till `main` som rör de filerna
+publicerar en ny version på salongskalkylen.vercel.app. Sidorna redigeras som
+artefakter på claude.ai, och den färdiga filen läggs här.
 
 ## Bygga om sajten
 
