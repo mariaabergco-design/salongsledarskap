@@ -11,11 +11,27 @@ varken ditt Google-konto eller ditt Resend-konto.
 | 1 | Kalkylarket och Apps Script | 8 min | Du, eller Claude i Chrome |
 | 2 | Publicera webbappen och skicka adressen till mig | 3 min | Du |
 | 3 | Jag kopplar in adressen och publicerar | 2 min | Jag |
-| 4 | Resend-konto och nyckel | 5 min | Du, eller Claude i Chrome |
-| 5 | Testmailet | 1 min | Du, i coachvyn |
+| 4 | Resend-konto och nyckel | 5 min | Frivilligt, se nedan |
 
-Steg 4 kan hoppas över i början. Utan Resend kopierar du mailen till din vanliga
-inkorg som vanligt — allt annat fungerar ändå.
+**Steg 4 behöver du förmodligen inte.** Gmail-kopplingen finns numera i Claude
+Code, vilket betyder att jag kan lägga färdiga utkast direkt i din inkorg. Du
+öppnar dem, läser igenom, ändrar det du vill och trycker skicka. Mailen kommer
+då från din egen adress, du granskar varje mail på riktigt, och du slipper både
+API-nyckel och att verifiera abergco.se hos Resend.
+
+Resend är kvar i koden som en snabbare väg: med en nyckel inlagd kan du skicka
+direkt från coachvyn utan att gå via mig. Välj det om du vill kunna göra hela
+månadsvarvet själv på en minut. Annars hoppa över det helt.
+
+## Utskicket varje månad, med Gmail
+
+1. Öppna coachvyn, välj månaden, klicka **Underlag för alla mail**.
+2. Kopiera blocket och klistra in till mig med frågan om jag kan fylla i råden
+   ur Circleback och lägga utkast i din inkorg.
+3. Öppna Gmail. Utkasten ligger där, ett per kund. Läs igenom — särskilt
+   Circleback-delen — och tryck skicka.
+
+Granskningen finns kvar, men du slipper skriva mailen.
 
 ## Steg 1 och 2 — Google
 
