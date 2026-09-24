@@ -195,6 +195,7 @@ function skickaMail(data) {
   var till = String(data.till || "").trim();
   var amne = String(data.amne || "").trim();
   var text = String(data.text || "").trim();
+  var html = String(data.html || "").trim();
   if (!till || till.indexOf("@") < 1) return { ok: false, fel: "Mejladressen saknas eller ser fel ut." };
   if (!amne) return { ok: false, fel: "Ämnesraden är tom." };
   if (!text) return { ok: false, fel: "Brödtexten är tom." };
@@ -209,7 +210,8 @@ function skickaMail(data) {
       to: [till],
       reply_to: "maria@abergco.se",
       subject: amne,
-      text: text
+      text: text,
+      html: html || undefined
     })
   });
 

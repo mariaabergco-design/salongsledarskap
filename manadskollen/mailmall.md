@@ -14,6 +14,30 @@ innehålla.
 Håll dagarna. En rytm som glider blir en rytm ingen litar på, och då slutar de
 svara.
 
+## Formen
+
+Mailet går ut formgivet, i sajtens färger och med Georgia och Helvetica i
+stället för Playfair och Montserrat — webbtypsnitt laddas inte i en inkorg.
+Mallen ligger i `manadskollen/mailmall.js` och används av coachvyn.
+
+Tre saker mallen gör åt dig:
+
+- **Vinsten hamnar i guldrutan högst upp.** Det är första stycket du skriver
+  efter hälsningen. Skriver du siffror där hamnar siffror först, och då blir
+  brevet en rapport.
+- **Talen hämtas ur hennes svar**, med rörelse mot senaste månad som faktiskt
+  är mätt. Saknas en månad emellan jämförs inte mot den.
+- **Rader ur mötesreferat skrivs aldrig ut som tal.** Har hon inte fyllt i
+  formuläret får mailet inga siffror alls, hur mycket som än står i coachvyn.
+
+Skillnaden mellan två procenttal skrivs utan procenttecken: `+7 mot juli`, inte
+`+7 % mot juli`. Sju procentenheter är inte sju procent.
+
+Staplarna i Din utveckling skalas mot hennes mål, inte mot seriens egna högsta.
+Annars ser varje litet hack ut som ett ras.
+
+Klicka alltid **Förhandsgranska** innan du skickar. Den visar exakt det som går.
+
 ## Ordningen i mailet
 
 Vinsten först, siffrorna sedan. Din nisch är ledarskap som motor och siffror som

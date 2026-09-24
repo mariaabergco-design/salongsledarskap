@@ -114,8 +114,14 @@
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
         <button class="primar" id="skicka-mail">Skicka</button>
+        <button id="forhandsgranska">Förhandsgranska</button>
         <span class="status" id="skickastatus"></span>
       </div>
+      <p class="q-hjalp" style="margin:14px 0 0">Mailet går ut formgivet i din
+      html-mall. Rutan ovan är textversionen, som visas för den som blockar
+      formgivning — skriv den, så följer formgivningen med. <strong>Första
+      stycket efter hälsningen blir vinsten</strong> och hamnar högst upp i
+      guldrutan, före siffrorna. Kontrollera med Förhandsgranska.</p>
     </div>
   </div>
 
@@ -128,6 +134,7 @@
 
 <script src="konfig.js"></script>
 <script src="fragor.js"></script>
+<script src="mailmall.js"></script>
 <script>
 (function () {
   "use strict";
@@ -390,6 +397,77 @@
         "Hon har inte svarat för " + MK.manadsnamn(period) + ", så det finns inget underlag.\n";
   }
 
+  /* Textversionen i rutan är sanningen. Html-mallen får samma innehåll,
+     styckeindelat, så att de två alltid säger samma sak. */
+  function byggHtml() {
+    const k = kunder.find(x => x.kod === E("mottagare").value) || {};
+    const stycken = E("brodtext").value.split(/\n{2,}/).map(s => s.trim()).filter(Boolean);
+    // Första stycket är hälsningen, den sätter mallen själv
+    if (stycken.length && /^hej\b/i.test(stycken[0])) stycken.shift();
+
+    const rader = radeFor(k.kod).filter(r => r.period <= period);
+    const nu = rader.filter(r => r.period === period)[0];
+    const mal = k.mal || {};
+    const manad = MK.manadsnamn(period).split(" ")[0];
+
+    // Bara kundens egna svar duger i ett mail. Rader ur mötesreferat får styra
+    // samtalet i coachvyn, men de skrivs aldrig ut som tal till henne.
+    const matta = rader.filter(r => !harledd(r));
+
+    // Jämför mot den senaste tidigare månad som faktiskt har talet mätt.
+    // Annars jämförs augusti mot maj utan att det syns att två månader saknas.
+    const tidigare = (id) => {
+      for (let i = matta.length - 1; i >= 0; i--) {
+        const r = matta[i];
+        if (r.period >= period) continue;
+        if (MK.tal(r[id]) !== null) return r;
+      }
+      return null;
+    };
+
+    // En rad ur ett mötesreferat är ingen mätning. Då går inga tal ut i mailet.
+    const talMed = (nu && !harledd(nu)) ? MK.TAL.filter(t => MK.tal(nu[t.id]) !== null).slice(0, 3) : [];
+
+    return window.MK_MAIL.mailhtml({
+      namn: (k.namn || "").split(" ")[0],
+      manad: manad,
+      amne: E("amne").value,
+      rubrik: E("amne").value,
+      forhandsrad: stycken[0] || "",
+      // Vinsten först, siffrorna sedan. Första stycket är vinsten och hamnar
+      // i guldrutan högst upp, resten blir löptext under talen.
+      vinst: stycken[0] || "",
+      brodtext: stycken.slice(1),
+      tal: talMed.map(t => {
+        const f = tidigare(t.id);
+        return {
+          namn: t.namn,
+          varde: MK.tal(nu[t.id]),
+          suffix: t.suffix === "/10" ? "av 10" : t.suffix,
+          forra: f ? MK.tal(f[t.id]) : null,
+          forraEtikett: f ? MK.manadsnamn(f.period).split(" ")[0] : "",
+          mal: t.mal ? (mal[t.mal] || null) : null,
+          riktning: t.bra
+        };
+      }),
+      // Kurvan visar de tal som faktiskt har en serie, inte de två första.
+      utveckling: talMed
+        .map(t => ({
+          namn: t.namn,
+          suffix: t.suffix === "/10" ? "" : t.suffix,
+          mal: t.mal ? (mal[t.mal] || null) : null,
+          serie: matta.filter(r => MK.tal(r[t.id]) !== null).slice(-4).map(r => ({
+            etikett: MK.manadsnamn(r.period).split(" ")[0],
+            varde: MK.tal(r[t.id])
+          }))
+        }))
+        .filter(u => u.serie.length > 1)
+        .sort((a, b) => b.serie.length - a.serie.length)
+        .slice(0, 2),
+      avsandare: "Maria"
+    });
+  }
+
   function skickaMailet() {
     const till = (kunder.find(x => x.kod === E("mottagare").value) || {}).mejl;
     if (!till) { E("skickastatus").className = "status fel"; E("skickastatus").textContent = "Ingen mottagare."; return; }
@@ -406,7 +484,8 @@
         nyckel: localStorage.getItem(NYCKELPLATS),
         till: till,
         amne: E("amne").value,
-        text: E("brodtext").value
+        text: E("brodtext").value,
+        html: byggHtml()
       })
     }).then(r => r.json()).then(function (r) {
       E("skicka-mail").disabled = false;
@@ -463,6 +542,15 @@
     }
 
     if (e.target.id === "skicka-mail") { skickaMailet(); return; }
+
+    if (e.target.id === "forhandsgranska") {
+      const w = window.open("", "_blank");
+      if (!w) { E("skickastatus").className = "status fel";
+                E("skickastatus").textContent = "Webbläsaren blockade fönstret."; return; }
+      w.document.write(byggHtml());
+      w.document.close();
+      return;
+    }
 
     if (e.target.id === "kopiera") {
       navigator.clipboard.writeText(E("underlag-text").textContent).then(function () {
