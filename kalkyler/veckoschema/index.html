@@ -47,7 +47,7 @@
     --vila: #EDEDEA;        --vila-s: #9A9A94;
     --aterhamtning: #DCEDF7; --aterhamtning-s: #3A88BD;
     --lunch: #EEF2CF;       --lunch-s: #8C9E1C;
-    --ledartid: #EFE1C6;    --ledartid-s: #8A5A05;
+    --personalmoten: #D9DDF2; --personalmoten-s: #3C4C9E;
     /* Färgerna till egna block. */
     --e0: #ECEBCF; --e0-s: #8C862A;
     --e1: #F6D9D6; --e1-s: #B5463D;
@@ -77,7 +77,7 @@
       --vila: #2E2E2B;        --vila-s: #8C8C86;
       --aterhamtning: #1F3444; --aterhamtning-s: #72B5E0;
       --lunch: #34381C;       --lunch-s: #C3D35A;
-      --ledartid: #3A2F1A;    --ledartid-s: #E0A94A;
+      --personalmoten: #252A45; --personalmoten-s: #8E9BE0;
       --e0: #37361F; --e0-s: #C9C26A; --e1: #432523; --e1-s: #E57F76;
       --e2: #2A2B45; --e2-s: #9097E0; --e3: #3B2E22; --e3-s: #C9956A;
       --e4: #1D3A2A; --e4-s: #6BCB96; --e5: #402640; --e5-s: #D582CC;
@@ -102,7 +102,7 @@
     --vila: #2E2E2B;        --vila-s: #8C8C86;
     --aterhamtning: #1F3444; --aterhamtning-s: #72B5E0;
     --lunch: #34381C;       --lunch-s: #C3D35A;
-    --ledartid: #3A2F1A;    --ledartid-s: #E0A94A;
+    --personalmoten: #252A45; --personalmoten-s: #8E9BE0;
     --e0: #37361F; --e0-s: #C9C26A; --e1: #432523; --e1-s: #E57F76;
     --e2: #2A2B45; --e2-s: #9097E0; --e3: #3B2E22; --e3-s: #C9956A;
     --e4: #1D3A2A; --e4-s: #6BCB96; --e5: #402640; --e5-s: #D582CC;
@@ -349,7 +349,7 @@
         </div>
       </div>
       <div class="body">
-        <div class="fields" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+        <div class="fields">
           <div class="field">
             <span id="langd-rubrik">Schemats längd</span>
             <div class="toggle" id="langd" role="group" aria-labelledby="langd-rubrik">
@@ -358,7 +358,6 @@
               <button type="button" data-l="4">4 veckor</button>
             </div>
           </div>
-          <label class="field"><span>Det här ska tiden leda till</span><input type="text" id="mal" placeholder="Till exempel en salong som klarar sig när jag är ledig en vecka"></label>
         </div>
       </div>
     </section>
@@ -493,7 +492,7 @@
   const BLOCK = [
     { id: "kund", typ: "kund", namn: "Jobba med kund", text: "Tid i stolen med egna kunder. Den fyller sig själv, så lägg in den sist." },
     { id: "admin", typ: "arbete", namn: "Admin", text: "Schema, beställningar, fakturor, mejl och meddelanden. Samla dem i ett block i stället för att göra dem i luckorna." },
-    { id: "moten", typ: "ledar", namn: "Möten", text: "Veckomötet med teamet, och möten med leverantörer, redovisning eller bank. Tjugo minuter räcker för veckomötet." },
+    { id: "moten", typ: "ledar", namn: "Möten", text: "Möten med leverantörer, redovisning, bank och andra utanför salongen. Möten med teamet lägger du som personalmöten." },
     { id: "feedback", typ: "ledar", namn: "Feedback", text: "Tid för att säga vad du har sett. Tre meningar per person, gärna till någon som har gjort rätt." },
     { id: "uppfoljning", typ: "ledar", namn: "Uppföljning", text: "Siffrorna, de enskilda samtalen och det ni bestämde förra veckan. Fråga hur det gick, inte om det är gjort." },
     { id: "framtid", typ: "ledar", namn: "Framtidsplanering", text: "Riktningen för salongen. Vad ni ska fokusera på nästa halvår, ett område i taget." },
@@ -502,7 +501,10 @@
     { id: "vila", typ: "ledig", namn: "Ledigt", text: "Familj, vila och tid när du inte är nåbar. Också den ska stå i schemat, annars äts den upp." },
     { id: "aterhamtning", typ: "ledig", namn: "Återhämtning", text: "Pauser under dagen: en promenad, tio minuter utan telefon, en stund för dig själv. Den som aldrig laddar hinner inte leda på eftermiddagen." },
     { id: "lunch", typ: "ledig", namn: "Lunch", text: "En riktig lunch, borta från stolen och kassan. Lägg in den som en tid, annars blir den en macka mellan två kunder." },
-    { id: "ledartid", typ: "ledar", namn: "Ledartid", text: "Tid för att leda, när du ännu inte vet exakt vad den ska användas till. Byt gärna till uppföljning, feedback eller framtidsplanering när du vet, då blir den svårare att ge bort." }
+    // Ledartid fanns en kort tid som block. Platsen står kvar så att numren i delningslänkarna stämmer,
+    // men blocket visas inte och tider med det läses inte in.
+    { id: "ledartid", borttaget: true },
+    { id: "personalmoten", typ: "ledar", namn: "Personalmöten", text: "Veckomötet och andra möten med hela teamet. Tjugo minuter, stående, samma tid varje vecka. Tre punkter: vad bestämde vi, hur gick det, vad gör vi nu." }
   ];
   // Typ avgör var timmarna räknas: kund och arbete är arbete, ledar är arbete och ledartid,
   // ledig är ledig tid och fri är varken arbete eller ledig tid, till exempel resor eller sömn.
@@ -517,7 +519,7 @@
   const $ = s => document.querySelector(s);
   // BLOCK har fast ordning eftersom delningslänkarna bygger på den. Nya block läggs sist där,
   // och ORDNING bestämmer i stället i vilken ordning de visas.
-  const ORDNING = ["kund", "admin", "moten", "feedback", "uppfoljning", "framtid", "resurs", "ledartid",
+  const ORDNING = ["kund", "admin", "personalmoten", "moten", "feedback", "uppfoljning", "framtid", "resurs",
     "traning", "lunch", "aterhamtning", "vila"];
   const alla = () => ORDNING.map(id => BLOCK.find(b => b.id === id)).concat(S.egna);
   const blockAv = id => alla().find(b => b.id === id);
@@ -595,7 +597,7 @@
       i = j;
     }
     const egna = S.egna.map(e => [e.id, e.namn, e.farg, e.typ]);
-    return "l=" + S.langd + "&s=" + runs.join(".") + (S.mal ? "&m=" + encodeURIComponent(S.mal) : "") +
+    return "l=" + S.langd + "&s=" + runs.join(".") +
       (egna.length ? "&e=" + encodeURIComponent(JSON.stringify(egna)) : "");
   }
   function avkoda(hash) {
@@ -733,7 +735,7 @@
     let html = "";
     for (let v = 0; v < S.langd; v++) {
       html += '<div class="utskrift-vecka"><div class="utskrift-rubrik">' + (S.langd > 1 ? "Vecka " + (v + 1) + " av " + S.langd : "Veckan") +
-        (S.mal ? " · " + esc(S.mal) : "") + '</div><div class="vecka" style="grid-template-columns:34px repeat(7,minmax(0,1fr))">' +
+        '</div><div class="vecka" style="grid-template-columns:34px repeat(7,minmax(0,1fr))">' +
         veckaHtml(v, [0, 1, 2, 3, 4, 5, 6]) + "</div></div>";
     }
     $("#utskrift").innerHTML = html;
@@ -838,7 +840,7 @@
     rader += rad("Arbete totalt", arbIds, "sum") + rad("varav ledartid", LEDAR, "del") + rad("varav kund", ["kund"], "del") +
       rad("Ledig tid", ledigIds, "sum2") + (friIds.length ? rad("Inte arbete", friIds, "sum2") : "") + "</tbody>";
     $("#htab").innerHTML = rader;
-    $("#htab-not").textContent = "Timmar. Ledartid är möten, feedback, uppföljning, framtidsplanering, resurstid, ledartid" +
+    $("#htab-not").textContent = "Timmar. Ledartid är personalmöten, möten, feedback, uppföljning, framtidsplanering, resurstid" +
       (S.egna.some(e => e.typ === "ledar") ? " och egna block som räknas som ledartid" : "") + ". Ledig tid är träning, ledigt, återhämtning och lunch" +
       (S.egna.some(e => e.typ === "ledig") ? " och egna block som räknas som ledig tid" : "") + ". En månad räknas som fyra veckor" +
       (L === 1 ? ", alltså veckan gånger fyra." : L === 2 ? ", alltså de fjorton dagarna gånger två." : ", alltså hela schemat.");
@@ -854,7 +856,7 @@
       else obs.push(["good", "Ledartiden är " + tim(ledar) + " timmar i veckan, över riktmärket på sex."]);
       if (ledarSent) obs.push(["warn", tim(ledarSent / L) + " timmar ledartid i veckan ligger efter klockan 17. Det som görs trött blir sämre och långsammare. Flytta den till förmiddagen om det går."]);
       else if (ledarFm * 2 >= summa(LEDAR, id => tot[id]) && ledar) obs.push(["good", "Minst hälften av ledartiden ligger på förmiddagen."]);
-      const saknas = ["moten", "feedback", "uppfoljning", "framtid"].filter(id => !tot[id]).map(id => blockAv(id).namn.toLowerCase());
+      const saknas = ["personalmoten", "feedback", "uppfoljning", "framtid"].filter(id => !tot[id]).map(id => blockAv(id).namn.toLowerCase());
       if (saknas.length) obs.push(["warn", "Ingen tid för " + saknas.join(", ").replace(/, ([^,]*)$/, " eller $1") + ". Det som inte har en tid i schemat blir gjort i förbifarten, eller inte alls."]);
       if (tot.admin && tot.kund && tot.admin > tot.kund) obs.push(["", "Admin tar mer tid än kunderna. Titta på vad av det som någon annan kan göra."]);
       if (arbete > 90) obs.push(["warn", "Arbetstiden är " + tim(arbete) + " timmar i veckan. Över fyrtiofem timmar håller inte i längden, varken för dig eller för kvaliteten."]);
@@ -947,7 +949,7 @@
   // Tider som [dag, från, till, block], klockslag i timmar.
   const EXEMPEL = [
     [0, 7, 8, "traning"], [0, 9, 10.5, "admin"], [0, 10.5, 12, "framtid"], [0, 12, 12.5, "lunch"], [0, 13, 14, "uppfoljning"], [0, 17, 22, "vila"],
-    [1, 8, 8.5, "moten"], [1, 8.5, 9, "resurs"], [1, 9, 12, "kund"], [1, 12, 12.5, "lunch"], [1, 12.5, 16, "kund"], [1, 16, 16.5, "feedback"], [1, 16.5, 18, "kund"],
+    [1, 8, 8.5, "personalmoten"], [1, 8.5, 9, "resurs"], [1, 9, 12, "kund"], [1, 12, 12.5, "lunch"], [1, 12.5, 16, "kund"], [1, 16, 16.5, "feedback"], [1, 16.5, 18, "kund"],
     [2, 7, 8, "traning"], [2, 9, 10, "admin"], [2, 10, 12, "resurs"], [2, 12, 12.5, "lunch"], [2, 12.5, 17, "kund"],
     [3, 9, 12, "kund"], [3, 12, 12.5, "lunch"], [3, 12.5, 13, "aterhamtning"], [3, 13, 14, "uppfoljning"], [3, 14, 17, "kund"], [3, 17, 17.5, "admin"],
     [4, 7, 8, "traning"], [4, 9, 12, "kund"], [4, 12, 12.5, "lunch"], [4, 12.5, 13, "feedback"], [4, 13, 17, "kund"], [4, 17, 22, "vila"],
@@ -1005,7 +1007,6 @@
     allaRitas();
   }
 
-  $("#mal").addEventListener("input", e => { S.mal = e.target.value; save(); });
 
   $("#share").addEventListener("click", () => {
     const url = location.origin + location.pathname + "#" + koda();
@@ -1018,7 +1019,6 @@
     S = { langd: 1, celler: {}, mal: "", egna: [] };
     vecka = 0;
     vald = "kund";
-    $("#mal").value = "";
     ritaFlikar();
     allaRitas();
   });
@@ -1035,7 +1035,6 @@
   if (smal.addEventListener) smal.addEventListener("change", lage); else if (smal.addListener) smal.addListener(lage);
 
   load();
-  $("#mal").value = S.mal;
   fyllVal();
   ritaPalett();
   ritaEgna();
