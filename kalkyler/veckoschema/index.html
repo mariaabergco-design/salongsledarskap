@@ -47,6 +47,7 @@
     --vila: #EDEDEA;        --vila-s: #9A9A94;
     --aterhamtning: #DCEDF7; --aterhamtning-s: #3A88BD;
     --lunch: #EEF2CF;       --lunch-s: #8C9E1C;
+    --ledartid: #EFE1C6;    --ledartid-s: #8A5A05;
     /* Färgerna till egna block. */
     --e0: #ECEBCF; --e0-s: #8C862A;
     --e1: #F6D9D6; --e1-s: #B5463D;
@@ -76,6 +77,7 @@
       --vila: #2E2E2B;        --vila-s: #8C8C86;
       --aterhamtning: #1F3444; --aterhamtning-s: #72B5E0;
       --lunch: #34381C;       --lunch-s: #C3D35A;
+      --ledartid: #3A2F1A;    --ledartid-s: #E0A94A;
       --e0: #37361F; --e0-s: #C9C26A; --e1: #432523; --e1-s: #E57F76;
       --e2: #2A2B45; --e2-s: #9097E0; --e3: #3B2E22; --e3-s: #C9956A;
       --e4: #1D3A2A; --e4-s: #6BCB96; --e5: #402640; --e5-s: #D582CC;
@@ -100,6 +102,7 @@
     --vila: #2E2E2B;        --vila-s: #8C8C86;
     --aterhamtning: #1F3444; --aterhamtning-s: #72B5E0;
     --lunch: #34381C;       --lunch-s: #C3D35A;
+    --ledartid: #3A2F1A;    --ledartid-s: #E0A94A;
     --e0: #37361F; --e0-s: #C9C26A; --e1: #432523; --e1-s: #E57F76;
     --e2: #2A2B45; --e2-s: #9097E0; --e3: #3B2E22; --e3-s: #C9956A;
     --e4: #1D3A2A; --e4-s: #6BCB96; --e5: #402640; --e5-s: #D582CC;
@@ -498,7 +501,8 @@
     { id: "resurs", typ: "ledar", namn: "Resurstid", text: "Tid på salongen utan egen kund. Du finns på golvet för att se, hjälpa, lära ut och följa upp medan det händer." },
     { id: "vila", typ: "ledig", namn: "Ledigt", text: "Familj, vila och tid när du inte är nåbar. Också den ska stå i schemat, annars äts den upp." },
     { id: "aterhamtning", typ: "ledig", namn: "Återhämtning", text: "Pauser under dagen: en promenad, tio minuter utan telefon, en stund för dig själv. Den som aldrig laddar hinner inte leda på eftermiddagen." },
-    { id: "lunch", typ: "ledig", namn: "Lunch", text: "En riktig lunch, borta från stolen och kassan. Lägg in den som en tid, annars blir den en macka mellan två kunder." }
+    { id: "lunch", typ: "ledig", namn: "Lunch", text: "En riktig lunch, borta från stolen och kassan. Lägg in den som en tid, annars blir den en macka mellan två kunder." },
+    { id: "ledartid", typ: "ledar", namn: "Ledartid", text: "Tid för att leda, när du ännu inte vet exakt vad den ska användas till. Byt gärna till uppföljning, feedback eller framtidsplanering när du vet, då blir den svårare att ge bort." }
   ];
   // Typ avgör var timmarna räknas: kund och arbete är arbete, ledar är arbete och ledartid,
   // ledig är ledig tid och fri är varken arbete eller ledig tid, till exempel resor eller sömn.
@@ -511,7 +515,11 @@
   const MAXV = 4;
   const KEY = "veckoschemat-v1";
   const $ = s => document.querySelector(s);
-  const alla = () => BLOCK.concat(S.egna);
+  // BLOCK har fast ordning eftersom delningslänkarna bygger på den. Nya block läggs sist där,
+  // och ORDNING bestämmer i stället i vilken ordning de visas.
+  const ORDNING = ["kund", "admin", "moten", "feedback", "uppfoljning", "framtid", "resurs", "ledartid",
+    "traning", "lunch", "aterhamtning", "vila"];
+  const alla = () => ORDNING.map(id => BLOCK.find(b => b.id === id)).concat(S.egna);
   const blockAv = id => alla().find(b => b.id === id);
   const arLedar = id => blockAv(id).typ === "ledar";
   const arFri = id => ["ledig", "fri"].includes(blockAv(id).typ);
@@ -577,7 +585,7 @@
     const tecken = [];
     for (let v = 0; v < S.langd; v++) for (let d = 0; d < 7; d++) for (let s = 0; s < N; s++) {
       const k = S.celler[nyckel(v, d, s)];
-      tecken.push(k ? alla().findIndex(b => b.id === k) + 1 : 0);
+      tecken.push(k ? BLOCK.concat(S.egna).findIndex(b => b.id === k) + 1 : 0);
     }
     const runs = [];
     for (let i = 0; i < tecken.length;) {
@@ -830,7 +838,7 @@
     rader += rad("Arbete totalt", arbIds, "sum") + rad("varav ledartid", LEDAR, "del") + rad("varav kund", ["kund"], "del") +
       rad("Ledig tid", ledigIds, "sum2") + (friIds.length ? rad("Inte arbete", friIds, "sum2") : "") + "</tbody>";
     $("#htab").innerHTML = rader;
-    $("#htab-not").textContent = "Timmar. Ledartid är möten, feedback, uppföljning, framtidsplanering, resurstid" +
+    $("#htab-not").textContent = "Timmar. Ledartid är möten, feedback, uppföljning, framtidsplanering, resurstid, ledartid" +
       (S.egna.some(e => e.typ === "ledar") ? " och egna block som räknas som ledartid" : "") + ". Ledig tid är träning, ledigt, återhämtning och lunch" +
       (S.egna.some(e => e.typ === "ledig") ? " och egna block som räknas som ledig tid" : "") + ". En månad räknas som fyra veckor" +
       (L === 1 ? ", alltså veckan gånger fyra." : L === 2 ? ", alltså de fjorton dagarna gånger två." : ", alltså hela schemat.");
