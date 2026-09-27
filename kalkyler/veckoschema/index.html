@@ -46,6 +46,7 @@
     --resurs: #F9DCCB;      --resurs-s: #C8612A;
     --vila: #EDEDEA;        --vila-s: #9A9A94;
     --aterhamtning: #DCEDF7; --aterhamtning-s: #3A88BD;
+    --lunch: #EEF2CF;       --lunch-s: #8C9E1C;
     /* Färgerna till egna block. */
     --e0: #ECEBCF; --e0-s: #8C862A;
     --e1: #F6D9D6; --e1-s: #B5463D;
@@ -74,6 +75,7 @@
       --resurs: #45291B;      --resurs-s: #E68B55;
       --vila: #2E2E2B;        --vila-s: #8C8C86;
       --aterhamtning: #1F3444; --aterhamtning-s: #72B5E0;
+      --lunch: #34381C;       --lunch-s: #C3D35A;
       --e0: #37361F; --e0-s: #C9C26A; --e1: #432523; --e1-s: #E57F76;
       --e2: #2A2B45; --e2-s: #9097E0; --e3: #3B2E22; --e3-s: #C9956A;
       --e4: #1D3A2A; --e4-s: #6BCB96; --e5: #402640; --e5-s: #D582CC;
@@ -97,6 +99,7 @@
     --resurs: #45291B;      --resurs-s: #E68B55;
     --vila: #2E2E2B;        --vila-s: #8C8C86;
     --aterhamtning: #1F3444; --aterhamtning-s: #72B5E0;
+    --lunch: #34381C;       --lunch-s: #C3D35A;
     --e0: #37361F; --e0-s: #C9C26A; --e1: #432523; --e1-s: #E57F76;
     --e2: #2A2B45; --e2-s: #9097E0; --e3: #3B2E22; --e3-s: #C9956A;
     --e4: #1D3A2A; --e4-s: #6BCB96; --e5: #402640; --e5-s: #D582CC;
@@ -264,6 +267,7 @@
   .htab td:first-child .sw { float: left; margin: 3px 7px 0 0; }
   .htab tr.tom td { color: var(--muted); }
   .htab tr.sum td { font-weight: 700; border-bottom: 0; border-top: 1px solid var(--line-strong); font-family: var(--display); font-size: 14px; }
+  .htab tr.sum2 td { font-weight: 600; border-bottom: 0; padding-top: 6px; }
   .htab tr.del td { color: var(--muted); font-size: 12px; border-bottom: 0; padding-top: 2px; }
   .htab .m { font-weight: 700; }
 
@@ -427,6 +431,7 @@
             <label class="field"><span>Räknas som</span><select id="eTyp">
               <option value="arbete">Arbete</option>
               <option value="ledar">Ledartid</option>
+              <option value="ledig">Ledig tid</option>
               <option value="fri">Inte arbete</option>
             </select></label>
             <p class="fel" id="eFel" role="alert"></p>
@@ -489,13 +494,15 @@
     { id: "feedback", typ: "ledar", namn: "Feedback", text: "Tid för att säga vad du har sett. Tre meningar per person, gärna till någon som har gjort rätt." },
     { id: "uppfoljning", typ: "ledar", namn: "Uppföljning", text: "Siffrorna, de enskilda samtalen och det ni bestämde förra veckan. Fråga hur det gick, inte om det är gjort." },
     { id: "framtid", typ: "ledar", namn: "Framtidsplanering", text: "Riktningen för salongen. Vad ni ska fokusera på nästa halvår, ett område i taget." },
-    { id: "traning", typ: "fri", namn: "Träning", text: "Din egen träning. Kroppen är ditt arbetsverktyg, och det här är blocket som ryker först." },
+    { id: "traning", typ: "ledig", namn: "Träning", text: "Din egen träning. Kroppen är ditt arbetsverktyg, och det här är blocket som ryker först." },
     { id: "resurs", typ: "ledar", namn: "Resurstid", text: "Tid på salongen utan egen kund. Du finns på golvet för att se, hjälpa, lära ut och följa upp medan det händer." },
-    { id: "vila", typ: "fri", namn: "Ledigt", text: "Familj, vila och tid när du inte är nåbar. Också den ska stå i schemat, annars äts den upp." },
-    { id: "aterhamtning", typ: "fri", namn: "Återhämtning", text: "Pauser under dagen: lunch, en promenad, tio minuter utan telefon. Den som aldrig laddar hinner inte leda på eftermiddagen." }
+    { id: "vila", typ: "ledig", namn: "Ledigt", text: "Familj, vila och tid när du inte är nåbar. Också den ska stå i schemat, annars äts den upp." },
+    { id: "aterhamtning", typ: "ledig", namn: "Återhämtning", text: "Pauser under dagen: en promenad, tio minuter utan telefon, en stund för dig själv. Den som aldrig laddar hinner inte leda på eftermiddagen." },
+    { id: "lunch", typ: "ledig", namn: "Lunch", text: "En riktig lunch, borta från stolen och kassan. Lägg in den som en tid, annars blir den en macka mellan två kunder." }
   ];
-  // Typ avgör var timmarna räknas: kund och arbete är arbete, ledar är arbete och ledartid, fri är inte arbete.
-  const TYPER = { arbete: "Arbete", ledar: "Ledartid", fri: "Inte arbete" };
+  // Typ avgör var timmarna räknas: kund och arbete är arbete, ledar är arbete och ledartid,
+  // ledig är ledig tid och fri är varken arbete eller ledig tid, till exempel resor eller sömn.
+  const TYPER = { arbete: "Arbete", ledar: "Ledartid", ledig: "Ledig tid", fri: "Inte arbete" };
   const MAX_EGNA = 8;
   const DAGAR = ["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag"];
   const KORT = ["Mån", "Tis", "Ons", "Tor", "Fre", "Lör", "Sön"];
@@ -507,7 +514,7 @@
   const alla = () => BLOCK.concat(S.egna);
   const blockAv = id => alla().find(b => b.id === id);
   const arLedar = id => blockAv(id).typ === "ledar";
-  const arFri = id => blockAv(id).typ === "fri";
+  const arFri = id => ["ledig", "fri"].includes(blockAv(id).typ);
   const bVar = b => b.farg !== undefined ? "var(--e" + b.farg + ")" : "var(--" + b.id + ")";
   const sVar = b => b.farg !== undefined ? "var(--e" + b.farg + "-s)" : "var(--" + b.id + "-s)";
   const farg = id => { const b = blockAv(id); return "--b:" + bVar(b) + ";--s:" + sVar(b); };
@@ -771,6 +778,7 @@
     let ledarSent = 0, ledarFm = 0;
     const jobbDagar = [];
     const langaDagar = [];
+    const utanLunch = [];
     for (let v = 0; v < L; v++) {
       const dagarMedArbete = new Set();
       for (let d = 0; d < 7; d++) {
@@ -786,6 +794,7 @@
             if (START + s * STEG < 12 * 60) ledarFm++;
           }
         }
+        if (arbete >= 12 && ![...Array(N).keys()].some(s => S.celler[nyckel(v, d, s)] === "lunch")) utanLunch.push((L > 1 ? "v" + (v + 1) + " " : "") + KORT[d].toLowerCase());
         if (arbete > 22) langaDagar.push((L > 1 ? "v" + (v + 1) + " " : "") + KORT[d].toLowerCase());
       }
       jobbDagar.push(dagarMedArbete.size);
@@ -795,7 +804,9 @@
     const perV = id => tot[id] / L;
     const perM = id => tot[id] / L * 4;
     const summa = (ids, f) => ids.reduce((a, id) => a + f(id), 0);
-    const arbIds = BL.filter(b => b.typ !== "fri").map(b => b.id);
+    const arbIds = BL.filter(b => !["ledig", "fri"].includes(b.typ)).map(b => b.id);
+    const ledigIds = BL.filter(b => b.typ === "ledig").map(b => b.id);
+    const friIds = BL.filter(b => b.typ === "fri").map(b => b.id);
 
     $("#kLedar").textContent = tim(summa(LEDAR, perV));
     $("#kLedarM").textContent = tim(summa(LEDAR, perM));
@@ -816,10 +827,12 @@
     const rad = (namn, ids, klass) => '<tr class="' + klass + '"><td>' + namn + "</td>" +
       (visaVald ? "<td>" + tim(summa(ids, id => dennaV[id])) + "</td>" : "") +
       "<td>" + tim(summa(ids, perV)) + "</td><td>" + tim(summa(ids, perM)) + "</td></tr>";
-    rader += rad("Arbete totalt", arbIds, "sum") + rad("varav ledartid", LEDAR, "del") + rad("varav kund", ["kund"], "del") + "</tbody>";
+    rader += rad("Arbete totalt", arbIds, "sum") + rad("varav ledartid", LEDAR, "del") + rad("varav kund", ["kund"], "del") +
+      rad("Ledig tid", ledigIds, "sum2") + (friIds.length ? rad("Inte arbete", friIds, "sum2") : "") + "</tbody>";
     $("#htab").innerHTML = rader;
     $("#htab-not").textContent = "Timmar. Ledartid är möten, feedback, uppföljning, framtidsplanering, resurstid" +
-      (S.egna.some(e => e.typ === "ledar") ? " och egna block som räknas som ledartid" : "") + ". Träning, ledigt och återhämtning räknas inte som arbete. En månad räknas som fyra veckor" +
+      (S.egna.some(e => e.typ === "ledar") ? " och egna block som räknas som ledartid" : "") + ". Ledig tid är träning, ledigt, återhämtning och lunch" +
+      (S.egna.some(e => e.typ === "ledig") ? " och egna block som räknas som ledig tid" : "") + ". En månad räknas som fyra veckor" +
       (L === 1 ? ", alltså veckan gånger fyra." : L === 2 ? ", alltså de fjorton dagarna gånger två." : ", alltså hela schemat.");
 
     // I halvtimmar: 4 är två timmar, 12 är riktmärket sex timmar, 90 är fyrtiofem timmar.
@@ -839,7 +852,8 @@
       if (arbete > 90) obs.push(["warn", "Arbetstiden är " + tim(arbete) + " timmar i veckan. Över fyrtiofem timmar håller inte i längden, varken för dig eller för kvaliteten."]);
       if (jobbDagar.some(n => n === 7)) obs.push(["warn", (L > 1 ? "Minst en vecka har" : "Veckan har") + " arbete alla sju dagar. Lägg in minst en hel dag som är ledig."]);
       if (langaDagar.length) obs.push(["warn", "Mer än elva timmars arbete: " + langaDagar.join(", ") + "."]);
-      if (!tot.aterhamtning) obs.push(["", "Återhämtning saknar plats. Lägg in pauserna under arbetsdagen, annars blir det ingen lunch de dagar det är fullt."]);
+      if (utanLunch.length) obs.push(["warn", "Ingen lunch på dagar med sex timmars arbete eller mer: " + utanLunch.join(", ") + ". Den som hoppar över lunchen leder sämre på eftermiddagen."]);
+      if (!tot.aterhamtning) obs.push(["", "Återhämtning saknar plats. Lägg in korta pauser under arbetsdagen, till exempel en promenad."]);
       if (!tot.traning) obs.push(["", "Träning saknar plats. Det är blocket som ryker först när veckan blir full."]);
       if (!tot.vila) obs.push(["", "Ingen tid är markerad som ledig. Lägg in den, annars äts den upp."]);
     }
@@ -924,12 +938,12 @@
 
   // Tider som [dag, från, till, block], klockslag i timmar.
   const EXEMPEL = [
-    [0, 7, 8, "traning"], [0, 9, 10.5, "admin"], [0, 10.5, 12, "framtid"], [0, 13, 14, "uppfoljning"], [0, 17, 22, "vila"],
-    [1, 8, 8.5, "moten"], [1, 8.5, 9, "resurs"], [1, 9, 12, "kund"], [1, 12, 12.5, "aterhamtning"], [1, 12.5, 16, "kund"], [1, 16, 16.5, "feedback"], [1, 16.5, 18, "kund"],
-    [2, 7, 8, "traning"], [2, 9, 10, "admin"], [2, 10, 12, "resurs"], [2, 12, 12.5, "aterhamtning"], [2, 12.5, 17, "kund"],
-    [3, 9, 12, "kund"], [3, 12, 12.5, "aterhamtning"], [3, 13, 14, "uppfoljning"], [3, 14, 17, "kund"], [3, 17, 17.5, "admin"],
-    [4, 7, 8, "traning"], [4, 9, 12, "kund"], [4, 12, 12.5, "aterhamtning"], [4, 12.5, 13, "feedback"], [4, 13, 17, "kund"], [4, 17, 22, "vila"],
-    [5, 9, 14, "kund"], [5, 14, 14.5, "uppfoljning"], [5, 15, 22, "vila"],
+    [0, 7, 8, "traning"], [0, 9, 10.5, "admin"], [0, 10.5, 12, "framtid"], [0, 12, 12.5, "lunch"], [0, 13, 14, "uppfoljning"], [0, 17, 22, "vila"],
+    [1, 8, 8.5, "moten"], [1, 8.5, 9, "resurs"], [1, 9, 12, "kund"], [1, 12, 12.5, "lunch"], [1, 12.5, 16, "kund"], [1, 16, 16.5, "feedback"], [1, 16.5, 18, "kund"],
+    [2, 7, 8, "traning"], [2, 9, 10, "admin"], [2, 10, 12, "resurs"], [2, 12, 12.5, "lunch"], [2, 12.5, 17, "kund"],
+    [3, 9, 12, "kund"], [3, 12, 12.5, "lunch"], [3, 12.5, 13, "aterhamtning"], [3, 13, 14, "uppfoljning"], [3, 14, 17, "kund"], [3, 17, 17.5, "admin"],
+    [4, 7, 8, "traning"], [4, 9, 12, "kund"], [4, 12, 12.5, "lunch"], [4, 12.5, 13, "feedback"], [4, 13, 17, "kund"], [4, 17, 22, "vila"],
+    [5, 9, 14, "kund"], [5, 14, 14.5, "uppfoljning"], [5, 14.5, 15, "aterhamtning"], [5, 15, 22, "vila"],
     [6, 8, 22, "vila"]
   ];
   $("#exempel").addEventListener("click", () => {
