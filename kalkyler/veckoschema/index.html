@@ -281,10 +281,6 @@
 
   .saved { font-size: 12px; font-weight: 600; color: var(--good); }
 
-  .rules { columns: 2; column-gap: 24px; font-size: 13px; }
-  .rules p { break-inside: avoid; margin-bottom: 10px; }
-  .rules b { display: block; font-family: var(--display); font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-  @media (max-width: 720px) { .rules { columns: 1; } }
 
   footer { max-width: 1180px; margin: 0 auto; padding: 8px 48px 40px; color: var(--muted); font-size: 12px; }
   @media (max-width: 720px) { footer { padding-left: 16px; padding-right: 16px; } }
@@ -300,7 +296,7 @@
   @media print {
     @page { size: A4 landscape; margin: 9mm; }
     body { background: #fff; font-size: 10px; }
-    .top-controls, .lede, main, .rules-panel, footer, .no-print { display: none !important; }
+    .top-controls, .lede, main, footer, .no-print { display: none !important; }
     header.top { border-bottom-width: 3px; }
     .top-inner { padding: 0 0 6px; }
     .brand { margin-bottom: 4px; }
@@ -444,17 +440,6 @@
       </div>
     </section>
 
-    <section class="panel rules-panel">
-      <div class="head"><div><h2>Så skyddar du tiden</h2></div></div>
-      <div class="body rules">
-        <p><b>Ge tiden ett namn</b>Ledartid är för vagt. Skriv uppföljning, feedback eller framtidsplanering, så vet du vad du ska göra när blocket börjar.</p>
-        <p><b>Lägg ledartiden på förmiddagen</b>Det som ligger efter stängning görs när du är trött, och blir både sämre och långsammare.</p>
-        <p><b>Berätta för teamet när du har den</b>Då slipper de fråga, och du slipper förklara varför du inte tar kunden som ringer.</p>
-        <p><b>Resurstid är inte ledig tid</b>Det är tiden då du finns på golvet utan egen kund, för att se, hjälpa, lära ut och följa upp medan det händer.</p>
-        <p><b>Sex timmar är riktmärket</b>För en salong med flera anställda. Under två timmar i veckan hinner du med veckomötet men aldrig med samtalen.</p>
-        <p><b>Lägg in kunderna sist</b>Kundtiden fyller sig själv. Sätt ut ledartiden, träningen och det lediga först, och boka kunder runt det.</p>
-      </div>
-    </section>
   </main>
 
   <aside>
