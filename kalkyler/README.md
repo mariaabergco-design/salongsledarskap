@@ -6,7 +6,7 @@ Den här mappen publiceras av Vercel på salongskalkylen.vercel.app.
 |---|---|
 | `index.html` | Salongskalkylen, för salongsägare |
 | `frisor/index.html` | Frisörkalkylen, för anställda frisörer |
-| `veckoschema/index.html` | Veckoschemat, där salongsledaren bygger sin vecka från 06 till 23 med färdiga block och ser timmarna per vecka och månad |
+| `veckoschema/index.html` | Veckoschemat, där salongsledaren bygger sin vecka från 06 till 23 med färdiga och egna block och ser timmarna per vecka och månad |
 | `api/las.js` | Serverfunktion som läser fakturor och kassalistor med Claude |
 
 Sidorna redigeras som artefakter på claude.ai. Den färdiga html-filen läggs

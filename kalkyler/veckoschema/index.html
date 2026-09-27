@@ -45,6 +45,16 @@
     --traning: #F4DCE7;     --traning-s: #B0527F;
     --resurs: #F9DCCB;      --resurs-s: #C8612A;
     --vila: #EDEDEA;        --vila-s: #9A9A94;
+    --aterhamtning: #DCEDF7; --aterhamtning-s: #3A88BD;
+    /* Färgerna till egna block. */
+    --e0: #ECEBCF; --e0-s: #8C862A;
+    --e1: #F6D9D6; --e1-s: #B5463D;
+    --e2: #DDDEF4; --e2-s: #4F56A8;
+    --e3: #EBDDCD; --e3-s: #875A33;
+    --e4: #D4F0DF; --e4-s: #2E935E;
+    --e5: #F2D8EF; --e5-s: #9F4397;
+    --e6: #DFE4EA; --e6-s: #5A697C;
+    --e7: #F3E6C8; --e7-s: #A77B1C;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -63,6 +73,11 @@
       --traning: #402634;     --traning-s: #D98AB0;
       --resurs: #45291B;      --resurs-s: #E68B55;
       --vila: #2E2E2B;        --vila-s: #8C8C86;
+      --aterhamtning: #1F3444; --aterhamtning-s: #72B5E0;
+      --e0: #37361F; --e0-s: #C9C26A; --e1: #432523; --e1-s: #E57F76;
+      --e2: #2A2B45; --e2-s: #9097E0; --e3: #3B2E22; --e3-s: #C9956A;
+      --e4: #1D3A2A; --e4-s: #6BCB96; --e5: #402640; --e5-s: #D582CC;
+      --e6: #2C3138; --e6-s: #9AA8BA; --e7: #3D321A; --e7-s: #E0B45A;
     }
   }
   :root[data-theme="dark"] {
@@ -81,6 +96,11 @@
     --traning: #402634;     --traning-s: #D98AB0;
     --resurs: #45291B;      --resurs-s: #E68B55;
     --vila: #2E2E2B;        --vila-s: #8C8C86;
+    --aterhamtning: #1F3444; --aterhamtning-s: #72B5E0;
+    --e0: #37361F; --e0-s: #C9C26A; --e1: #432523; --e1-s: #E57F76;
+    --e2: #2A2B45; --e2-s: #9097E0; --e3: #3B2E22; --e3-s: #C9956A;
+    --e4: #1D3A2A; --e4-s: #6BCB96; --e5: #402640; --e5-s: #D582CC;
+    --e6: #2C3138; --e6-s: #9AA8BA; --e7: #3D321A; --e7-s: #E0B45A;
   }
 
   * { box-sizing: border-box; }
@@ -192,21 +212,16 @@
   .vecka .c[data-k] { border-top-color: transparent; }
   .vecka .c[data-k].forst { border-top: 2px solid var(--surface); }
   .vecka .c[data-k]:hover { filter: brightness(.96); }
+  .vecka .c[data-k]:hover { background: var(--b); }
+  .vecka .c[data-k="vila"]:hover { background: repeating-linear-gradient(135deg, var(--vila) 0 6px, var(--surface) 6px 9px); }
   .vecka .etikett {
     position: absolute; left: 7px; right: 3px; top: 2px; z-index: 1;
     font-size: 10.5px; line-height: 1.25; font-weight: 600; color: var(--ink); pointer-events: none; overflow: hidden;
   }
   .vecka .etikett i { display: block; font-style: normal; font-weight: 500; color: var(--muted); }
 
-  .k-kund { background: var(--kund); box-shadow: inset 4px 0 0 var(--kund-s); }
-  .k-admin { background: var(--admin); box-shadow: inset 4px 0 0 var(--admin-s); }
-  .k-moten { background: var(--moten); box-shadow: inset 4px 0 0 var(--moten-s); }
-  .k-feedback { background: var(--feedback); box-shadow: inset 4px 0 0 var(--feedback-s); }
-  .k-uppfoljning { background: var(--uppfoljning); box-shadow: inset 4px 0 0 var(--uppfoljning-s); }
-  .k-framtid { background: var(--framtid); box-shadow: inset 4px 0 0 var(--framtid-s); }
-  .k-traning { background: var(--traning); box-shadow: inset 4px 0 0 var(--traning-s); }
-  .k-resurs { background: var(--resurs); box-shadow: inset 4px 0 0 var(--resurs-s); }
-  .k-vila { background: repeating-linear-gradient(135deg, var(--vila) 0 6px, var(--surface) 6px 9px); box-shadow: inset 4px 0 0 var(--vila-s); }
+  .vecka .c[data-k] { background: var(--b); box-shadow: inset 4px 0 0 var(--s); }
+  .vecka .c[data-k="vila"] { background: repeating-linear-gradient(135deg, var(--vila) 0 6px, var(--surface) 6px 9px); }
 
   /* Verktygen under schemat */
   .tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
@@ -217,6 +232,19 @@
   .dagval label { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; border: 1px solid var(--line-strong); background: var(--surface); padding: 4px 8px; border-radius: 6px; cursor: pointer; }
   .snabb { display: flex; gap: 4px; flex-wrap: wrap; }
   .fel { font-size: 12px; color: var(--bad); min-height: 1.2em; }
+  .blk.ny { border-style: dashed; color: var(--accent); }
+  .farger { display: flex; flex-wrap: wrap; gap: 6px; }
+  .farger label { cursor: pointer; }
+  .farger input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .farger span { display: block; width: 26px; height: 26px; border-radius: 6px; background: var(--b); box-shadow: inset 4px 0 0 var(--s); border: 2px solid transparent; }
+  .farger input:checked + span { border-color: var(--ink); }
+  .farger input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .egna { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .egna li { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 5px 6px 5px 10px; }
+  .egna li .namn { flex: 1; min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .egna li .typ { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .egna .x { border: 0; background: transparent; color: var(--muted); font-size: 16px; line-height: 1; padding: 2px 6px; border-radius: 4px; }
+  .egna .x:hover { color: var(--bad); background: var(--bad-tint); }
 
   /* Summering */
   .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -232,8 +260,8 @@
   .htab th { font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: 6px 4px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
   .htab th:first-child { text-align: left; }
   .htab td { padding: 5px 4px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
-  .htab td:first-child { text-align: left; }
-  .htab td:first-child .sw { margin-right: 7px; vertical-align: -1px; }
+  .htab td:first-child { text-align: left; white-space: normal; overflow-wrap: anywhere; }
+  .htab td:first-child .sw { float: left; margin: 3px 7px 0 0; }
   .htab tr.tom td { color: var(--muted); }
   .htab tr.sum td { font-weight: 700; border-bottom: 0; border-top: 1px solid var(--line-strong); font-family: var(--display); font-size: 14px; }
   .htab tr.del td { color: var(--muted); font-size: 12px; border-bottom: 0; padding-top: 2px; }
@@ -293,7 +321,7 @@
       <div class="brand"><img class="logo-light" alt="Åberg & Co" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfYAAADVCAYAAAClpNKQAAAACXBIWXMAABcRAAAXEQHKJvM/AAAgAElEQVR4nO2dTU4cS5eG062eILWEvwk9BK+A8grAKzB3juTyClyWelCMDCNqdvEKXJaYX1iBixVcWMEHUyYNUksM3QruGzicGZkVkZWZVRX5PBK61/WXGRk/b5wTJ068+vnzZwYAAABp8B/UIwAAQDog7AAAAAmBsAMAACQEwg4AAJAQCDsAAEBCIOwAAAAJgbADAAAkBMIOAACQEAg7AABAQiDsAAAACYGwAwAAJATCDgAAkBAIOwAAQEIg7AAAAAmBsAMAACQEwg4AAJAQCDsAAEBCIOwAAAAJgbADAAAkBMIOAACQEAg7AABAQiDsAAAACYGwAwAAJATCDgAAkBAIOwAAQEIg7AAAAAmBsAMAACQEwg4AAJAQCDsAAEBCIOwAAAAJgbADAAAkBMIOAACQEAg7AABAQiDsAAAACYGwAwAAJATCDgAAkBAIOwAAQEIg7AAAAAmBsAMAACQEwg4AAJAQCDsAAEBCIOwAAAAJgbADAAAkBMIOAACQEAg7AABAQiDsAAAACYGwAwAAJATCDgAAkBAIOwAAQEIg7AAAAAmBsAMAACQEwg4AAJAQCDsAAEBC/CeVuRiTyekgy7LX+pHr8fjoYV3LAgAA68+rnz9/Uo2RTCan+1mWDbMs++D55k2WZWfj8dG08A4AAEDLIOyRTCanZ1mWfQr41lWWZQdY8AAA0CUIewSTyem0xEovw1jv+4g7AAB0BcFzgUwmp8eRom7YzbLsovAqAABASyDsAUwmpyY4blTxyZvCK7/Ym0xOh4VXAQAAWgBhD8MI86bnk5dZlv1rPD4ajMdHr7Is+1z4xD8cFF4BAABoAYQ9DJ8wX43HR78Fx43HRyaw7qTwySx7X3gFAACgBRD2MHY8nyrbznZWeOXXFjkAAIBWQdjD2PZ86rbwyj9WOxHwAACwNBD2MK48n/K556ssc+9EAAAAoEkQ9jB8ojxUOtkXFD3vc8U/jsdHvt8AAABoFHLFh3Hh2cNuouT/nkxOv2dZNsuybFARPc9edgAA6AQyzwUymZzelqy1h/AGix0AALoAV3w43jX1AE4QdQAA6AqEPZDx+Og6y7KPkV/7Ph4fHRdeBQAAaAmEPQIdxfp2TgpZw6PJQjceH5FKFgAAOoU19ppMJqcHcs+7yWseFCh3wX52AABYBgg7QGJMJqc7mnDanAqvtWvDcq1J6IP+/3rVJ6Iq077KteNMqGe2HOPx0azwxTXj6XxrR3Vl62snZzzYMpq4nduNw/u1KrPK57bNfPkKbXPj8B4jKRKEPRLtVQ/Zvnbbhitee+d9e+XrYjtSpkFj4UF+Mjk9ywlJV4wUC2Hvo6lBzw4yllv7twqBkWqTBxos92vu3rhR/V+skkDqZMSRjkCex6NSPZ+tS8Dq0/mWrTtbf77tsvO4sp7CjcP7lSq3U75F2uadyjfbOLxn63AACHskGmi+BX7rrSs0DV3fdI4fhTeaxXakaZ37l6DuFd5on3euKE0mp1007keJvl2C6WxgVVsYenIsLMqdBHK6LIFU2aYLbDE9WeXA1afzrX1NWJo+IMpM0M42Du/LzrLohKfzrYHKd1BzslLGy+Rt1SYxqwTCHslkcnodaD1kiopv1GrvSNhdjDVwHGPF9UzY89zIYmxtYFUbOO7oGX9X/Xc5YTFl+1J4Ix5TF/urtMwgQV9kwhKKmZwddy3wKl+nbROBL0JUfAQaUENF3XAgN+k6YzroD7nXYT6mfXwzk5t8yuEG2t+OJk0/Opw4GW/AtcS2dSaT02lDop6pLmar0AfN2vLT+Zatu7ZFPdM1vj2db13Lem4V43J/Ot+aLqFt/vvpfIstxTkQ9jhire/NBRLbrBqfjLcigYlKV+xJVBqp/8nkdCSX/zI8IaYdf1H9tyYSKmPTywq7y07p/HS+NVxi3Zny/92m+D2dbx0o5qTpugvlS1cTmHUBYQ9Eglan4Y4Kr6wvK2MBrQlGEP9SXEYtzLOeTE6NMP3Z8FplHXZ1PkLjbVoThj8LbzTDXlcehzyyYr+tQN0Z8ZspmK0xns63jCfvr1Vpm5pE9R6EPZy6DWa3TStnCexqDQ3C+VanDWgCNWshwGpR/pTLvEnaXuoZdTkhlWv6eolWrI9nL1IT4q7ymQnnp8Kby8UsP/R+2RBhD2cRKyW1WeSninPnwc9FjLA4oh4T09ElH5oSd7WlUDe1iYr+qvTOn7Msuyx8ws9mV/1Qwrmqdbe7qLg75Vu1CaflkzwlvQVhD0ADzyIBLym6h1JaYuiC7VBPxxqIuqUpcQ/tHybKfWc8PjL5CsxWPLP7wKzvvpPgN3WdRVn1ultU3C/WoW32OagOYQ9j0QFhc5F11hXlPWvt0XxSBrV5NCEMxpI9keiZY4Nf2T+dd/CHLN+7wjfj+NDAjokQ789j2dY1bXEMmWi2LkayFJuou8+qu39tHN6/sn967aO2eoVMZsqoFVSo8i0aBHjlts1c+d7o9ZOAMznm8aWva+7sY5+DxOt/qz8VxNV4fLSw+zpyH3vlNZ3UozbzVaxX4o/x+KgwOETuY3/XVqazmH3sErxScmlaBwu4Ib8ai7Pw6q97Pltg3fJOa9VTnwCW0dC+eG9bCLh2aP+qfG76rduANtxae5OIhCavynOnOriISaGqax4vkshn4/A+yLJdsHyPaptnkeXb0aRtWDNA73lCuHF432iisFXnP/tU2Jo0NeMzkbk7q5TqUvdyq0j3Y3W8mGCfwbK3EnWF+6yyX0J/VkPgh2XWpQS2jqg/KilOLdejhG5/wWxvU7Xv2GQwoUGFIe1stqxgNQlQXc9FsLjmUQKa6dP51kgCHyt+z9Hy83LOL1i+r0okE50oSMlnRgqIq9PfNtWme7UVDlf8fLyD8Ar8VqOYAVlZ8q4ifre3+0aN0Gt9N/aM/k1f4KEs1zrr1Ta72sLriRL4gdy8sWzWvP8mWWaGuWkNUTVW+tu6ou6ycXhvz2eo474Oqbc65TMTzncbh/ejRQ9yMQK/cXhfp78Zdvu23o6wV6DkIiHWS+ha1zqs98R0gN6vsSt17EnhjWoKwq4JZKylfCVRb8zN6EzwYsuUKe7CV7YmCJlELmWiqTSqscsYRoAHTbqIZd3u1xD37SrhW7B8lZ6AWOShCA2WdBnJ69ALEPZqQoU41BJf+SA6WW2LBOX0DlnLMYPpb+Inaz3Wm/McP9FWHnSVqY7lXioQJYQuTVVm8NPSSIj4tLEUFlvmG637Nl53+s064j6qiJKPLZ9d125l2VGThTpZQHtjtSPsJWigCFnPuZHVFhpdvA5We68CTRoiZtDIWw6jSDfnTRepimW5h+4Tt+zFJONR7ELIRHJvjjcgZP33sekYlxrWrCnrsM0zxh1xj5mge/f517TWW5m0uOj41s+FN6r5UDF5SQqEvZxCIy/Brk+FBpHtBW55WiahjZ8JgFBEeOhAmne5x072hh2eWDassSUu1vsQ6q6d+rZYygsWMglvI9AztqzHXURoS1hj25WvLLG/cdJVBLriCmJigrKSMiYHUfHlxAp7zDal0ao2MA2coftwEfbfic7GFRHHYTlp+oz/KjSBaHsiehH43LbV3168FZHbAxtNNao125j6vpIYdYKxap/Oty4j7tGstb+s+8u6jdllcNdEIGAkZpz+d8RXhn1wyWOxe4gYbC+t5SQXX+i61iq742NcvK3sB15j6ghuzPN+7CCneudELmWZAL2pjrC9jhD17y1MiGKXQ5YhKCNZtaF/7jJKbPk6N1a0jv+18EY52304BQ6L3U+o8OZde9PAE6pMEN1BnYQebSJrPVQ4LldpT/4aU7VunCcq8cyacRyR/ORDpCX52JLoxNTdVdMR4iE4kfJ1iBH2O617L4PYpE4HqXsbsdhzRATNZR5hj2nYK2W1KzDpNiKIixPeihTWf6tQW4txwyd7sIWs9kVTiPooTUXbADFu+HWsu5gJwdI8SZq8xAR5Jn+AFRZ7kVDBvcwPFsaCnUxOQ9e03neQie51RSSxTZH6Wg09Jr/11wbdmoPJ5LTwYh3aShUaQaiLzwb8lNWNj7su19aXhLWkmjrb+3HePn8nVfA8HtzfqeHOXasMjYofiKmHZZcvNE4jayDX/cqDsBcJddmVzcBjGljbgRy7EXnlQ7mZl7M7kpCli1Aq8723iZYxQgcMO5mLCUpLPp5BE2PTJ/4qvBnPjXYPlIq6mAV6TT7m3Lcxwn7T9vavFohpm3dt7VmP4CImj70bJJgiuOIdNKiEzFIfK9bHY7Y9rdvJQ1d9cGPVpE7QYYw49GIHgvpVnbShLsajNJgn6urvIaJ+p6UCl9QnZTH9fOnl08QpZikn6f3sCPvv1A2ae0Hu+dL3c2wrAn8dOGkz01kCxHhebPuIGVwqRSoxFmlj7yI8SqF15vtcjLCnHmS6KuWLuY+kI+NxxYuIlJRZgHBfRETtDtdg/e2uB4NTbbSXOjQIrhCb0fJ9LXMAu45ZtnEOwql7JK7hzMSVzHvGC1rrWaSwr+OkLGbSuSpjw3VE20naYkfYfxE6AFW54Z8x708mp4+Bbv0ugugWxQyA33S063HJQNdLJBAxW226jB4erEugkDxXdU4Qy7OrY4jnibvPCvexbstlTREzIWTSv2Lgiv9FbKa5pj6XrdHgYQX+wpfas0+YfOjmOcQE7OjgFpL65NCE8a8Go+GtuHvbaIS1Tn3BWoLFHhc0l0UKe6glt25pDt8HWkVrx5ztT/t6b7/GEauPPbb+SjFZ5CKTzYRSZbkvsrYORbwTKFgeWOz/EDrgBu8l1udC02SuUxCdZXfd9uYGMtAWQd/fF4lQrKhn2nqFy9KhRVG3FCz3Bq31mAntOgZqxcQFrEr5yibkvaP3wt5w0FyemPXUdbTm9uRGTQbFT8SeGDWPjyVxGamLQ+lEZjI5HdUQ9Zsax8ju5rxsoe11XsxNjPCto+DEtM1VKR95IQSu+Dh3W2zQ2EVEApY2guiM1RG0H1UTnH1NMGICrkYm+trj7gzle5UALInYE6PKeJSl7hP1LDKKNxlh13ntsYmJPo/HR2dZPUv/vb4Tmowm5MCY1Cdl61i+mHEr6W27vRZ2uehCXeA3sSk9lUnrJiJd68Gyci5rQjHVmdfDiKCwTVk3dS336RyXZ+eo3r5GRrvnMROW0ZwJT0x7WsfEQGXli2njhbSw4/HRUGmIY8Q95uCYkLZcVjYfe+YI1DXLPhdTvt1ll+/pfCtqKTPlrHMZrvhnIW06aC5PzCC2Eme0aztbTPavFIPCjiMyCFrMJO5zlmVvjPjMEfUscvDclldlnShY7IolCbWsCqJuMc9Xk6em+R7iNatxUttaxdCsYflirt/GYUMrRd9d8TFCOqi5nhwTMbqtKN6lW7BG3GW5hwzC22uwFz8KI8qq71CXcfCyh0WegbuIYLxRZJsdNRyxHHPuwKNPkCMngZW53mta7lXEHu96FTFJGa7hCW8x3sbRsspnvAU1UzonS2+FXet8MSeatRm96zJcoYZ3FjFw7fgstHXGrOkqyCtEeE0g4bBG8p5ZTJZCM9kIjWeoEsVYauzaKLRhLX2FxhRcVcQmvNCwuMfGilxE9A/jjt9fxpns5rqFF8u5dQ50uYgYI3eXVT5NKmJyICQv7H12xa+E29vDh7LEGksg9TXgEGIszLMadRczEdhcYruNva5PlGOCrIKfS0Nu+cca8S2+MlbR+Q6Sp/OtY8+2zao/tx+vQ/leR7bNx43D+xS36f5GL4U9MmhuGazEmjX7rl/OeA/dYrUZO7jp90PzHWTahdDpWrvO9I9NTesbPGMmf77vl9KAuEfv7JBlG7M1ci82yGsRdKZ6lOi5z10BZjHr0aZ8XU88jyOt9V6kw+6rxR4TNLcMVsKboOUKiKuPTzWeW6zV3tng5BzMEsP3RTMS1vn+AuJex1q3xD6bqazMLriIHOcuPJHtsc/lWBOK1tESQ+zOlaXsOuqavgr7qrrhLduykpYNwv7Lc3FSeKOc2MHjLDICf0/7srsg5uQ6y8Iu2brLUTXFfbPugL9xeD+N9LiYa83aFven861pZAxR5qu3muW76KB8gxpLBZdO/EDS9E7YawTNLYtVcMfH3EPqASkx4runHQVByDqNFZYPbYt7zZSvQdvFAlhkYlsQqAAWeZ6x19ttU9wl6rH1dlUheqtWvoHGm1iva29y//fRYl91a92y1CC6iK1ulrJBIQkkvjFtJzaQ7izSMsrURho/ac/8Xk1Rf2xw8Fykn9YV6FriLqs2Ng2xFb9G3dY1RT2rmsSrfLF7v235GvX6LSDq31NPSuPSK2HXANjVtrUmKO1sbaItXjHHkd71IdBOW9lCB/CoQDpNHOrUt9k+dt3U0o1+57pmPzmb0w5ivDpRXg+Lcg8scgZ9Xcu9zkTEiN91EwF1RvCezrfq1ttJhbVuqVu+WVMBdYrw/7uGqMfmJ1h7+raPPXagiFlXDSVmz+Woq2CPBXLFZ33YF+pwHJGoxQTSTSNOBJzVTGVr1sB/TCanZtJxXCfBkQR9EVE0+84rJzIqX+H1CszZ/1lobgBNSL8U3ojng64bPF4Ya/DpfOtzjRz4Ziz46+l867nuYveBy+I/XsBguQkZY8x9PZ1vndR4vqZ8f0rcj2X9R/F0vmWPta5zqqJh6AkKTJpXP3/+7E1hJ5PT24jGYXLDNx48VsPF+dYVBg3AocLyGLAX/XUDMQf5e5xFCMRNgwcyjHL3Edy4x+OjV4UXS4isw+iMdJPJ6fWCdXKnwCLzd+2LMJf3aqAdIgcLDJqZ2tmO7zqe615EJKmxfNeExWtValJ6VuN35143Rtyzf0SoTvlcXuquTOTljrZ1t8i1nlP2xrion863Yvq2D1s+8zszn+BqbX7fMTQW2cH0dePwvlfWetYni12CGDN4tRWYdBEp7KMFXPKbC3bCEK4WzHDWZCBjVzEJxxFbJutkpLPu8Lpiuy2r/9nyl5VslxCamMi52HzuhQG6hGkNMfogK/pGgmCvZQWgrWDYaMvdyRxZ955e6u7pfMu+ZutuZ8EJWJ5RjXXng6bKl/0j4pkzuW+6bX7vo6hnPVtjjxXHVoRdaTJjgqQOVigTnY/edRxZjjFLJFGBdBLJgxqH0FSxp782RD1YHBY8735XgvBFf59qlCf2mUatucsC3W/4oBFbd02K+sc6bnGVr+m2udtC27zp49hk6YWw1wiau1w0wcYcYvZfbq5wlrzPTeYjXye0nhw6QauTke5aAhEbKd8V0aLusKwB91FWb+w+91UQ9yapJeoWBdoNVrh8l1pi6NW6uktfLPZYa73tXMKxAXGrOPM064+9yOJUQasZ6SSaqziAmvsZ1J3U6XufC2+0z/P5+DWT2HyIqT9H3EPTEXeBmdj8sYioO+W7XdHJi3G/H/RZ1LMeCXtUvuQaJ3RFIVduTIfYXbH0riexQUUpUsOtHD0RkhCZuv9aeHM5fJWl7g1kiyjXWUvnqZfx3e3XNcT9Y+xExoiLEZmWdtfEciMrtjGjReVblbb5KE9E78elrA/CXiNorquTf9bRajed5928bU09I6Zeau3Nzv4RInOdd0t0zd+p7kdNLVNJXLsQBW90e4S4f1xksr9xeG/6y9slWrdmn/qgrQQtClBbZts0k+tBE56IVOiDxR4riF25l2MnEMsOovuqLU3eLTh9RVZcjDjVOdr1GfPsx+OjHVmATQYvVXEnYWul7jVh+aPF8lR6lwLEfSFRtxhRlXX7scO6M4L3RhOLVjFb8zYO75fRNt9tHN7v9yUHfChJC7v2t8ZsrbnrKhhMVk/VgJJnGUF0dxKtN01aaglyHDGYRQfS5ZHHZEci0ZaVdOUIettLUxc1g9qquAn1LlWIeyOi7mKsyo3D+9ct150py9tlCJ4mETuKoWizbZpYgZ2yvf59J/V97IPINdCuD+CfqhOEMtD+5rrbhebxoN+/VWKTupOcZUXK5ycebT2n3zATHmU9K7UMcwyM1b7IREnfNe1nqviLYQOJZq5scpSuUwTblLpKCTvUX52ymGC1qSYLMdcfar//hwUj/oOQ23iqZDNN1N2lk9hmqRNwXd94Ps8aLN+VUz6s8zn0KvMcQOrIS2Uzk+3MmTi6k7iVs3ycNMc7c057m6kss0W9SpPJ6ZkmBp1PTpUeNrru1sVqTb18qwTCDgAAkBB9PLYVAAAgWRB2AACAhEDYAQAAEgJhBwAASAiEHQAAICEQdgAAgIRA2AEAABICYQcAAEgIhB0AACAhEHYAAICESP0QGFgCOpTkdVf5x5VTfEc5zzs9AMNee52Os51MTk3e9QdfPnTfs1zFMvru04fKemsPtcn/e1XR0b4HuXzqjeTDbxvd+yC0P65jH1p1sNihDcxBGj86fLJDXW9QeKe7a68TP1RHPnzPchXL6LtPHz9yp+7l/71y6IQ7M/H4lmXZF+fvL/O6ThJcZQaR/XEd+9BKg7ADQJ+4kmiuJJPJ6VRC/qAz29+Mx0evzH91xrnhT30uFW67OmK5L+CKB4DeMB4fVR3/ulRkqZvz4G90HvyLG1tLB2cSdOOy/jCZnBpXd5nnZW0Yj4+ez6anFzYHwg5LYzI5HWodcV8WillDvFBH/w2t24302T0Nfubzx2X3r/XUob7zWp83Z21PdW07qNh7yWQ9mOsMxuOjHV33zDkP3Ayqo6q1Q+deDWfms3rNltd3/0Pd263WHIca7Nxyb8uyudBnS++hCfT87J8VHsP/ZVn2X+PxUeHZO2U3onOh1w5UnkG+Hkq+7z6nO33+LGQNVm7q1/a5e94/1jr1zP23vjPMtUXvNVU/xyrPrupkpnZi7jvzla0K/aax1B/zou6itnSgtrHvLqmU3JctR8FLEdM/nO8Mnbqs7LO5z7t1eezGd9h2ZtuT0+7O1JYOVJ4bPedj3/Mpubcz9emhW++pgyseloIsj2/qhHbGbv7/W97NqGC8Ww18ZvD6ro57oM5bWMtTJ/8hC+jWEUnz+xfq6O5a69CJDRg47tqZfuNCf/b/vWhwnWlAmjmibl7707n/W+f+R07ZMv33iwbpv53PXeo98zsz/W6b7GiAtfdlB9z/NvfnTIZchrr319mvev5Lz/RCz9jWw29lqHhO5po/JpPTUuvUfNdYsPrurW/gF1+cSVqmf5/pHnf0nM013+uav5VR//632kGmOnmt37H17nsu8zjQ+94JiYsRaeN5GI+P7Hfy9/UgUTf39cmUSX0oX46y/nGd7x96vjP1WdvGr/UsC33WlkWff637edBzneXuZ1/PL//vmbMs4Zan0G50z3Y8uXbGhR/qR/l6Txosdugcx+X4OedKPNYAYdyMt45FaARhM/95Rwjeu2XQjP+bZvgHrrWi9+zv5df1zGvfx+OjYfZrQmEsha/j8dFIr5n/fDICnreC9HlrEew7VsmFfufEtXIdb8Cnkjr4IHH7zUNgn5EG44PCtxrCukhVX1+sG1v3/T+6dn5AN8/uUVafreeXZ+rU80gifOx4N+xzKqtn89xn1hPged9892OZ9ViB75oDxwq3Xp0dtatHtauZ5/O+dhWCFZ3SSWMZuvY3x9p3rWFbRzO12Ydc/xh6rGdf/ziW1f1bXTptON9nMz3Xd7nnNNS1jwPa7mvFGLj917b9oeOtONa1qvpKr8Bih07RQGBmz5e+9UENGmZAGWkmPpQL+iT/eXXgfbn4XKxQHOTFV4NMVVSx772XLUdG4E0wU4WoP7iDq163A+Jvrmtz/ypv/v4tV+b9vAXnPKP3EptO0f18z1/fmQhZYR3ZMuTvT3V5aSdJEhT7nMrq+dETzW+fu7mPtzVE3XDjuea1yrGpe8ucZZODvEtXny8sTUTw2vmdWGyb3c9/X5OgkYTa1oP9/NDz+UL/UB1/8tWl04ZvPH3nxvOcpvrs+2w+x54lhJe+7bu3kr5S1r+SBYsdusa64K6dATPPtQb5gSOq3gFbFshFzup9r4lDYV1R3zHW5LfCG/8MDm7AkrnHGwmYHegvSn53Zt3GucHFWiXe+3fe+1J4tfo7Z3pG+3M+1xau5WQF7SWuQHW7qe1ZZfVsvS0Dp10UJnvZL3H3LT386bNUIylbd823q32fWDlMdT91eMkZUNK+qjjQfXnLr/Zu1//P9Myv5nze7R+2/rx1o+8UlsMq2qX1zMyj4L1Qf3c9CZXjg3O9Mq9YkmCxw7L4ovUv319+MM3mDHa+NUnvoOUQOovfd7cZmXXMirXenVxCkRcqxCCr2H5V9nrmlNl7vbZRee5y68kHEgz3vj946tf+WRF0PSKx4vyoCcQiz8HXfnxsV31Wk4+627ZsucsmQVVsVt1X7vfL/p3nxvm3fbaxwZp1J1rPBAaH2udV1VcKE4TUwWKHZRG0FqqAnb05lozPkisdILUcsD1nMHhGg8uZrNAdO/v3rPXuy/J7WcvMXXO/Qtx91k42R6xsmZvekx0ziJ9pT/WB7mfTsZzs9/NxFF5sxL1x50eKu/UYTPWMFxKTOdzMqZNM79epk6kTMFnZL9xdF1reuSvpAy57zqTjsap/iF3n8/aZLmUSOYdZLvDUR9tBpisHFjt0zbUGlsK6q8UEvMi9njmDim/t290e5XKpyUCZYJZeO/fb+0Zw7DqyJhb2Pn77bQnKy5Y4J2rXlqPq/suCiLzfyb1XNlmowjz/QUlUvfWQhAikLZvdzvZoX9P3H6vKoHqe5X7Lu06teAvjhs2L5oPz/PLR1k1jyrRdtrSgCc524Y0A1La+6/crhV0Tqi+OYD0HDlbclxucGPP5zPl8VtVvTL2Y+im80T6V40PAe0mCsEOnOBbwngb2/LYVu3b73GFlFd/ISv5t0He2lm3mymAtxFl+8HKisUOw285c4bXCUbDKJGZDWTvP4q7XbKBbvrz2/svEwAy+FyXPyAaaFe4jgKme2bXdzmX+qziCbQnMXHTtS9XXnuIP3MH92ApVflmEe74AAAQxSURBVBLh1PPMeXbzntOmbwDXfbxElZdMWJrg2E5ePO2qiViHkdr6B20FLFxDdWST2Nj+UHVftr3fOff3stuk4vMvqE6/qs/62uOF2k3nyXKce5vXV3oFrnhojcnk9Kfnt832F2sFmwHqwLHa9p0tZ66IH8ja+KKB51rWyq4GtEs3yta4vCeT04/aVvNDAXAPEmorXFWuO4uNKP7THpziDKredTszEXGufeYkW5k55bVWxp7u/3PJZOOzBuH/dQKG7CB15RO5QGwSkz3tQXYDpXzRzVVMnWefjyw/kwXtlvtB194uqef8c3rtBFp9zG91c65lgzH/thO6phP4KHnQyOY7mExO7zTBs+3qchG3r7MVberso3909mTbCeylItofnPuyCY1893WnSH77+evY/mF2g0g0P5S0x8Kuj64IuLevBM8BLI4ZYE5K/p4tTG1DeSeBfK2/Cwl/fkvNrRPEZkXxQb+/o4H2xLWitX7/Rp3aDvDXEoehkxTHUkhr6WyzOtH97ej3XNGY6f0sd+0/FBE+0JaggXJ/u67zr07ilhOPF8AO6F+d1y5VhtrCpfvZd/KPX+nPrIcPPL9bKKPzW/beP/vc97l6zvQcZyX17HtOdmvdm1xMxsxT59d67heOZ+Uk98zn/dvl1nONqVMn9vVb1Un+NLZo9AzM77zVte0zvdY1zZa+A8+2Llvmz7n7+qwsivltbbH9w61L16Pz3VOXheeWI9+e5v07T9m9fVT/cO/tjfMMy+o5OV79/OkzqgBgWchq+5FP7gHLxUl1eu3zHDj19pLQCNrHWaLzZu2zAbhZlv3L936KYLEDAIRhgyf/ygeYORnbfEl0oF1eUvrmEia5a+xf+yLqGRY7wOqBxb66OClaNyXiNuvdbgOJcqAmudSxN84ZA5uelMbJg8UOsHpcay0TgVgxnLXsr04Q54PWsncQ9eXgrP+bNfaHqpidPoDFDgAAkBBY7AAAAAmBsAMAACQEwg4AAJAQCDsAAEBCIOwAAAAJgbADAAAkBMIOAACQEAg7AABAQiDsAAAACYGwAwAAJATCDgAAkBAIOwAAQEIg7AAAAAmBsAMAACQEwg4AAJAQCDsAAEBCIOwAAAAJgbADAAAkBMIOAACQEAg7AABAQiDsAAAACYGwAwAAJATCDgAAkBAIOwAAQEIg7AAAAAmBsAMAACQEwg4AAJAQCDsAAEBCIOwAAAAJgbADAAAkBMIOAACQEAg7AABAQiDsAAAACYGwAwAAJATCDgAAkBAIOwAAQEIg7AAAAAmBsAMAACQEwg4AAJAQCDsAAEBCIOwAAAAJgbADAAAkBMIOAACQEAg7AABAQiDsAAAACYGwAwAAJATCDgAAkBAIOwAAQEIg7AAAAAmBsAMAACQEwg4AAJAQCDsAAEBCIOwAAAAJgbADAACkQpZl/w9KSIO8Qt1HDwAAAABJRU5ErkJggg=="><img class="logo-dark" alt="" src="data:image/png;base64,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"></div>
       <div class="eyebrow">För dig som leder en salong</div>
       <h1>Veckoschemat</h1>
-      <p class="lede">Kundtiden fyller sig själv. Allt annat måste sättas ut. Bygg din vecka från sex på morgonen till elva på kvällen med färdiga block, och se hur många timmar varje uppgift tar per vecka och per månad.</p>
+      <p class="lede">Kundtiden fyller sig själv. Allt annat måste sättas ut. Bygg din vecka från sex på morgonen till elva på kvällen med färdiga eller egna block, och se hur många timmar varje uppgift tar per vecka och per månad.</p>
     </div>
     <div class="top-controls">
       <button class="btn primary" id="share" type="button">Kopiera länk med mitt schema</button>
@@ -349,7 +377,7 @@
     </section>
 
     <section class="panel">
-      <div class="head"><div><h2>Bygg snabbare</h2><p>Lägg in samma block på flera dagar och veckor på en gång, kopiera en dag, eller börja från en exempelvecka.</p></div></div>
+      <div class="head"><div><h2>Bygg snabbare</h2><p>Lägg in samma block på flera dagar och veckor på en gång, kopiera en dag, börja från en exempelvecka eller gör egna block.</p></div></div>
       <div class="body">
         <div class="tools">
           <div class="tool">
@@ -386,6 +414,24 @@
             <h3 style="margin-top:10px">Börja inte från noll</h3>
             <p class="small muted">En exempelvecka för en ledare som står på golvet tisdag till lördag och har drygt sex timmar ledartid. Ändra den tills den stämmer med din salong.</p>
             <div><button class="btn" type="button" id="exempel">Fyll i exempelveckan</button></div>
+          </div>
+
+          <div class="tool" id="egna-tool">
+            <h3>Egna block</h3>
+            <p class="small muted">Saknas något du gör varje vecka, som utbildning, sociala medier eller inköp? Lägg till det som ett eget block. Det hamnar bland de andra blocken och i timmarna.</p>
+            <label class="field"><span>Namn</span><input type="text" id="eNamn" maxlength="28" placeholder="Till exempel Sociala medier"></label>
+            <div class="field">
+              <span id="eFargRubrik">Färg</span>
+              <div class="farger" id="eFarg" role="radiogroup" aria-labelledby="eFargRubrik"></div>
+            </div>
+            <label class="field"><span>Räknas som</span><select id="eTyp">
+              <option value="arbete">Arbete</option>
+              <option value="ledar">Ledartid</option>
+              <option value="fri">Inte arbete</option>
+            </select></label>
+            <p class="fel" id="eFel" role="alert"></p>
+            <div><button class="btn primary" type="button" id="eLagg">Lägg till blocket</button></div>
+            <ul class="egna" id="egnaLista"></ul>
           </div>
         </div>
       </div>
@@ -437,18 +483,20 @@
 
 <script>
   const BLOCK = [
-    { id: "kund", namn: "Jobba med kund", text: "Tid i stolen med egna kunder. Den fyller sig själv, så lägg in den sist." },
-    { id: "admin", namn: "Admin", text: "Schema, beställningar, fakturor, mejl och meddelanden. Samla dem i ett block i stället för att göra dem i luckorna." },
-    { id: "moten", namn: "Möten", text: "Veckomötet med teamet, och möten med leverantörer, redovisning eller bank. Tjugo minuter räcker för veckomötet." },
-    { id: "feedback", namn: "Feedback", text: "Tid för att säga vad du har sett. Tre meningar per person, gärna till någon som har gjort rätt." },
-    { id: "uppfoljning", namn: "Uppföljning", text: "Siffrorna, de enskilda samtalen och det ni bestämde förra veckan. Fråga hur det gick, inte om det är gjort." },
-    { id: "framtid", namn: "Framtidsplanering", text: "Riktningen för salongen. Vad ni ska fokusera på nästa halvår, ett område i taget." },
-    { id: "traning", namn: "Träning", text: "Din egen träning. Kroppen är ditt arbetsverktyg, och det här är blocket som ryker först." },
-    { id: "resurs", namn: "Resurstid", text: "Tid på salongen utan egen kund. Du finns på golvet för att se, hjälpa, lära ut och följa upp medan det händer." },
-    { id: "vila", namn: "Ledigt", text: "Familj, vila och tid när du inte är nåbar. Också den ska stå i schemat, annars äts den upp." }
+    { id: "kund", typ: "kund", namn: "Jobba med kund", text: "Tid i stolen med egna kunder. Den fyller sig själv, så lägg in den sist." },
+    { id: "admin", typ: "arbete", namn: "Admin", text: "Schema, beställningar, fakturor, mejl och meddelanden. Samla dem i ett block i stället för att göra dem i luckorna." },
+    { id: "moten", typ: "ledar", namn: "Möten", text: "Veckomötet med teamet, och möten med leverantörer, redovisning eller bank. Tjugo minuter räcker för veckomötet." },
+    { id: "feedback", typ: "ledar", namn: "Feedback", text: "Tid för att säga vad du har sett. Tre meningar per person, gärna till någon som har gjort rätt." },
+    { id: "uppfoljning", typ: "ledar", namn: "Uppföljning", text: "Siffrorna, de enskilda samtalen och det ni bestämde förra veckan. Fråga hur det gick, inte om det är gjort." },
+    { id: "framtid", typ: "ledar", namn: "Framtidsplanering", text: "Riktningen för salongen. Vad ni ska fokusera på nästa halvår, ett område i taget." },
+    { id: "traning", typ: "fri", namn: "Träning", text: "Din egen träning. Kroppen är ditt arbetsverktyg, och det här är blocket som ryker först." },
+    { id: "resurs", typ: "ledar", namn: "Resurstid", text: "Tid på salongen utan egen kund. Du finns på golvet för att se, hjälpa, lära ut och följa upp medan det händer." },
+    { id: "vila", typ: "fri", namn: "Ledigt", text: "Familj, vila och tid när du inte är nåbar. Också den ska stå i schemat, annars äts den upp." },
+    { id: "aterhamtning", typ: "fri", namn: "Återhämtning", text: "Pauser under dagen: lunch, en promenad, tio minuter utan telefon. Den som aldrig laddar hinner inte leda på eftermiddagen." }
   ];
-  const LEDAR = ["moten", "feedback", "uppfoljning", "framtid", "resurs"];
-  const EJ_ARBETE = ["traning", "vila"];
+  // Typ avgör var timmarna räknas: kund och arbete är arbete, ledar är arbete och ledartid, fri är inte arbete.
+  const TYPER = { arbete: "Arbete", ledar: "Ledartid", fri: "Inte arbete" };
+  const MAX_EGNA = 8;
   const DAGAR = ["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag"];
   const KORT = ["Mån", "Tis", "Ons", "Tor", "Fre", "Lör", "Sön"];
   const START = 6 * 60, SLUT = 23 * 60, STEG = 30;
@@ -456,10 +504,18 @@
   const MAXV = 4;
   const KEY = "veckoschemat-v1";
   const $ = s => document.querySelector(s);
-  const blockAv = id => BLOCK.find(b => b.id === id);
+  const alla = () => BLOCK.concat(S.egna);
+  const blockAv = id => alla().find(b => b.id === id);
+  const arLedar = id => blockAv(id).typ === "ledar";
+  const arFri = id => blockAv(id).typ === "fri";
+  const bVar = b => b.farg !== undefined ? "var(--e" + b.farg + ")" : "var(--" + b.id + ")";
+  const sVar = b => b.farg !== undefined ? "var(--e" + b.farg + "-s)" : "var(--" + b.id + "-s)";
+  const farg = id => { const b = blockAv(id); return "--b:" + bVar(b) + ";--s:" + sVar(b); };
+  const esc = t => String(t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
   // celler["v-d-s"] = block-id. v är veckan (0–3), d dagen (0 = måndag), s halvtimmen från 06.00.
-  let S = { langd: 1, celler: {}, mal: "" };
+  // egna = [{ id: "e1", namn, farg: 0–7, typ, text }], blocken ledaren har lagt till själv.
+  let S = { langd: 1, celler: {}, mal: "", egna: [] };
   let vald = "kund";
   let vecka = 0;
   let dag = (new Date().getDay() + 6) % 7;
@@ -486,21 +542,35 @@
     } catch (e) {}
   }
   function rensa(obj) {
-    const ut = { langd: [1, 2, 4].includes(+obj.langd) ? +obj.langd : 1, celler: {}, mal: typeof obj.mal === "string" ? obj.mal : "" };
+    const ut = { langd: [1, 2, 4].includes(+obj.langd) ? +obj.langd : 1, celler: {}, mal: typeof obj.mal === "string" ? obj.mal : "", egna: [] };
+    if (Array.isArray(obj.egna)) {
+      obj.egna.slice(0, MAX_EGNA).forEach(e => {
+        if (!e || typeof e.namn !== "string" || !e.namn.trim() || !/^e\d+$/.test(e.id) || ut.egna.some(x => x.id === e.id)) return;
+        ut.egna.push(egetBlock(e.id, e.namn, +e.farg, e.typ));
+      });
+    }
+    const S0 = S;
+    S = ut;
     if (obj.celler && typeof obj.celler === "object") {
       Object.keys(obj.celler).forEach(k => {
         const [v, d, s] = k.split("-").map(Number);
         if (v >= 0 && v < MAXV && d >= 0 && d < 7 && s >= 0 && s < N && blockAv(obj.celler[k])) ut.celler[k] = obj.celler[k];
       });
     }
+    S = S0;
     return ut;
   }
-  // Länken: längd, schemat som körlängder (blocknummer:antal) och målet.
+  function egetBlock(id, namn, f, typ) {
+    typ = TYPER[typ] ? typ : "arbete";
+    return { id, namn: String(namn).trim().slice(0, 28), farg: f >= 0 && f < 8 ? Math.floor(f) : 0, typ,
+      text: "Eget block. Räknas som " + TYPER[typ].toLowerCase() + "." };
+  }
+  // Länken: längd, egna block, schemat som körlängder (blocknummer:antal) och målet.
   function koda() {
     const tecken = [];
     for (let v = 0; v < S.langd; v++) for (let d = 0; d < 7; d++) for (let s = 0; s < N; s++) {
       const k = S.celler[nyckel(v, d, s)];
-      tecken.push(k ? BLOCK.findIndex(b => b.id === k) + 1 : 0);
+      tecken.push(k ? alla().findIndex(b => b.id === k) + 1 : 0);
     }
     const runs = [];
     for (let i = 0; i < tecken.length;) {
@@ -509,7 +579,9 @@
       runs.push(tecken[i] + (j - i > 1 ? ":" + (j - i).toString(36) : ""));
       i = j;
     }
-    return "l=" + S.langd + "&s=" + runs.join(".") + (S.mal ? "&m=" + encodeURIComponent(S.mal) : "");
+    const egna = S.egna.map(e => [e.id, e.namn, e.farg, e.typ]);
+    return "l=" + S.langd + "&s=" + runs.join(".") + (S.mal ? "&m=" + encodeURIComponent(S.mal) : "") +
+      (egna.length ? "&e=" + encodeURIComponent(JSON.stringify(egna)) : "");
   }
   function avkoda(hash) {
     const p = new URLSearchParams(hash);
@@ -521,12 +593,15 @@
       const antal = n ? parseInt(n, 36) : 1;
       for (let i = 0; i < antal && tecken.length < langd * 7 * N; i++) tecken.push(+b);
     });
+    let egna = [];
+    try { egna = (JSON.parse(p.get("e") || "[]") || []).map(e => ({ id: e[0], namn: e[1], farg: e[2], typ: e[3] })); } catch (e) {}
+    const lista = BLOCK.concat(egna);
     const celler = {};
     let i = 0;
     for (let v = 0; v < langd; v++) for (let d = 0; d < 7; d++) for (let s = 0; s < N; s++, i++) {
-      if (tecken[i] && BLOCK[tecken[i] - 1]) celler[nyckel(v, d, s)] = BLOCK[tecken[i] - 1].id;
+      if (tecken[i] && lista[tecken[i] - 1]) celler[nyckel(v, d, s)] = lista[tecken[i] - 1].id;
     }
-    return { langd, celler, mal: p.get("m") || "" };
+    return { langd, celler, mal: p.get("m") || "", egna };
   }
   function load() {
     const h = location.hash.replace(/^#/, "");
@@ -549,17 +624,26 @@
   function ritaPalett() {
     const p = $("#palett");
     p.innerHTML = "";
-    BLOCK.concat([{ id: "sudd", namn: "Sudda" }]).forEach(b => {
+    alla().concat([{ id: "sudd", namn: "Sudda" }]).forEach(b => {
       const k = document.createElement("button");
       k.type = "button";
       k.className = "blk" + (b.id === "sudd" ? " sudd" : "");
       k.setAttribute("aria-pressed", String(b.id === vald));
-      k.innerHTML = '<span class="sw" style="--s:var(--' + b.id + '-s)"></span>' + b.namn;
+      k.innerHTML = '<span class="sw"' + (b.id === "sudd" ? "" : ' style="--s:' + sVar(b) + '"') + "></span>" + esc(b.namn);
       k.addEventListener("click", () => { vald = b.id; ritaPalett(); });
       p.appendChild(k);
     });
+    if (S.egna.length < MAX_EGNA) {
+      const ny = document.createElement("button");
+      ny.type = "button";
+      ny.className = "blk ny";
+      ny.textContent = "+ Eget block";
+      ny.addEventListener("click", () => { $("#egna-tool").scrollIntoView({ behavior: "smooth", block: "center" }); $("#eNamn").focus({ preventScroll: true }); });
+      p.appendChild(ny);
+    }
+    if (vald !== "sudd" && !blockAv(vald)) vald = "kund";
     const b = blockAv(vald);
-    $("#beskr").innerHTML = b ? "<b>" + b.namn + ".</b> " + b.text : "<b>Sudda.</b> Dra eller tryck över det som ska bort.";
+    $("#beskr").innerHTML = b ? "<b>" + esc(b.namn) + ".</b> " + esc(b.text) : "<b>Sudda.</b> Dra eller tryck över det som ska bort.";
     if (b) $("#lBlock").value = vald;
   }
 
@@ -599,7 +683,7 @@
     const html = ['<div class="dh"></div>'];
     dagar.forEach(d => {
       let n = 0;
-      for (let s = 0; s < N; s++) { const k = S.celler[nyckel(v, d, s)]; if (k && !EJ_ARBETE.includes(k)) n++; }
+      for (let s = 0; s < N; s++) { const k = S.celler[nyckel(v, d, s)]; if (k && !arFri(k)) n++; }
       html.push('<div class="dh">' + (dagar.length === 1 ? DAGAR[d] : KORT[d]) + '<span class="tim">' + (n ? tim(n) + " h arbete" : "&nbsp;") + "</span></div>");
     });
     for (let s = 0; s < N; s++) {
@@ -609,18 +693,17 @@
         let cls = "c" + (s % 2 === 0 ? " hel" : "");
         let inne = "";
         if (k) {
-          cls += " k-" + k;
           if (s === 0 || S.celler[nyckel(v, d, s - 1)] !== k) {
             cls += " forst";
             let e = s;
             while (e + 1 < N && S.celler[nyckel(v, d, e + 1)] === k) e++;
             const langd = e - s + 1;
-            inne = '<span class="etikett" style="max-height:calc(var(--rad) * ' + langd + ' - 4px)">' + blockAv(k).namn +
+            inne = '<span class="etikett" style="max-height:calc(var(--rad) * ' + langd + ' - 4px)">' + esc(blockAv(k).namn) +
               (langd > 1 ? "<i>" + klock(s) + "–" + klock(e + 1) + "</i>" : "") + "</span>";
           }
         }
-        html.push('<div class="' + cls + '" data-d="' + d + '" data-s="' + s + '"' + (k ? ' data-k="' + k + '"' : "") +
-          ' title="' + DAGAR[d] + " " + klock(s) + "–" + klock(s + 1) + (k ? ", " + blockAv(k).namn : "") + '">' + inne + "</div>");
+        html.push('<div class="' + cls + '" data-d="' + d + '" data-s="' + s + '"' + (k ? ' data-k="' + k + '" style="' + farg(k) + '"' : "") +
+          ' title="' + DAGAR[d] + " " + klock(s) + "–" + klock(s + 1) + (k ? ", " + esc(blockAv(k).namn) : "") + '">' + inne + "</div>");
       });
     }
     return html.join("");
@@ -635,7 +718,7 @@
     let html = "";
     for (let v = 0; v < S.langd; v++) {
       html += '<div class="utskrift-vecka"><div class="utskrift-rubrik">' + (S.langd > 1 ? "Vecka " + (v + 1) + " av " + S.langd : "Veckan") +
-        (S.mal ? " · " + S.mal.replace(/[<>&]/g, "") : "") + '</div><div class="vecka" style="grid-template-columns:34px repeat(7,minmax(0,1fr))">' +
+        (S.mal ? " · " + esc(S.mal) : "") + '</div><div class="vecka" style="grid-template-columns:34px repeat(7,minmax(0,1fr))">' +
         veckaHtml(v, [0, 1, 2, 3, 4, 5, 6]) + "</div></div>";
     }
     $("#utskrift").innerHTML = html;
@@ -645,8 +728,9 @@
     const n = nyckel(vecka, cell.dataset.d, cell.dataset.s);
     if (lage === "sudda") delete S.celler[n]; else S.celler[n] = vald;
     const k = S.celler[n];
-    cell.className = "c" + (+cell.dataset.s % 2 === 0 ? " hel" : "") + (k ? " k-" + k : "");
-    if (k) cell.dataset.k = k; else delete cell.dataset.k;
+    cell.className = "c" + (+cell.dataset.s % 2 === 0 ? " hel" : "");
+    if (k) { cell.dataset.k = k; cell.setAttribute("style", farg(k)); }
+    else { delete cell.dataset.k; cell.removeAttribute("style"); }
   }
   const lageFor = cell => (vald === "sudd" || cell.dataset.k === vald) ? "sudda" : "mala";
 
@@ -680,8 +764,10 @@
   // ---------------------------------------------------------------- summering
   function summera() {
     const L = S.langd;
+    const BL = alla();
+    const LEDAR = BL.filter(b => b.typ === "ledar").map(b => b.id);
     const tot = {}, dennaV = {};
-    BLOCK.forEach(b => { tot[b.id] = 0; dennaV[b.id] = 0; });
+    BL.forEach(b => { tot[b.id] = 0; dennaV[b.id] = 0; });
     let ledarSent = 0, ledarFm = 0;
     const jobbDagar = [];
     const langaDagar = [];
@@ -694,8 +780,8 @@
           if (!k) continue;
           tot[k]++;
           if (v === vecka) dennaV[k]++;
-          if (!EJ_ARBETE.includes(k)) { arbete++; dagarMedArbete.add(d); }
-          if (LEDAR.includes(k)) {
+          if (!arFri(k)) { arbete++; dagarMedArbete.add(d); }
+          if (arLedar(k)) {
             if (START + s * STEG >= 17 * 60) ledarSent++;
             if (START + s * STEG < 12 * 60) ledarFm++;
           }
@@ -709,22 +795,22 @@
     const perV = id => tot[id] / L;
     const perM = id => tot[id] / L * 4;
     const summa = (ids, f) => ids.reduce((a, id) => a + f(id), 0);
-    const arbIds = BLOCK.filter(b => !EJ_ARBETE.includes(b.id)).map(b => b.id);
+    const arbIds = BL.filter(b => b.typ !== "fri").map(b => b.id);
 
     $("#kLedar").textContent = tim(summa(LEDAR, perV));
     $("#kLedarM").textContent = tim(summa(LEDAR, perM));
     $("#kKund").textContent = tim(perV("kund"));
     $("#kArbete").textContent = tim(summa(arbIds, perV));
 
-    const allt = BLOCK.reduce((a, b) => a + tot[b.id], 0);
-    $("#bar").innerHTML = allt ? BLOCK.filter(b => tot[b.id]).map(b =>
-      '<div style="--s:var(--' + b.id + '-s);width:' + (tot[b.id] / allt * 100) + '%" title="' + b.namn + '"></div>').join("") : "";
+    const allt = BL.reduce((a, b) => a + tot[b.id], 0);
+    $("#bar").innerHTML = allt ? BL.filter(b => tot[b.id]).map(b =>
+      '<div style="--s:' + sVar(b) + ';width:' + (tot[b.id] / allt * 100) + '%" title="' + esc(b.namn) + '"></div>').join("") : "";
 
     const visaVald = L > 1;
     let rader = "<thead><tr><th>Block</th>" + (visaVald ? "<th>Vecka " + (vecka + 1) + "</th>" : "") +
       "<th>" + (L > 1 ? "Snitt/v" : "Per vecka") + "</th><th>Per månad</th></tr></thead><tbody>";
-    BLOCK.forEach(b => {
-      rader += '<tr class="' + (tot[b.id] ? "" : "tom") + '"><td><span class="sw" style="--s:var(--' + b.id + '-s)"></span>' + b.namn + "</td>" +
+    BL.forEach(b => {
+      rader += '<tr class="' + (tot[b.id] ? "" : "tom") + '"><td><span class="sw" style="--s:' + sVar(b) + '"></span>' + esc(b.namn) + "</td>" +
         (visaVald ? "<td>" + tim(dennaV[b.id]) + "</td>" : "") + "<td>" + tim(perV(b.id)) + '</td><td class="m">' + tim(perM(b.id)) + "</td></tr>";
     });
     const rad = (namn, ids, klass) => '<tr class="' + klass + '"><td>' + namn + "</td>" +
@@ -732,7 +818,8 @@
       "<td>" + tim(summa(ids, perV)) + "</td><td>" + tim(summa(ids, perM)) + "</td></tr>";
     rader += rad("Arbete totalt", arbIds, "sum") + rad("varav ledartid", LEDAR, "del") + rad("varav kund", ["kund"], "del") + "</tbody>";
     $("#htab").innerHTML = rader;
-    $("#htab-not").textContent = "Timmar. Ledartid är möten, feedback, uppföljning, framtidsplanering och resurstid. En månad räknas som fyra veckor" +
+    $("#htab-not").textContent = "Timmar. Ledartid är möten, feedback, uppföljning, framtidsplanering, resurstid" +
+      (S.egna.some(e => e.typ === "ledar") ? " och egna block som räknas som ledartid" : "") + ". Träning, ledigt och återhämtning räknas inte som arbete. En månad räknas som fyra veckor" +
       (L === 1 ? ", alltså veckan gånger fyra." : L === 2 ? ", alltså de fjorton dagarna gånger två." : ", alltså hela schemat.");
 
     // I halvtimmar: 4 är två timmar, 12 är riktmärket sex timmar, 90 är fyrtiofem timmar.
@@ -752,6 +839,7 @@
       if (arbete > 90) obs.push(["warn", "Arbetstiden är " + tim(arbete) + " timmar i veckan. Över fyrtiofem timmar håller inte i längden, varken för dig eller för kvaliteten."]);
       if (jobbDagar.some(n => n === 7)) obs.push(["warn", (L > 1 ? "Minst en vecka har" : "Veckan har") + " arbete alla sju dagar. Lägg in minst en hel dag som är ledig."]);
       if (langaDagar.length) obs.push(["warn", "Mer än elva timmars arbete: " + langaDagar.join(", ") + "."]);
+      if (!tot.aterhamtning) obs.push(["", "Återhämtning saknar plats. Lägg in pauserna under arbetsdagen, annars blir det ingen lunch de dagar det är fullt."]);
       if (!tot.traning) obs.push(["", "Träning saknar plats. Det är blocket som ryker först när veckan blir full."]);
       if (!tot.vila) obs.push(["", "Ingen tid är markerad som ledig. Lägg in den, annars äts den upp."]);
     }
@@ -761,8 +849,12 @@
   function uppdatera() { ritaVecka(); summera(); save(); }
 
   // ---------------------------------------------------------------- formulären
+  function fyllBlockVal() {
+    $("#lBlock").innerHTML = alla().map(b => '<option value="' + b.id + '">' + esc(b.namn) + "</option>").join("");
+    if (blockAv(vald)) $("#lBlock").value = vald;
+  }
   function fyllVal() {
-    $("#lBlock").innerHTML = BLOCK.map(b => '<option value="' + b.id + '">' + b.namn + "</option>").join("");
+    fyllBlockVal();
     const tider = [];
     for (let s = 0; s <= N; s++) tider.push('<option value="' + s + '">' + klock(s) + "</option>");
     $("#lFran").innerHTML = tider.slice(0, N).join("");
@@ -795,7 +887,7 @@
     if (!veckor.includes(vecka)) { vecka = veckor[0]; ritaFlikar(); }
     if (endag && !dagar.includes(dag)) { dag = dagar[0]; ritaFlikar(); }
     uppdatera();
-    meddela("Lagt in " + blockAv(k).namn.toLowerCase() + " " + klock(fran) + "–" + klock(till) + ".");
+    meddela("Lagt in " + blockAv(k).namn + " " + klock(fran) + "–" + klock(till) + ".");
   });
 
   function kopieraDag(fV, fD, tV, tD) {
@@ -833,10 +925,10 @@
   // Tider som [dag, från, till, block], klockslag i timmar.
   const EXEMPEL = [
     [0, 7, 8, "traning"], [0, 9, 10.5, "admin"], [0, 10.5, 12, "framtid"], [0, 13, 14, "uppfoljning"], [0, 17, 22, "vila"],
-    [1, 8, 8.5, "moten"], [1, 8.5, 9, "resurs"], [1, 9, 12, "kund"], [1, 12.5, 16, "kund"], [1, 16, 16.5, "feedback"], [1, 16.5, 18, "kund"],
-    [2, 7, 8, "traning"], [2, 9, 10, "admin"], [2, 10, 12, "resurs"], [2, 12.5, 17, "kund"],
-    [3, 9, 12, "kund"], [3, 13, 14, "uppfoljning"], [3, 14, 17, "kund"], [3, 17, 17.5, "admin"],
-    [4, 7, 8, "traning"], [4, 9, 12, "kund"], [4, 12.5, 13, "feedback"], [4, 13, 17, "kund"], [4, 17, 22, "vila"],
+    [1, 8, 8.5, "moten"], [1, 8.5, 9, "resurs"], [1, 9, 12, "kund"], [1, 12, 12.5, "aterhamtning"], [1, 12.5, 16, "kund"], [1, 16, 16.5, "feedback"], [1, 16.5, 18, "kund"],
+    [2, 7, 8, "traning"], [2, 9, 10, "admin"], [2, 10, 12, "resurs"], [2, 12, 12.5, "aterhamtning"], [2, 12.5, 17, "kund"],
+    [3, 9, 12, "kund"], [3, 12, 12.5, "aterhamtning"], [3, 13, 14, "uppfoljning"], [3, 14, 17, "kund"], [3, 17, 17.5, "admin"],
+    [4, 7, 8, "traning"], [4, 9, 12, "kund"], [4, 12, 12.5, "aterhamtning"], [4, 12.5, 13, "feedback"], [4, 13, 17, "kund"], [4, 17, 22, "vila"],
     [5, 9, 14, "kund"], [5, 14, 14.5, "uppfoljning"], [5, 15, 22, "vila"],
     [6, 8, 22, "vila"]
   ];
@@ -850,6 +942,47 @@
     uppdatera();
   });
 
+  // ---------------------------------------------------------------- egna block
+  let eFarg = 0;
+  function ritaEgna() {
+    $("#eFarg").innerHTML = [0, 1, 2, 3, 4, 5, 6, 7].map(i =>
+      '<label><input type="radio" name="efarg" value="' + i + '"' + (i === eFarg ? " checked" : "") + ' aria-label="Färg ' + (i + 1) + '">' +
+      '<span style="--b:var(--e' + i + ');--s:var(--e' + i + '-s)"></span></label>').join("");
+    $("#eFarg").querySelectorAll("input").forEach(i => i.addEventListener("change", () => eFarg = +i.value));
+    $("#egnaLista").innerHTML = S.egna.map(e =>
+      '<li><span class="sw" style="--s:' + sVar(e) + '"></span><span class="namn">' + esc(e.namn) + '</span><span class="typ">' + TYPER[e.typ] +
+      '</span><button type="button" class="x" data-id="' + e.id + '" aria-label="Ta bort ' + esc(e.namn) + '">×</button></li>').join("");
+    $("#egnaLista").querySelectorAll(".x").forEach(k => k.addEventListener("click", () => taBortEget(k.dataset.id)));
+    $("#eLagg").disabled = S.egna.length >= MAX_EGNA;
+  }
+  function allaRitas() { ritaPalett(); fyllBlockVal(); ritaEgna(); uppdatera(); }
+  $("#eLagg").addEventListener("click", () => {
+    const namn = $("#eNamn").value.trim();
+    if (!namn) { $("#eFel").textContent = "Skriv ett namn på blocket."; return; }
+    if (alla().some(b => b.namn.toLowerCase() === namn.toLowerCase())) { $("#eFel").textContent = "Det finns redan ett block som heter så."; return; }
+    if (S.egna.length >= MAX_EGNA) { $("#eFel").textContent = "Det går att ha " + MAX_EGNA + " egna block."; return; }
+    $("#eFel").textContent = "";
+    let n = 1;
+    while (S.egna.some(e => e.id === "e" + n)) n++;
+    const b = egetBlock("e" + n, namn, eFarg, $("#eTyp").value);
+    S.egna.push(b);
+    vald = b.id;
+    $("#eNamn").value = "";
+    eFarg = (eFarg + 1) % 8;
+    allaRitas();
+    meddela(b.namn + " finns nu bland blocken och är valt. Dra över tiderna i schemat.");
+  });
+  $("#eNamn").addEventListener("keydown", e => { if (e.key === "Enter") $("#eLagg").click(); });
+  function taBortEget(id) {
+    const b = blockAv(id);
+    const anvands = Object.keys(S.celler).filter(k => S.celler[k] === id);
+    if (anvands.length && !confirm("Ta bort " + b.namn + "? Det ligger " + tim(anvands.length) + " timmar av det i schemat, och de tas också bort.")) return;
+    anvands.forEach(k => delete S.celler[k]);
+    S.egna = S.egna.filter(e => e.id !== id);
+    if (vald === id) vald = "kund";
+    allaRitas();
+  }
+
   $("#mal").addEventListener("input", e => { S.mal = e.target.value; save(); });
 
   $("#share").addEventListener("click", () => {
@@ -860,11 +993,12 @@
   });
   $("#reset").addEventListener("click", () => {
     if (!confirm("Börja om med ett tomt schema?")) return;
-    S = { langd: 1, celler: {}, mal: "" };
+    S = { langd: 1, celler: {}, mal: "", egna: [] };
     vecka = 0;
+    vald = "kund";
     $("#mal").value = "";
     ritaFlikar();
-    uppdatera();
+    allaRitas();
   });
 
   window.addEventListener("beforeprint", ritaUtskrift);
@@ -882,6 +1016,7 @@
   $("#mal").value = S.mal;
   fyllVal();
   ritaPalett();
+  ritaEgna();
   ritaFlikar();
   lage();
   summera();
