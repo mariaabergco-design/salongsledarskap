@@ -25,7 +25,9 @@ Kunskapssajt för salongsägare med fyra anställda eller fler. Innehållet ägs
 ## Kalkylerna på Vercel
 
 `kalkyler/index.html` är Salongskalkylen, `kalkyler/frisor/index.html` är
-Frisörkalkylen och `kalkyler/veckoschema/index.html` är Veckoschemat. Vercel-projektet salongskalkylen är kopplat till det här repot
+Frisörkalkylen och `kalkyler/veckoschema/index.html` är Veckoschemat. Veckoschemat
+länkas från sajtens verktygssida, startsidan och pelare 5 via `url` i listan
+`VERKTYG` i `scripts/bygg-sajt.py`. Vercel-projektet salongskalkylen är kopplat till det här repot
 med `kalkyler` som rotmapp, så varje push till `main` som rör de filerna
 publicerar en ny version på salongskalkylen.vercel.app. Sidorna redigeras som
 artefakter på claude.ai, och den färdiga filen läggs här.
