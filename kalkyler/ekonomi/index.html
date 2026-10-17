@@ -1,0 +1,1287 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hushållskalkylen</title>
+<meta name="description" content="Räkna ut vad du och din familj kostar att driva en månad, vilken lön du behöver och vad salongen måste bära för att du ska kunna ta ut den.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #F4F4F2;
+    --surface: #FFFFFF;
+    --surface-2: #F8F8F6;
+    --ink: #3D3D3D;
+    --muted: #767676;
+    --line: #E1E1DD;
+    --line-strong: #C4C4BE;
+    --accent: #F6A313;
+    --accent-ink: #FFFFFF;
+    --tint: #FEF3E0;
+    --brand-yellow: #FCBE04;
+    --brand-grey: #878787;
+    --logo-light: block;
+    --logo-dark: none;
+    --good: #2C7A57;
+    --good-tint: #E4F2EB;
+    --warn: #B7791F;
+    --warn-tint: #FBF1DE;
+    --bad: #B23A31;
+    --bad-tint: #F9E5E3;
+    --radius: 10px;
+    --display: "Playfair Display", Georgia, "Times New Roman", serif;
+    --body: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1C1C1B; --surface: #262624; --surface-2: #2D2D2A;
+      --ink: #EFEDE8; --muted: #A5A39D; --line: #3A3A37; --line-strong: #55554F;
+      --accent: #F6A313; --accent-ink: #1C1C1B; --tint: #3A2E17; --brand-grey: #A5A39D; --logo-light: none; --logo-dark: block;
+      --good: #63C293; --good-tint: #1B3229; --warn: #E2AA4F; --warn-tint: #3A2E17; --bad: #E4766C; --bad-tint: #3B211F;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1C1C1B; --surface: #262624; --surface-2: #2D2D2A;
+    --ink: #EFEDE8; --muted: #A5A39D; --line: #3A3A37; --line-strong: #55554F;
+    --accent: #F6A313; --accent-ink: #1C1C1B; --tint: #3A2E17; --brand-grey: #A5A39D; --logo-light: none; --logo-dark: block;
+    --good: #63C293; --good-tint: #1B3229; --warn: #E2AA4F; --warn-tint: #3A2E17; --bad: #E4766C; --bad-tint: #3B211F;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { overflow-x: hidden; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--body); font-size: 13px; line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+  h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; letter-spacing: 0; font-weight: 500; }
+  h1 { font-size: 30px; line-height: 1.1; }
+  h2 { font-size: 20px; }
+  h3 { font-size: 16px; }
+  p { margin: 0; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  input, select { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 6px; padding: 6px 8px; min-width: 0; }
+  input:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .muted { color: var(--muted); }
+  .small { font-size: 12px; }
+
+  /* Sidhuvud, samma som kalkylerna */
+  header.top { background: var(--surface); border-bottom: 6px solid var(--brand-yellow); }
+  .brand { margin-bottom: 16px; }
+  .brand img { height: 56px; width: auto; }
+  .brand .logo-light { display: var(--logo-light); }
+  .brand .logo-dark { display: var(--logo-dark); }
+  .top-inner {
+    max-width: 1180px; margin: 0 auto; padding: 22px 48px 18px;
+    display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: flex-end; justify-content: space-between;
+  }
+  .top-inner .lede { max-width: 62ch; color: var(--muted); margin-top: 6px; }
+  .top-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .btn { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 6px; padding: 7px 12px; font-weight: 600; font-size: 13px; font-family: var(--body); letter-spacing: .02em; }
+  .btn:hover { background: var(--surface-2); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn.ghost { border-color: transparent; background: transparent; color: var(--muted); padding: 4px 6px; }
+  .btn.ghost:hover { color: var(--ink); }
+  .btn.small { font-size: 12px; padding: 4px 9px; }
+
+  /* Layout: posterna till vänster, resultatet till höger */
+  .wrap {
+    max-width: 1180px; margin: 0 auto; padding: 24px 48px 40px;
+    display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 20px; align-items: start;
+  }
+  main { display: grid; gap: 20px; min-width: 0; }
+  aside { position: sticky; top: 16px; display: grid; gap: 16px; min-width: 0; max-height: calc(100vh - 32px); overflow-y: auto; }
+  @media (max-width: 1000px) {
+    .wrap { grid-template-columns: minmax(0, 1fr); }
+    aside { position: static; max-height: none; overflow: visible; }
+  }
+  @media (max-width: 720px) { .wrap, .top-inner { padding-left: 16px; padding-right: 16px; } }
+
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); min-width: 0; }
+  .panel > .head { padding: 16px 20px 12px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+  .panel > .head p { color: var(--muted); max-width: 70ch; margin-top: 4px; }
+  .panel > .body { padding: 16px 20px 20px; }
+  .summa { font-weight: 700; white-space: nowrap; }
+
+  .fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px 16px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field > span { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .field.wide { grid-column: 1 / -1; }
+
+  .toggle { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; background: var(--surface); flex-wrap: wrap; }
+  .toggle button { border: 0; background: transparent; padding: 6px 12px; font-size: 12px; font-weight: 600; color: var(--muted); }
+  .toggle button + button { border-left: 1px solid var(--line); }
+  .toggle button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; max-width: 70ch; }
+
+  /* Raderna i varje kategori */
+  .rader { display: grid; gap: 6px; }
+  .rad { display: grid; grid-template-columns: minmax(0, 1fr) 120px 112px 28px; gap: 8px; align-items: center; }
+  .rad input.belopp { text-align: right; }
+  .rad .x { border: 0; background: transparent; color: var(--muted); font-size: 18px; line-height: 1; padding: 2px; border-radius: 4px; }
+  .rad .x:hover { color: var(--bad); background: var(--bad-tint); }
+  .rad-head { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .rad-head span:nth-child(2) { text-align: right; }
+  .lagg-till { margin-top: 10px; }
+  @media (max-width: 560px) {
+    .rad { grid-template-columns: minmax(0, 1fr) 96px 28px; }
+    .rad .namn { grid-column: 1 / -1; }
+    .rad-head { display: none; }
+    .rad { padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+  }
+
+  /* Resultatet */
+  .stor { font-family: var(--display); font-size: 40px; line-height: 1.05; font-weight: 600; margin: 4px 0 2px; }
+  .nyckel { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; margin-top: 14px; }
+  .nyckel dt { color: var(--muted); }
+  .nyckel dd { margin: 0; text-align: right; font-weight: 600; }
+  .nyckel .total { border-top: 1px solid var(--line-strong); padding-top: 6px; color: var(--ink); font-weight: 700; }
+  .stapel { display: grid; gap: 8px; }
+  .stapel .s-rad { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; font-size: 12px; }
+  .stapel .s-namn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .stapel .s-varde { text-align: right; font-weight: 600; }
+  .stapel .s-bar { grid-column: 1 / -1; height: 8px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+  .stapel .s-bar i { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
+  .notes { display: grid; gap: 8px; }
+  .note { padding: 10px 12px; border-radius: 6px; background: var(--surface-2); border-left: 3px solid var(--line-strong); }
+  .note.warn { background: var(--warn-tint); border-left-color: var(--warn); }
+  .note.good { background: var(--good-tint); border-left-color: var(--good); }
+
+  .saved { font-size: 12px; font-weight: 600; color: var(--good); }
+
+  footer { max-width: 1180px; margin: 0 auto; padding: 8px 48px 40px; color: var(--muted); font-size: 12px; }
+  @media (max-width: 720px) {
+    footer { padding-left: 16px; padding-right: 16px; }
+    h1 { font-size: 26px; }
+    .brand img { height: 46px; }
+  }
+
+  @media print {
+    @page { size: A4; margin: 12mm; }
+    body { background: #fff; font-size: 10px; }
+    .top-controls, footer, .no-print, .x, .lagg-till { display: none !important; }
+    header.top { border-bottom-width: 3px; }
+    .top-inner { padding: 0 0 6px; }
+    .brand { margin-bottom: 4px; }
+    .brand img { height: 32px; }
+    h1 { font-size: 18px; }
+    .wrap { display: block; padding: 0; max-width: none; }
+    aside { position: static; max-height: none; overflow: visible; margin-top: 12px; }
+    .panel { break-inside: avoid; margin-bottom: 8px; }
+    input, select { border: 0; padding: 2px 0; background: transparent; appearance: none; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* Flikar */
+  nav.flikar { max-width: 1180px; margin: 0 auto; padding: 18px 48px 0; display: flex; gap: 6px; flex-wrap: wrap; }
+  nav.flikar button { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 999px; padding: 8px 16px; font-weight: 600; font-size: 13px; color: var(--muted); }
+  nav.flikar button[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  nav.flikar .rakna { font-weight: 700; margin-left: 4px; }
+  @media (max-width: 720px) { nav.flikar { padding-left: 16px; padding-right: 16px; } }
+  [data-flik][hidden] { display: none !important; }
+
+  /* Månadsväljaren */
+  .manadsval { display: flex; align-items: center; gap: 6px; }
+  .manadsval select { font-weight: 600; }
+  .manadsval .btn { padding: 5px 10px; }
+
+  /* Inläsning */
+  .slapp { display: block; cursor: pointer; border: 1.5px dashed var(--line-strong); border-radius: var(--radius); padding: 18px; text-align: center; background: var(--surface-2); }
+  .slapp.over { border-color: var(--accent); background: var(--tint); }
+  .slapp p { color: var(--muted); margin-top: 6px; }
+  textarea { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 6px; padding: 8px; width: 100%; min-height: 90px; resize: vertical; }
+  .knapprad { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
+  .status { margin-top: 10px; font-size: 12px; }
+  .status.fel { color: var(--bad); }
+  .kodrad { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+  .kodrad input { width: 180px; }
+
+  /* Transaktioner */
+  .trans { display: grid; gap: 0; }
+  /* Två rader per transaktion: vad och belopp överst, typ och kategori under. */
+  .t-rad {
+    display: grid; gap: 6px 8px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line);
+    grid-template-columns: 136px minmax(0, 1fr) minmax(0, 1fr) 112px 28px;
+    grid-template-areas: "datum text text belopp x" "typ typ kat kat .";
+  }
+  .t-rad .datum { grid-area: datum; }
+  .t-rad .text { grid-area: text; }
+  .t-rad .belopp { grid-area: belopp; text-align: right; }
+  .t-rad .typ { grid-area: typ; }
+  .t-rad .kat { grid-area: kat; }
+  .t-rad .x { grid-area: x; }
+  .t-rad.in input.belopp { color: var(--good); font-weight: 600; }
+  .t-rad.ute input.text, .t-rad.ute input.belopp { color: var(--muted); }
+  .t-rad.osorterad select.kat { border-color: var(--warn); background: var(--warn-tint); }
+  .t-rad .x { border: 0; background: transparent; color: var(--muted); font-size: 18px; line-height: 1; padding: 2px; border-radius: 4px; }
+  .t-rad .x:hover { color: var(--bad); background: var(--bad-tint); }
+  @media (max-width: 560px) {
+    .t-rad { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 28px; grid-template-areas: "text text x" "datum belopp ." "typ kat ."; }
+  }
+  .tom { color: var(--muted); padding: 8px 0; }
+
+  .resultat.plus { color: var(--good); }
+  .resultat.minus { color: var(--bad); }
+  .mot { display: grid; gap: 10px; }
+  .mot .m-rad { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 10px; font-size: 12px; }
+  .mot .m-varde { text-align: right; font-weight: 600; }
+  .mot .m-varde.over { color: var(--bad); }
+  .mot .m-bar { grid-column: 1 / -1; position: relative; height: 8px; background: var(--surface-2); border-radius: 4px; }
+  .mot .m-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 4px; }
+  .mot .m-bar i.over { background: var(--bad); }
+  .mot .m-bar b { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); }
+  .historik { display: grid; gap: 4px; }
+  .historik button { display: grid; grid-template-columns: 1fr auto; border: 0; background: transparent; padding: 6px 8px; border-radius: 6px; text-align: left; }
+  .historik button:hover, .historik button[aria-current="true"] { background: var(--surface-2); }
+
+  /* Utlägg */
+  .u-manad + .u-manad { margin-top: 22px; }
+  .u-manad h3 { font-family: var(--display); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; margin-bottom: 8px; }
+  .u-rad { display: grid; grid-template-columns: 96px minmax(0, 1fr) minmax(0, 1fr) 96px 160px; gap: 8px; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--line); }
+  .u-rad .bel { text-align: right; font-weight: 600; }
+  .u-rad.ersatt { color: var(--muted); }
+  @media (max-width: 760px) {
+    .u-rad { grid-template-columns: 1fr auto; }
+    .u-rad .not, .u-rad select { grid-column: 1 / -1; }
+  }
+
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div>
+      <div class="brand"><img class="logo-light" alt="Åberg & Co" src="data:image/png;base64,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"><img class="logo-dark" alt="" src="data:image/png;base64,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"></div>
+      <div class="eyebrow">För dig som leder en salong, och för dig själv</div>
+      <h1>Hushållskalkylen</h1>
+      <p class="lede">Vad kostar du och din familj att driva en månad, och vad blir verkligen över? Läs in kontoutdraget med en skärmdump, sortera bort utläggen du får tillbaka från bolaget och jämför med budgeten.</p>
+    </div>
+    <div class="top-controls">
+      <button class="btn primary" id="exportera" type="button">Spara som fil</button>
+      <button class="btn" id="importera" type="button">Öppna fil</button>
+      <button class="btn" id="skriv" type="button">Skriv ut</button>
+      <button class="btn" id="reset" type="button">Börja om</button>
+      <input type="file" id="fil" accept="application/json,.json" hidden>
+      <div class="small" style="flex-basis:100%"><span id="msg" class="muted" aria-live="polite"></span> <span id="saved" class="saved"></span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="flikar no-print" role="tablist" aria-label="Delar av kalkylen">
+  <button type="button" role="tab" data-till="manad">Månaden</button>
+  <button type="button" role="tab" data-till="utlagg">Utlägg till bolaget<span class="rakna" id="flik-utlagg"></span></button>
+  <button type="button" role="tab" data-till="budget">Budget</button>
+</nav>
+
+<!-- ============================================================ Månaden -->
+<div class="wrap" data-flik="manad">
+  <main>
+    <section class="panel no-print">
+      <div class="head">
+        <div>
+          <h2>Läs in kontoutdraget</h2>
+          <p>Ta en skärmdump av kontohändelserna i bankappen, spara kontoutdraget som pdf eller kopiera raderna från internetbanken. Allt hamnar i rätt månad efter datum, och rader du redan har läst in hoppas över.</p>
+        </div>
+      </div>
+      <div class="body">
+        <label class="slapp" id="slapp">
+          <strong>Välj skärmdumpar eller pdf</strong>
+          <p>Eller dra hit filerna. Upp till fyra bilder åt gången.</p>
+          <input type="file" id="bilder" accept="image/*,application/pdf" multiple hidden>
+        </label>
+        <div style="margin-top:14px">
+          <label class="field"><span>Eller klistra in rader från internetbanken</span>
+            <textarea id="klistra" placeholder="2026-10-03  ICA Maxi  -345,50&#10;2026-10-25  Lön  32 400,00"></textarea>
+          </label>
+        </div>
+        <div class="knapprad">
+          <button class="btn primary" id="las" type="button">Läs in</button>
+          <button class="btn" id="ny-rad" type="button">Lägg till rad för hand</button>
+        </div>
+        <div class="status" id="las-status" aria-live="polite"></div>
+        <div id="kod-ruta"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <div class="manadsval">
+          <button class="btn" type="button" data-steg="-1" aria-label="Föregående månad">‹</button>
+          <select id="manad" aria-label="Månad"></select>
+          <button class="btn" type="button" data-steg="1" aria-label="Nästa månad">›</button>
+        </div>
+        <div class="toggle no-print" id="filter" role="group" aria-label="Visa">
+          <button type="button" data-v="alla">Alla</button>
+          <button type="button" data-v="osorterade">Att sortera</button>
+          <button type="button" data-v="utlagg">Utlägg</button>
+        </div>
+      </div>
+      <div class="body">
+        <p class="hint" style="margin:0 0 12px">Välj typ på varje rad. <b>Privat</b> räknas i månadens resultat. <b>Utlägg för bolaget</b> och <b>Ersättning från bolaget</b> räknas inte, eftersom pengarna går tillbaka. Kalkylen kommer ihåg ditt val nästa gång samma butik dyker upp.</p>
+        <div class="trans" id="trans"></div>
+      </div>
+    </section>
+  </main>
+
+  <aside>
+    <section class="panel">
+      <div class="head"><h2 id="r-manad-namn">Månaden</h2></div>
+      <div class="body">
+        <div class="eyebrow" id="r-over-etikett">Över</div>
+        <div class="stor resultat" id="r-resultat"></div>
+        <dl class="nyckel" id="r-manad"></dl>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="head"><h2>Mot budgeten</h2></div>
+      <div class="body mot" id="r-mot"></div>
+    </section>
+    <section class="panel no-print">
+      <div class="head"><h2>Månad för månad</h2></div>
+      <div class="body historik" id="r-historik"></div>
+    </section>
+  </aside>
+</div>
+
+<!-- ============================================================ Utlägg -->
+<div class="wrap" data-flik="utlagg" hidden>
+  <main>
+    <section class="panel">
+      <div class="head">
+        <div>
+          <h2>Utläggsrapporten</h2>
+          <p>Allt du har markerat som utlägg för bolaget, månad för månad. Skriv vad varje utlägg gällde, kopiera rapporten till Fortnox och markera raderna som ersatta när pengarna kommit in.</p>
+        </div>
+      </div>
+      <div class="body">
+        <div class="fields" style="margin-bottom:18px">
+          <label class="field"><span>Ditt namn</span><input id="u-namn" type="text" autocomplete="name"></label>
+          <label class="field"><span>Bolaget</span><input id="u-bolag" type="text" autocomplete="organization"></label>
+        </div>
+        <div id="utlagg"></div>
+      </div>
+    </section>
+  </main>
+  <aside>
+    <section class="panel">
+      <div class="head"><h2>Bolaget är skyldigt dig</h2></div>
+      <div class="body">
+        <div class="stor" id="u-skuld"></div>
+        <dl class="nyckel" id="u-nyckel"></dl>
+        <div id="u-matcha"></div>
+      </div>
+    </section>
+    <section class="panel no-print">
+      <div class="head"><h2>Så fungerar det</h2></div>
+      <div class="body notes">
+        <p class="note">Ett utlägg är pengar som lämnar ditt privata konto men egentligen är bolagets. De dras inte från ditt resultat, men de syns här tills bolaget betalat tillbaka.</p>
+        <p class="note">När ersättningen kommer in markerar du den som <b>Ersättning från bolaget</b> i Månaden. Den räknas inte som inkomst, eftersom den bara täcker det du redan lagt ut.</p>
+        <p class="note">Kvittona hör till bokföringen. Spara dem i Fortnox mot samma utläggsrapport.</p>
+      </div>
+    </section>
+  </aside>
+</div>
+
+<!-- ============================================================ Budget -->
+<div class="wrap" data-flik="budget" hidden>
+  <main>
+    <section class="panel">
+      <div class="head">
+        <div>
+          <h2>Hushållet</h2>
+          <p>Vilka som ingår och hur du tar ut din lön. Det avgör hur mycket salongen måste dra in för att täcka hushållet.</p>
+        </div>
+      </div>
+      <div class="body">
+        <div class="fields">
+          <label class="field"><span>Vuxna</span><input id="vuxna" type="number" min="1" max="10" step="1" inputmode="numeric"></label>
+          <label class="field"><span>Barn</span><input id="barn" type="number" min="0" max="15" step="1" inputmode="numeric"></label>
+          <label class="field"><span>Skatt på din lön, procent</span><input id="skatt" type="number" min="0" max="70" step="0.5" inputmode="decimal"></label>
+          <label class="field" id="dagar-falt"><span>Arbetsdagar per månad</span><input id="dagar" type="number" min="1" max="31" step="1" inputmode="numeric"></label>
+          <div class="field wide">
+            <span>Så tar du ut din lön</span>
+            <div class="toggle" id="form" role="group" aria-label="Så tar du ut din lön">
+              <button type="button" data-v="ab">Lön från eget aktiebolag</button>
+              <button type="button" data-v="ef">Enskild firma</button>
+              <button type="button" data-v="anst">Anställd</button>
+            </div>
+            <p class="hint" id="form-hint"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <div>
+          <h2>Inkomster utöver din lön</h2>
+          <p>Det som kommer in till hushållet utan att salongen betalar det. Skriv belopp efter skatt.</p>
+        </div>
+        <span class="summa" id="sum-inkomster"></span>
+      </div>
+      <div class="body" id="inkomster"></div>
+    </section>
+
+    <div id="grupper" style="display:grid;gap:20px"></div>
+  </main>
+
+  <aside>
+    <section class="panel">
+      <div class="head"><h2>Det här kostar ni</h2></div>
+      <div class="body">
+        <div class="eyebrow">Per månad</div>
+        <div class="stor" id="r-man"></div>
+        <div class="muted" id="r-sub"></div>
+        <dl class="nyckel" id="r-nyckel"></dl>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="head"><h2>Det här måste salongen bära</h2></div>
+      <div class="body">
+        <dl class="nyckel" id="r-lon" style="margin-top:0"></dl>
+        <p class="hint" id="r-lon-hint"></p>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="head"><h2>Vart pengarna går</h2></div>
+      <div class="body stapel" id="r-stapel"></div>
+    </section>
+    <section class="panel no-print">
+      <div class="head"><h2>Att tänka på</h2></div>
+      <div class="body notes" id="r-obs"></div>
+    </section>
+  </aside>
+</div>
+
+<footer>
+  Åberg &amp; Co · salongsledarskap.se. Allt du skriver sparas i din egen webbläsare. Vill du ha kalkylen på en annan enhet, spara den som fil och öppna filen där. När du läser in en skärmdump, en pdf eller inklistrad text med Claude skickas just det underlaget till Anthropic för att läsas, via Åberg &amp; Co:s server på salongskalkylen.vercel.app eller via ditt eget Claude-konto på claude.ai. Underlaget sparas inte där, bara antalet tecken och bilder loggas. Rader du klistrar in läses i webbläsaren när Claude inte är tillgänglig. Skatten och avgifterna i budgeten är förenklade, så se resultatet som en god uppskattning och stäm av med din redovisningskonsult.
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script>
+  // pdf.js: arbetarskriptet är laddat på huvudtråden ovan, så ingen Web Worker behöver startas
+  try { if (window.pdfjsLib) window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; } catch (e) {}
+
+  // Arbetsgivaravgift för aktiebolag och egenavgifter för enskild firma, 2026.
+  const ARBETSGIVARAVGIFT = 0.3142;
+  const EGENAVGIFT = 0.2897;
+  const PERIOD = { man: { namn: "per månad", del: 1 }, kv: { namn: "per kvartal", del: 3 }, ar: { namn: "per år", del: 12 } };
+  const FORMER = {
+    ab: "Bolaget betalar din bruttolön plus arbetsgivaravgift på 31,42 procent. Det är den summan salongen måste tjäna ihop varje månad.",
+    ef: "I enskild firma är vinsten din lön. På vinsten betalar du egenavgifter, ungefär 29 procent av det som blir kvar efter avgifterna, och sedan skatt.",
+    anst: "Du är anställd och får lön från någon annan. Kalkylen visar vilken bruttolön du behöver."
+  };
+  const r = (namn, per) => ({ namn, belopp: 0, per: per || "man" });
+  const GRUPPER = [
+    { id: "boende", namn: "Boende", rader: [r("Hyra eller månadsavgift"), r("Bolån, ränta"), r("Bolån, amortering"), r("El och uppvärmning"), r("Vatten, avlopp och sophämtning", "ar"), r("Bredband")] },
+    { id: "mat", namn: "Mat och hushåll", rader: [r("Mat och dagligvaror"), r("Hygien och apotek"), r("Hushållsartiklar")] },
+    { id: "transport", namn: "Transport", rader: [r("Billån eller leasing"), r("Bränsle eller laddning"), r("Bilförsäkring"), r("Fordonsskatt", "ar"), r("Service och däck", "ar"), r("Kollektivtrafik"), r("Parkering")] },
+    { id: "barn", namn: "Barn", rader: [r("Förskola eller fritids"), r("Kläder och skor"), r("Aktiviteter och träning"), r("Fickpengar")] },
+    { id: "forsakring", namn: "Försäkringar och hälsa", rader: [r("Hemförsäkring", "ar"), r("Liv- och olycksfallsförsäkring"), r("Sjukvårdsförsäkring"), r("Tandvård och glasögon", "ar"), r("Träningskort")] },
+    { id: "abonnemang", namn: "Abonnemang", rader: [r("Mobil"), r("Streaming"), r("Tidningar och appar")] },
+    { id: "lan", namn: "Lån och skulder", rader: [r("CSN"), r("Privatlån"), r("Kreditkort och delbetalningar")] },
+    { id: "sparande", namn: "Sparande", rader: [r("Buffert"), r("Eget pensionssparande"), r("Barnsparande"), r("Fonder och aktier")] },
+    { id: "fritid", namn: "Fritid och nöje", rader: [r("Restaurang och café"), r("Kläder, vuxna"), r("Nöje och hobby"), r("Presenter och kalas")] },
+    { id: "oregelbundet", namn: "Oregelbundet", rader: [r("Semester och resor", "ar"), r("Jul och högtider", "ar"), r("Hemmet, möbler och reparationer", "ar"), r("Oförutsett")] }
+  ];
+  const INKOMSTER = [r("Partners lön efter skatt"), r("Barnbidrag"), r("Övriga inkomster")];
+  // Typen avgör om en transaktion räknas i månadens resultat. Bara privat gör det.
+  const TYPER = { privat: "Privat", utlagg: "Utlägg för bolaget", ersattning: "Ersättning från bolaget", egna: "Mellan egna konton" };
+  const STATUS = { ny: "Inte rapporterat", rapporterad: "Rapporterat till bolaget", ersatt: "Ersatt" };
+  const MANADER = ["januari", "februari", "mars", "april", "maj", "juni", "juli", "augusti", "september", "oktober", "november", "december"];
+  const KEY = "hushallskalkylen-v1";
+  // Samma nyckel som Salongskalkylen, så att salongskoden bara behöver skrivas in en gång.
+  const KODKEY = "salongskalkyl-salongskod";
+  const SERVER_BILDER = 4;
+
+  const $ = s => document.querySelector(s);
+  const kopia = o => JSON.parse(JSON.stringify(o));
+  const fmt = n => Math.round(n).toLocaleString("sv-SE") + " kr";
+  const fmtOre = n => n.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " kr";
+  const tal = s => {
+    const n = parseFloat(String(s).replace(/\s|kr/g, "").replace(",", "."));
+    return isFinite(n) && n > 0 ? n : 0;
+  };
+  // Belopp med tecken, som banken skriver dem: −1 234,50 eller -1234.50
+  const belopp = s => {
+    let t = String(s == null ? "" : s).replace(/[\s ]|kr|sek/gi, "").replace(/[−–]/g, "-");
+    if (t.includes(",")) t = t.replace(/\./g, "").replace(",", ".");
+    const n = parseFloat(t);
+    return isFinite(n) ? Math.round(n * 100) / 100 : 0;
+  };
+  const visaTal = n => n ? Math.round(n).toLocaleString("sv-SE") : "";
+  const visaBelopp = n => n ? n.toLocaleString("sv-SE", { minimumFractionDigits: 0, maximumFractionDigits: 2 }) : "";
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const perManad = rad => tal(rad.belopp) / (PERIOD[rad.per] || PERIOD.man).del;
+  const summa = rader => rader.reduce((a, x) => a + perManad(x), 0);
+  const manadNamn = m => { const [y, mm] = m.split("-"); return MANADER[+mm - 1].replace(/^./, c => c.toUpperCase()) + " " + y; };
+  const idag = () => new Date().toISOString().slice(0, 10);
+  // Butiksnamnet utan kortnummer, datum och referenser, så att regeln gäller nästa gång också.
+  const normText = s => String(s || "").toLowerCase().replace(/[0-9]+/g, " ").replace(/[^a-zåäöéü]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 40);
+  const nyId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+  function standardBudget() {
+    return { vuxna: 2, barn: 0, skatt: 31, dagar: 18, form: "ab", inkomster: kopia(INKOMSTER), grupper: kopia(GRUPPER) };
+  }
+  function standard() {
+    return { budget: standardBudget(), trans: [], regler: {}, namn: "", bolag: "", manad: idag().slice(0, 7), flik: "manad", filter: "alla" };
+  }
+  let S = standard();
+
+  // En sparad eller inläst fil kan sakna fält eller innehålla skräp. Ta bara det som går att använda.
+  const inom = (v, min, max, d) => { const n = Number(v); return isFinite(n) ? Math.min(max, Math.max(min, n)) : d; };
+  const strang = (v, max) => String(v == null ? "" : v).slice(0, max);
+  function rensaBudget(o) {
+    const s = standardBudget();
+    if (!o || typeof o !== "object") return s;
+    s.vuxna = inom(o.vuxna, 1, 10, s.vuxna);
+    s.barn = inom(o.barn, 0, 15, s.barn);
+    s.skatt = inom(o.skatt, 0, 70, s.skatt);
+    s.dagar = inom(o.dagar, 1, 31, s.dagar);
+    if (o.form in FORMER) s.form = o.form;
+    const rader = a => Array.isArray(a) ? a.filter(x => x && typeof x === "object").slice(0, 60).map(x => ({
+      namn: strang(x.namn, 80), belopp: tal(x.belopp), per: x.per in PERIOD ? x.per : "man"
+    })) : null;
+    s.inkomster = rader(o.inkomster) || s.inkomster;
+    if (Array.isArray(o.grupper)) {
+      // Grupperna är fasta, eftersom transaktionerna sorteras efter dem. Bara raderna läses in.
+      s.grupper.forEach(g => { const f = o.grupper.find(x => x && x.id === g.id); if (f) g.rader = rader(f.rader) || g.rader; });
+    }
+    return s;
+  }
+  function rensaTrans(x) {
+    if (!x || typeof x !== "object" || !/^\d{4}-\d{2}-\d{2}$/.test(x.datum)) return null;
+    return {
+      id: strang(x.id || nyId(), 20), datum: x.datum, text: strang(x.text, 120), belopp: belopp(x.belopp),
+      typ: x.typ in TYPER ? x.typ : "privat", kat: strang(x.kat, 20), status: x.status in STATUS ? x.status : "ny",
+      notering: strang(x.notering, 200)
+    };
+  }
+  function rensa(o) {
+    const s = standard();
+    if (!o || typeof o !== "object") return s;
+    // Första versionen sparade bara budgeten, direkt i roten.
+    s.budget = rensaBudget(o.budget || (o.grupper ? o : null));
+    if (Array.isArray(o.trans)) s.trans = o.trans.slice(0, 20000).map(rensaTrans).filter(Boolean);
+    if (o.regler && typeof o.regler === "object") Object.entries(o.regler).slice(0, 3000).forEach(([k, v]) => {
+      if (v && v.typ in TYPER) s.regler[strang(k, 40)] = { typ: v.typ, kat: strang(v.kat, 20) };
+    });
+    s.namn = strang(o.namn, 80);
+    s.bolag = strang(o.bolag, 80);
+    if (/^\d{4}-\d{2}$/.test(o.manad)) s.manad = o.manad;
+    if (["manad", "utlagg", "budget"].includes(o.flik)) s.flik = o.flik;
+    if (["alla", "osorterade", "utlagg"].includes(o.filter)) s.filter = o.filter;
+    return s;
+  }
+
+  // ---------------------------------------------------------------- spara
+  let savedTimer;
+  function save() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(S));
+      $("#saved").textContent = "Sparat";
+      clearTimeout(savedTimer);
+      savedTimer = setTimeout(() => $("#saved").textContent = "", 1500);
+    } catch (e) { meddela("Det gick inte att spara i webbläsaren. Spara kalkylen som fil i stället."); }
+  }
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) S = rensa(JSON.parse(raw));
+    } catch (e) {}
+  }
+  function meddela(t) {
+    $("#msg").textContent = t;
+    setTimeout(() => { if ($("#msg").textContent === t) $("#msg").textContent = ""; }, 5000);
+  }
+
+  // ---------------------------------------------------------------- flikar
+  function visaFlik(f) {
+    S.flik = f;
+    document.querySelectorAll("[data-flik]").forEach(el => el.hidden = el.dataset.flik !== f);
+    document.querySelectorAll("nav.flikar button").forEach(b => b.setAttribute("aria-selected", b.dataset.till === f));
+  }
+  document.querySelectorAll("nav.flikar button").forEach(b => b.addEventListener("click", () => {
+    visaFlik(b.dataset.till);
+    if (b.dataset.till === "manad") ritaManad();
+    if (b.dataset.till === "utlagg") ritaUtlagg();
+    save();
+  }));
+
+  // ================================================================ Budget
+  function radHtml(x, i) {
+    const val = Object.entries(PERIOD).map(([k, p]) => `<option value="${k}"${x.per === k ? " selected" : ""}>${p.namn}</option>`).join("");
+    return `<div class="rad" data-i="${i}">
+      <input class="namn" type="text" value="${esc(x.namn)}" aria-label="Vad" placeholder="Vad">
+      <input class="belopp" type="text" inputmode="decimal" value="${visaTal(x.belopp)}" aria-label="Belopp i kronor" placeholder="0">
+      <select class="per" aria-label="Hur ofta">${val}</select>
+      <button class="x" type="button" aria-label="Ta bort raden" title="Ta bort">×</button>
+    </div>`;
+  }
+  function raderHtml(rader) {
+    return `<div class="rader">
+      <div class="rad rad-head"><span>Vad</span><span>Kronor</span><span>Hur ofta</span><span></span></div>
+      ${rader.map(radHtml).join("")}
+    </div>
+    <button class="btn small lagg-till" type="button">Lägg till rad</button>`;
+  }
+  // Kopplar en lista med rader till sitt ställe i budgeten. hamta() pekar ut listan så att den alltid är aktuell.
+  function koppla(el, hamta, rita) {
+    el.addEventListener("input", e => {
+      const rad = e.target.closest(".rad[data-i]");
+      if (!rad) return;
+      const x = hamta()[+rad.dataset.i];
+      if (e.target.classList.contains("namn")) x.namn = e.target.value;
+      if (e.target.classList.contains("belopp")) x.belopp = tal(e.target.value);
+      if (e.target.classList.contains("per")) x.per = e.target.value;
+      raknaBudget(); save();
+    });
+    el.addEventListener("change", e => {
+      if (e.target.classList.contains("belopp")) e.target.value = visaTal(tal(e.target.value));
+    });
+    el.addEventListener("click", e => {
+      if (e.target.closest(".x")) {
+        hamta().splice(+e.target.closest(".rad").dataset.i, 1);
+        rita(); raknaBudget(); save();
+      } else if (e.target.closest(".lagg-till")) {
+        hamta().push(r(""));
+        rita(); raknaBudget(); save();
+        const namn = el.querySelectorAll(".rad[data-i] .namn");
+        if (namn.length) namn[namn.length - 1].focus();
+      }
+    });
+  }
+
+  function ritaInkomster() { $("#inkomster").innerHTML = raderHtml(S.budget.inkomster); }
+  function ritaGrupper() {
+    $("#grupper").innerHTML = S.budget.grupper.map((g, gi) => `<section class="panel" data-g="${gi}">
+      <div class="head"><h2>${esc(g.namn)}</h2><span class="summa" data-sum="${gi}"></span></div>
+      <div class="body">${raderHtml(g.rader)}</div>
+    </section>`).join("");
+    $("#grupper").querySelectorAll("section[data-g]").forEach(sec => {
+      const gi = +sec.dataset.g;
+      koppla(sec, () => S.budget.grupper[gi].rader, () => { sec.querySelector(".body").innerHTML = raderHtml(S.budget.grupper[gi].rader); });
+    });
+  }
+  function ritaHushall() {
+    const B = S.budget;
+    $("#vuxna").value = B.vuxna;
+    $("#barn").value = B.barn;
+    $("#skatt").value = B.skatt;
+    $("#dagar").value = B.dagar;
+    $("#form").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === B.form));
+    $("#form-hint").textContent = FORMER[B.form];
+    $("#dagar-falt").style.display = B.form === "anst" ? "none" : "";
+  }
+
+  function raknaBudget() {
+    const B = S.budget;
+    const perGrupp = B.grupper.map(g => ({ namn: g.namn, id: g.id, sum: summa(g.rader) }));
+    const kostnad = perGrupp.reduce((a, g) => a + g.sum, 0);
+    const sparande = perGrupp.filter(g => g.id === "sparande").reduce((a, g) => a + g.sum, 0);
+    const inkomst = summa(B.inkomster);
+    const personer = B.vuxna + B.barn;
+
+    perGrupp.forEach((g, gi) => { const el = document.querySelector(`[data-sum="${gi}"]`); if (el) el.textContent = fmt(g.sum); });
+    $("#sum-inkomster").textContent = fmt(inkomst);
+
+    $("#r-man").textContent = fmt(kostnad);
+    $("#r-sub").textContent = `${fmt(kostnad * 12)} per år`;
+    $("#r-nyckel").innerHTML = `
+      <dt>Per person och månad</dt><dd>${fmt(personer ? kostnad / personer : 0)}</dd>
+      <dt>Varav sparande</dt><dd>${fmt(sparande)}</dd>
+      <dt>Utan sparande</dt><dd>${fmt(kostnad - sparande)}</dd>
+      <dt>Buffert för tre månader</dt><dd>${fmt((kostnad - sparande) * 3)}</dd>`;
+
+    // Nettolönen du behöver, räknad bakåt till brutto och till vad det kostar salongen.
+    const netto = Math.max(0, kostnad - inkomst);
+    const skatt = Math.min(0.7, B.skatt / 100);
+    const brutto = netto / (1 - skatt);
+    let lon = `
+      <dt>Hushållet kostar</dt><dd>${fmt(kostnad)}</dd>
+      <dt>Minus andra inkomster</dt><dd>−${fmt(inkomst)}</dd>
+      <dt class="total">Du behöver netto</dt><dd class="total">${fmt(netto)}</dd>
+      <dt>Bruttolön, med ${String(B.skatt).replace(".", ",")} procent skatt</dt><dd>${fmt(brutto)}</dd>`;
+    let hint = "Skatten är en genomsnittlig procentsats. Kommunalskatten ligger runt 32 procent, men jobbskatteavdraget gör att den verkliga skatten på en vanlig lön oftast blir lägre. På höga löner tillkommer statlig skatt.";
+    if (B.form === "ab") {
+      const bolag = brutto * (1 + ARBETSGIVARAVGIFT);
+      lon += `
+      <dt>Arbetsgivaravgift</dt><dd>${fmt(bolag - brutto)}</dd>
+      <dt class="total">Salongen betalar per månad</dt><dd class="total">${fmt(bolag)}</dd>
+      <dt>Per år</dt><dd>${fmt(bolag * 12)}</dd>
+      <dt>Per arbetsdag</dt><dd>${fmt(bolag / B.dagar)}</dd>`;
+      hint = "Salongen måste tjäna ihop det här efter alla andra kostnader, innan den går med vinst. " + hint;
+    } else if (B.form === "ef") {
+      const vinst = brutto * (1 + EGENAVGIFT);
+      lon += `
+      <dt>Egenavgifter</dt><dd>${fmt(vinst - brutto)}</dd>
+      <dt class="total">Vinst som behövs per månad</dt><dd class="total">${fmt(vinst)}</dd>
+      <dt>Per år</dt><dd>${fmt(vinst * 12)}</dd>
+      <dt>Per arbetsdag</dt><dd>${fmt(vinst / B.dagar)}</dd>`;
+      hint = "Vinsten är det som blir kvar i firman efter alla kostnader. Den behöver vara minst så här stor. " + hint;
+    }
+    $("#r-lon").innerHTML = lon;
+    $("#r-lon-hint").textContent = hint;
+
+    const max = Math.max(...perGrupp.map(g => g.sum), 1);
+    const sorterat = perGrupp.filter(g => g.sum > 0).sort((a, b) => b.sum - a.sum);
+    $("#r-stapel").innerHTML = sorterat.length ? sorterat.map(g => `<div class="s-rad">
+      <span class="s-namn">${esc(g.namn)}</span>
+      <span class="s-varde">${fmt(g.sum)} · ${Math.round(g.sum / kostnad * 100)} %</span>
+      <span class="s-bar"><i style="width:${g.sum / max * 100}%"></i></span>
+    </div>`).join("") : `<p class="muted">Fyll i beloppen till vänster, så syns fördelningen här.</p>`;
+
+    const obs = [];
+    if (!kostnad) obs.push(["", "Börja med de stora posterna: boende, mat och bil. De brukar stå för mer än hälften. Har du läst in några månader under Månaden ser du där vad ni faktiskt lägger."]);
+    else {
+      const boende = (perGrupp.find(g => g.id === "boende") || {}).sum || 0;
+      if (boende / kostnad > 0.4) obs.push(["warn", `Boendet tar ${Math.round(boende / kostnad * 100)} procent av hushållets kostnader. Över 40 procent gör hushållet sårbart om salongen har en svag månad.`]);
+      if (!sparande) obs.push(["warn", "Ingenting går till sparande. Som salongsägare har du ingen arbetsgivare som betalar tjänstepension, och lönen kan svaja. Lägg in en summa, även en liten."]);
+      else obs.push(["good", `${Math.round(sparande / kostnad * 100)} procent av pengarna går till sparande.`]);
+      const oregel = (perGrupp.find(g => g.id === "oregelbundet") || {}).sum || 0;
+      if (!oregel) obs.push(["", "Semester, jul och trasiga vitvaror kommer varje år. Skriv in en årskostnad under Oregelbundet, så blir de en del av månaden i stället för en överraskning."]);
+      if (B.form !== "anst") obs.push(["", "Ta ut samma lön varje månad, och låt det som blir över stanna i salongen. Då vet hushållet vad som kommer, och salongen har en buffert för de svaga månaderna."]);
+    }
+    if (B.barn && !B.inkomster.some(x => /barnbidrag/i.test(x.namn) && tal(x.belopp))) obs.push(["", "Barnbidraget är 1 250 kr per barn och månad, med flerbarnstillägg från andra barnet. Lägg in det under Inkomster."]);
+    $("#r-obs").innerHTML = obs.map(([k, t]) => `<p class="note ${k}">${t}</p>`).join("");
+  }
+
+  [["vuxna", 1, 10], ["barn", 0, 15], ["skatt", 0, 70], ["dagar", 1, 31]].forEach(([id, min, max]) => {
+    $("#" + id).addEventListener("input", e => {
+      const n = parseFloat(String(e.target.value).replace(",", "."));
+      if (!isFinite(n)) return;
+      S.budget[id] = Math.min(max, Math.max(min, n));
+      raknaBudget(); save();
+    });
+  });
+  $("#form").addEventListener("click", e => {
+    const b = e.target.closest("button[data-v]");
+    if (!b) return;
+    S.budget.form = b.dataset.v;
+    ritaHushall(); raknaBudget(); save();
+  });
+  koppla($("#inkomster"), () => S.budget.inkomster, ritaInkomster);
+
+  // ================================================================ Månaden
+  const KATEGORIER = () => [{ id: "inkomst", namn: "Inkomst" }, ...S.budget.grupper.map(g => ({ id: g.id, namn: g.namn })), { id: "ovrigt", namn: "Övrigt" }];
+  const katNamn = id => (KATEGORIER().find(k => k.id === id) || { namn: "Ej sorterad" }).namn;
+  const iManad = (m) => S.trans.filter(t => t.datum.slice(0, 7) === m);
+  const sorterad = t => t.typ !== "privat" || !!t.kat;
+
+  function manaderMedData() {
+    const set = new Set(S.trans.map(t => t.datum.slice(0, 7)));
+    set.add(idag().slice(0, 7));
+    set.add(S.manad);
+    return [...set].sort().reverse();
+  }
+  function flyttaManad(steg) {
+    const [y, m] = S.manad.split("-").map(Number);
+    const d = new Date(y, m - 1 + steg, 1);
+    S.manad = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+    ritaManad(); save();
+  }
+
+  function manadsResultat(m) {
+    const res = { in: 0, ut: 0, utlagg: 0, ersattning: 0, egna: 0, osorterade: 0, perKat: {} };
+    iManad(m).forEach(t => {
+      if (t.typ === "privat") {
+        if (t.belopp > 0 && (t.kat === "inkomst" || !t.kat)) res.in += t.belopp;
+        else {
+          // En återbetalning på en kostnadskategori minskar kostnaden i stället för att räknas som inkomst.
+          res.ut -= t.belopp;
+          const k = t.kat || "ovrigt";
+          res.perKat[k] = (res.perKat[k] || 0) - t.belopp;
+        }
+        if (!t.kat) res.osorterade++;
+      } else if (t.typ === "utlagg") res.utlagg -= t.belopp;
+      else if (t.typ === "ersattning") res.ersattning += t.belopp;
+      else res.egna += t.belopp;
+    });
+    res.resultat = res.in - res.ut;
+    return res;
+  }
+
+  function tRadHtml(t) {
+    const typer = Object.entries(TYPER).map(([k, n]) => `<option value="${k}"${t.typ === k ? " selected" : ""}>${n}</option>`).join("");
+    const kat = `<option value=""${t.kat ? "" : " selected"}>Välj kategori</option>` +
+      KATEGORIER().map(k => `<option value="${k.id}"${t.kat === k.id ? " selected" : ""}>${esc(k.namn)}</option>`).join("");
+    const klass = ["t-rad", t.belopp > 0 ? "in" : "", t.typ !== "privat" ? "ute" : "", !sorterad(t) ? "osorterad" : ""].join(" ");
+    return `<div class="${klass}" data-id="${esc(t.id)}">
+      <input class="datum" type="date" value="${t.datum}" aria-label="Datum">
+      <input class="text" type="text" value="${esc(t.text)}" aria-label="Vad" placeholder="Vad">
+      <input class="belopp" type="text" inputmode="decimal" value="${visaBelopp(t.belopp)}" aria-label="Belopp, minus för pengar ut" placeholder="−0">
+      <select class="typ" aria-label="Typ">${typer}</select>
+      <select class="kat" aria-label="Kategori"${t.typ === "privat" ? "" : " disabled"}>${t.typ === "privat" ? kat : `<option>Räknas inte</option>`}</select>
+      <button class="x" type="button" aria-label="Ta bort raden" title="Ta bort">×</button>
+    </div>`;
+  }
+
+  function ritaManad() {
+    const m = S.manad;
+    $("#manad").innerHTML = manaderMedData().map(x => `<option value="${x}"${x === m ? " selected" : ""}>${manadNamn(x)}</option>`).join("");
+    $("#filter").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === S.filter));
+    let lista = iManad(m).sort((a, b) => a.datum.localeCompare(b.datum) || a.text.localeCompare(b.text));
+    if (S.filter === "osorterade") lista = lista.filter(t => !sorterad(t));
+    if (S.filter === "utlagg") lista = lista.filter(t => t.typ === "utlagg" || t.typ === "ersattning");
+    $("#trans").innerHTML = lista.length
+      ? lista.map(tRadHtml).join("")
+      : `<p class="tom">${iManad(m).length ? "Inga rader att visa med det här urvalet." : "Inga transaktioner i " + manadNamn(m).toLowerCase() + " ännu. Läs in en skärmdump av kontot eller lägg till rader för hand."}</p>`;
+    raknaManad();
+  }
+
+  function raknaManad() {
+    const m = S.manad;
+    const R = manadsResultat(m);
+    $("#r-manad-namn").textContent = manadNamn(m);
+    $("#r-over-etikett").textContent = R.resultat >= 0 ? "Över i månaden" : "Underskott i månaden";
+    const el = $("#r-resultat");
+    el.textContent = (R.resultat < 0 ? "−" : "") + fmt(Math.abs(R.resultat));
+    el.className = "stor resultat " + (R.resultat > 0 ? "plus" : R.resultat < 0 ? "minus" : "");
+    $("#r-manad").innerHTML = `
+      <dt>Inkomster</dt><dd>${fmt(R.in)}</dd>
+      <dt>Privata utgifter</dt><dd>−${fmt(R.ut)}</dd>
+      <dt class="total">Resultat</dt><dd class="total">${R.resultat < 0 ? "−" : ""}${fmt(Math.abs(R.resultat))}</dd>
+      <dt>Utlägg för bolaget</dt><dd>${fmt(R.utlagg)}</dd>
+      <dt>Ersättning från bolaget</dt><dd>${fmt(R.ersattning)}</dd>
+      ${R.egna ? `<dt>Mellan egna konton</dt><dd>${R.egna < 0 ? "−" : ""}${fmt(Math.abs(R.egna))}</dd>` : ""}
+      ${R.osorterade ? `<dt style="color:var(--warn)">Rader att sortera</dt><dd style="color:var(--warn)">${R.osorterade}</dd>` : ""}`;
+
+    // Utfall mot budget per kategori. Budgeten är per månad, årskostnader delade på tolv.
+    const budget = {};
+    S.budget.grupper.forEach(g => budget[g.id] = summa(g.rader));
+    const kat = KATEGORIER().filter(k => k.id !== "inkomst" && ((R.perKat[k.id] || 0) > 0 || (budget[k.id] || 0) > 0));
+    $("#r-mot").innerHTML = kat.length ? kat.map(k => {
+      const utfall = Math.max(0, R.perKat[k.id] || 0), plan = budget[k.id] || 0;
+      const skala = Math.max(utfall, plan, 1);
+      const over = plan > 0 && utfall > plan;
+      return `<div class="m-rad">
+        <span>${esc(k.namn)}</span>
+        <span class="m-varde${over ? " over" : ""}">${fmt(utfall)}${plan ? " av " + fmt(plan) : ""}</span>
+        <span class="m-bar"><i class="${over ? "over" : ""}" style="width:${utfall / skala * 100}%"></i>${plan ? `<b style="left:calc(${plan / skala * 100}% - 1px)"></b>` : ""}</span>
+      </div>`;
+    }).join("") + `<p class="hint">Strecket är budgeten. Fyll i budgeten under fliken Budget.</p>` : `<p class="muted">När raderna är sorterade syns de här, bredvid budgeten.</p>`;
+
+    const man = manaderMedData().filter(x => iManad(x).length).slice(0, 12);
+    $("#r-historik").innerHTML = man.length ? man.map(x => {
+      const res = manadsResultat(x).resultat;
+      return `<button type="button" data-m="${x}"${x === m ? ' aria-current="true"' : ""}><span>${manadNamn(x)}</span><span class="resultat ${res >= 0 ? "plus" : "minus"}" style="font-weight:600">${res < 0 ? "−" : "+"}${fmt(Math.abs(res))}</span></button>`;
+    }).join("") : `<p class="muted">Här samlas resultatet för varje månad du läser in.</p>`;
+    ritaFlikRaknare();
+  }
+
+  function ritaFlikRaknare() {
+    const n = S.trans.filter(t => t.typ === "utlagg" && t.status !== "ersatt").length;
+    $("#flik-utlagg").textContent = n ? " · " + n : "";
+  }
+
+  // Ändringar i en transaktionsrad. Typ och kategori sparas som regel för samma butik.
+  $("#trans").addEventListener("change", e => {
+    const rad = e.target.closest(".t-rad[data-id]");
+    if (!rad) return;
+    const t = S.trans.find(x => x.id === rad.dataset.id);
+    if (!t) return;
+    const c = e.target.classList;
+    if (c.contains("datum") && /^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) t.datum = e.target.value;
+    if (c.contains("text")) t.text = e.target.value;
+    if (c.contains("belopp")) t.belopp = belopp(e.target.value);
+    if (c.contains("typ")) { t.typ = e.target.value; if (t.typ !== "privat") t.kat = ""; }
+    if (c.contains("kat")) t.kat = e.target.value;
+    if ((c.contains("typ") || c.contains("kat")) && normText(t.text)) {
+      S.regler[normText(t.text)] = { typ: t.typ, kat: t.kat };
+      // Samma butik som ännu inte är sorterad får samma val direkt.
+      S.trans.forEach(x => { if (x !== t && normText(x.text) === normText(t.text) && !sorterad(x) && x.typ === "privat") { x.typ = t.typ; x.kat = t.kat; } });
+    }
+    if (t.datum.slice(0, 7) !== S.manad) meddela(`Raden flyttades till ${manadNamn(t.datum.slice(0, 7)).toLowerCase()}.`);
+    ritaManad(); save();
+  });
+  $("#trans").addEventListener("click", e => {
+    const x = e.target.closest(".x");
+    if (!x) return;
+    const id = x.closest(".t-rad").dataset.id;
+    S.trans = S.trans.filter(t => t.id !== id);
+    ritaManad(); save();
+  });
+  $("#manad").addEventListener("change", e => { S.manad = e.target.value; ritaManad(); save(); });
+  document.querySelectorAll("[data-steg]").forEach(b => b.addEventListener("click", () => flyttaManad(+b.dataset.steg)));
+  $("#filter").addEventListener("click", e => {
+    const b = e.target.closest("button[data-v]");
+    if (!b) return;
+    S.filter = b.dataset.v;
+    ritaManad(); save();
+  });
+  $("#r-historik").addEventListener("click", e => {
+    const b = e.target.closest("button[data-m]");
+    if (b) { S.manad = b.dataset.m; ritaManad(); save(); }
+  });
+  $("#ny-rad").addEventListener("click", () => {
+    const dag = S.manad === idag().slice(0, 7) ? idag() : S.manad + "-01";
+    const t = { id: nyId(), datum: dag, text: "", belopp: 0, typ: "privat", kat: "", status: "ny", notering: "" };
+    S.trans.push(t);
+    S.filter = "alla";
+    ritaManad(); save();
+    const el = document.querySelector(`.t-rad[data-id="${t.id}"] .text`);
+    if (el) el.focus();
+  });
+
+  // ---------------------------------------------------------------- läsa in
+  // Lägger till lästa rader. Dubbletter hoppas över, och sparade regler sorterar det som går.
+  function laggTill(rader) {
+    const finns = new Set(S.trans.map(t => t.datum + "|" + t.belopp.toFixed(2) + "|" + normText(t.text)));
+    const kat = new Set(KATEGORIER().map(k => k.id));
+    let nya = 0, dubbel = 0;
+    const manader = {};
+    rader.forEach(x => {
+      const t = rensaTrans({ ...x, id: nyId() });
+      if (!t || !t.belopp) return;
+      const nyckel = t.datum + "|" + t.belopp.toFixed(2) + "|" + normText(t.text);
+      if (finns.has(nyckel)) { dubbel++; return; }
+      finns.add(nyckel);
+      const regel = S.regler[normText(t.text)];
+      if (regel) { t.typ = regel.typ; t.kat = regel.kat; }
+      else {
+        t.typ = x.egna ? "egna" : "privat";
+        t.kat = t.typ === "privat" && kat.has(x.kat) ? x.kat : (t.typ === "privat" && t.belopp > 0 ? "inkomst" : "");
+      }
+      S.trans.push(t);
+      manader[t.datum.slice(0, 7)] = (manader[t.datum.slice(0, 7)] || 0) + 1;
+      nya++;
+    });
+    // Visa den månad som fick flest nya rader.
+    const mest = Object.entries(manader).sort((a, b) => b[1] - a[1])[0];
+    if (mest) S.manad = mest[0];
+    ritaManad(); save();
+    return { nya, dubbel };
+  }
+
+  // Utan Claude: plocka datum, text och belopp ur inklistrade rader från internetbanken.
+  function lasLokalt(text) {
+    const ar = S.manad.slice(0, 4);
+    const ut = [];
+    const BELOPP = /^[-−–+]?\d{1,3}(?:[  .]\d{3})*(?:,\d{1,2})?$|^[-−–+]?\d+(?:[.,]\d{1,2})?$/;
+    String(text).split(/\r?\n/).forEach(rad => {
+      const d = rad.match(/(\d{4})-(\d{2})-(\d{2})|\b(\d{2})-(\d{2})-(\d{2})\b/);
+      if (!d) return;
+      const datum = d[1] ? `${d[1]}-${d[2]}-${d[3]}` : `20${d[4]}-${d[5]}-${d[6]}`;
+      const rest = rad.slice(d.index + d[0].length).replace(/\b\d{4}-\d{2}-\d{2}\b/g, " ");
+      let delar = rest.split(/\t|;|\s{2,}|\s\|\s/).map(s => s.replace(/kr$/i, "").trim()).filter(Boolean);
+      let i = delar.findIndex((s, n) => n > 0 && BELOPP.test(s));
+      let txt, bel;
+      if (i > 0) { txt = delar.slice(0, i).join(" "); bel = delar[i]; }
+      else {
+        const m = rest.match(/[-−–]?\d{1,3}(?:[  ]\d{3})*,\d{2}/);
+        if (!m) return;
+        txt = rest.slice(0, m.index).trim(); bel = m[0];
+      }
+      txt = txt.replace(/^["']|["']$/g, "").trim();
+      if (!txt || !belopp(bel)) return;
+      ut.push({ datum, text: txt, belopp: belopp(bel) });
+    });
+    return ut;
+  }
+
+  // Två sätt att nå Claude: inne på claude.ai med besökarens eget konto, eller på salongskalkylen.vercel.app
+  // via Åberg & Co:s funktion /api/las med salongskoden. Båda ger en funktion fn(prompt, bilder) -> text.
+  const serverLage = !window.claude && /^https?:$/.test(location.protocol);
+  let claudeFn = null, claudeStatus = "vantar";
+  function sparadKod() { try { return localStorage.getItem(KODKEY) || ""; } catch (e) { return ""; } }
+  function blobB64(b) { return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(",")[1] || ""); fr.onerror = () => rej({ message: "Bilden gick inte att läsa." }); fr.readAsDataURL(b); }); }
+  async function serverAnrop(kod, body) {
+    let svar;
+    try { svar = await fetch("/api/las", { method: "POST", headers: { "content-type": "application/json", "x-salongskod": kod }, body: JSON.stringify(body) }); }
+    catch (e) { throw { message: "Servern svarade inte. Kontrollera nätet och försök igen." }; }
+    let j = null; try { j = await svar.json(); } catch (e) {}
+    if (svar.status === 401) { try { localStorage.removeItem(KODKEY); } catch (e) {} kopplaClaude(); throw { message: "Salongskoden stämmer inte. Skriv in den igen." }; }
+    if (!svar.ok) throw { message: (j && j.message) || ("Servern svarade med fel " + svar.status + ".") };
+    return j || {};
+  }
+  function kopplaClaude() {
+    if (serverLage) {
+      const kod = sparadKod();
+      claudeFn = kod ? async (prompt, bilder) => {
+        const images = [];
+        for (const b of bilder.slice(0, SERVER_BILDER)) images.push({ media_type: b.type || "image/jpeg", data: await blobB64(b) });
+        if (images.reduce((s, i) => s + i.data.length, 0) > 4000000) throw { message: "Bilderna är för stora att skicka. Läs in färre åt gången." };
+        return String((await serverAnrop(kod, { prompt, images })).text || "");
+      } : null;
+      claudeStatus = kod ? "ok" : "kod";
+      ritaKodRuta();
+    } else if (window.claude && typeof window.claude.use === "function") {
+      window.claude.use("sample").then(s => {
+        claudeFn = typeof s === "function" ? async (prompt, bilder) => String((await s(prompt, { images: bilder })).text || "") : null;
+        claudeStatus = claudeFn ? "ok" : "inget";
+        ritaKodRuta();
+      }).catch(() => { claudeStatus = "inget"; ritaKodRuta(); });
+    } else { claudeStatus = "inget"; ritaKodRuta(); }
+  }
+  function ritaKodRuta() {
+    const el = $("#kod-ruta");
+    if (serverLage && claudeStatus === "kod") {
+      el.innerHTML = `<div class="kodrad"><label class="field"><span>Salongskod för att läsa skärmdumpar</span><input id="kod-in" type="text" autocomplete="off"></label><button class="btn" id="kod-spara" type="button" style="align-self:flex-end">Spara koden</button></div>
+        <p class="hint">Koden får du av Åberg &amp; Co. Inklistrade rader går att läsa in utan kod.</p>`;
+      $("#kod-spara").onclick = async () => {
+        const kod = $("#kod-in").value.trim();
+        if (!kod) return;
+        try { await serverAnrop(kod, { ping: true }); localStorage.setItem(KODKEY, kod); kopplaClaude(); status("Koden är sparad. Nu kan du läsa in skärmdumpar."); }
+        catch (e) { status(e.message, true); }
+      };
+    } else if (serverLage && claudeStatus === "ok") {
+      el.innerHTML = `<p class="hint">Skärmdumpar läses med Claude via salongskoden. <button class="btn ghost small" id="kod-glom" type="button">Glöm koden</button></p>`;
+      $("#kod-glom").onclick = () => { try { localStorage.removeItem(KODKEY); } catch (e) {} kopplaClaude(); };
+    } else if (claudeStatus === "inget") {
+      el.innerHTML = `<p class="hint">Skärmdumpar kan läsas när sidan är öppen på salongskalkylen.vercel.app med salongskod, eller på claude.ai. Inklistrade rader fungerar ändå.</p>`;
+    } else el.innerHTML = "";
+  }
+  function status(t, fel) { const el = $("#las-status"); el.textContent = t; el.className = "status" + (fel ? " fel" : ""); }
+
+  function lasPrompt(text, harBild) {
+    const kat = KATEGORIER().map(k => `- "${k.id}": ${k.namn}`).join("\n");
+    return [
+      "Du hjälper en privatperson i Sverige att föra hushållsbudget. Läs kontohändelserna" + (harBild ? " i de bifogade skärmdumparna eller sidorna" : " nedan") + " och plocka ut varje transaktion en gång.",
+      "",
+      "Regler:",
+      "- \"datum\" är transaktionsdagen som YYYY-MM-DD. Saknas året, anta " + S.manad.slice(0, 4) + ". Står det bara Idag eller Igår, använd " + idag() + " respektive dagen före.",
+      "- \"text\" är mottagaren eller beskrivningen som den står, utan kortnummer.",
+      "- \"belopp\" är ett tal i kronor, negativt när pengar går ut från kontot och positivt när pengar kommer in. 1 234,50 skrivs 1234.5.",
+      "- Hoppa över saldo, rubriker, summeringar, kommande betalningar som inte är dragna och samma rad som syns två gånger.",
+      "- \"kat\" är den kategori som passar bäst bland dessa. Pengar in är oftast \"inkomst\":",
+      kat,
+      "- Sätt \"egna\": true på överföringar mellan kontoinnehavarens egna konton, till exempel till ett sparkonto i samma bank.",
+      "",
+      "Svara med enbart ett JSON-objekt med exakt den här formen:",
+      "{\"transaktioner\": [{\"datum\": \"2026-10-03\", \"text\": \"ICA Maxi\", \"belopp\": -345.5, \"kat\": \"mat\", \"egna\": false}]}",
+      text ? "\nTexten från kontoutdraget:\n" + text.slice(0, 60000) : ""
+    ].join("\n");
+  }
+  function tolkaJson(t) {
+    try { return JSON.parse(t); } catch (e) {}
+    const m = String(t).match(/```(?:json)?\s*([\s\S]*?)```/); if (m) { try { return JSON.parse(m[1]); } catch (e) {} }
+    const a = String(t).indexOf("{"), b = String(t).lastIndexOf("}"); if (a >= 0 && b > a) { try { return JSON.parse(String(t).slice(a, b + 1)); } catch (e) {} }
+    return null;
+  }
+  // Skärmdumpar från telefonen är stora. Skala ner så att de går att skicka, men texten fortfarande syns.
+  async function forminska(fil) {
+    try {
+      const bild = await createImageBitmap(fil);
+      const skala = Math.min(1, 1400 / Math.min(bild.width, bild.height), 3000 / Math.max(bild.width, bild.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(bild.width * skala); c.height = Math.round(bild.height * skala);
+      c.getContext("2d").drawImage(bild, 0, 0, c.width, c.height);
+      return await new Promise(res => c.toBlob(b => res(b || fil), "image/jpeg", 0.85));
+    } catch (e) { return fil; }
+  }
+  async function pdfText(fil) {
+    if (!window.pdfjsLib) throw { message: "Pdf-läsaren kunde inte laddas. Ladda om sidan och försök igen." };
+    const pdf = await pdfjsLib.getDocument({ data: await fil.arrayBuffer(), isEvalSupported: false, disableFontFace: true }).promise;
+    const ut = [];
+    for (let p = 1; p <= Math.min(pdf.numPages, 20); p++) {
+      const sida = await pdf.getPage(p);
+      const tc = await sida.getTextContent();
+      const delar = tc.items.filter(it => it.str && it.str.trim()).map(it => ({ x: it.transform[4], y: it.transform[5], w: it.width || 0, s: it.str })).sort((a, b) => b.y - a.y || a.x - b.x);
+      const rader = []; let cur = null;
+      delar.forEach(it => { if (!cur || Math.abs(cur.y - it.y) > 2.5) { cur = { y: it.y, delar: [it] }; rader.push(cur); } else cur.delar.push(it); });
+      rader.forEach(l => { l.delar.sort((a, b) => a.x - b.x); let s = "", slut = null; l.delar.forEach(it => { if (slut != null) s += (it.x - slut > 12 ? "  " : it.x - slut > 1 ? " " : ""); s += it.s; slut = it.x + it.w; }); ut.push(s.trim()); });
+    }
+    return ut.join("\n");
+  }
+
+  let filer = [];
+  function valdaFiler(lista) {
+    filer = [...lista].filter(f => /^image\//.test(f.type) || f.type === "application/pdf");
+    status(filer.length ? `${filer.length} ${filer.length === 1 ? "fil vald" : "filer valda"}: ${filer.map(f => f.name).join(", ")}. Tryck Läs in.` : "");
+  }
+  $("#bilder").addEventListener("change", e => valdaFiler(e.target.files));
+  const slapp = $("#slapp");
+  slapp.addEventListener("dragover", e => { e.preventDefault(); slapp.classList.add("over"); });
+  slapp.addEventListener("dragleave", () => slapp.classList.remove("over"));
+  slapp.addEventListener("drop", e => { e.preventDefault(); slapp.classList.remove("over"); valdaFiler(e.dataTransfer.files); });
+
+  let lasBusy = false;
+  $("#las").addEventListener("click", async () => {
+    if (lasBusy) return;
+    let text = $("#klistra").value.trim();
+    if (!filer.length && !text) { status("Välj en skärmdump eller klistra in rader först.", true); return; }
+    lasBusy = true;
+    $("#las").disabled = true;
+    try {
+      const bilder = [];
+      for (const f of filer) {
+        if (f.type === "application/pdf") { status("Läser pdf:en…"); text += "\n" + await pdfText(f); }
+        else bilder.push(await forminska(f));
+      }
+      text = text.trim();
+      let rader;
+      if (claudeFn) {
+        if (bilder.length > SERVER_BILDER) status(`Läser de ${SERVER_BILDER} första bilderna. Läs in resten efteråt.`);
+        else status("Claude läser kontohändelserna. Det tar ofta en halv minut…");
+        const svar = tolkaJson(await claudeFn(lasPrompt(text, bilder.length > 0), bilder.slice(0, SERVER_BILDER)));
+        if (!svar || !Array.isArray(svar.transaktioner)) throw { message: "Claude svarade i ett format som inte gick att tolka. Försök igen." };
+        rader = svar.transaktioner;
+      } else {
+        if (bilder.length) throw { message: "Skärmdumpar kan bara läsas med Claude. Klistra in raderna som text i stället, eller öppna sidan där Claude är tillgänglig." };
+        rader = lasLokalt(text);
+        if (!rader.length) throw { message: "Hittade inga rader med datum och belopp. Varje rad behöver ett datum som 2026-10-03 och ett belopp." };
+      }
+      const { nya, dubbel } = laggTill(rader);
+      status(`${nya} ${nya === 1 ? "ny rad" : "nya rader"} inlästa${dubbel ? `, ${dubbel} fanns redan` : ""}. Kontrollera beloppen och välj typ på det som är utlägg.`);
+      $("#klistra").value = "";
+      filer = []; $("#bilder").value = "";
+    } catch (e) {
+      status((e && e.message) || "Något gick fel. Försök igen.", true);
+    } finally {
+      lasBusy = false;
+      $("#las").disabled = false;
+    }
+  });
+
+  // ================================================================ Utlägg
+  function ritaUtlagg() {
+    $("#u-namn").value = S.namn;
+    $("#u-bolag").value = S.bolag;
+    const utlagg = S.trans.filter(t => t.typ === "utlagg").sort((a, b) => b.datum.localeCompare(a.datum));
+    const perManad = {};
+    utlagg.forEach(t => (perManad[t.datum.slice(0, 7)] = perManad[t.datum.slice(0, 7)] || []).push(t));
+    const sel = t => Object.entries(STATUS).map(([k, n]) => `<option value="${k}"${t.status === k ? " selected" : ""}>${n}</option>`).join("");
+    $("#utlagg").innerHTML = Object.keys(perManad).length ? Object.entries(perManad).map(([m, lista]) => {
+      const sum = lista.reduce((a, t) => a - t.belopp, 0);
+      const kvar = lista.filter(t => t.status !== "ersatt").reduce((a, t) => a - t.belopp, 0);
+      return `<div class="u-manad" data-m="${m}">
+        <h3><span>${manadNamn(m)}</span><span class="small muted">${fmtOre(sum)}${kvar && kvar !== sum ? ` · ${fmtOre(kvar)} kvar att få` : !kvar ? " · ersatt" : ""}</span></h3>
+        ${lista.sort((a, b) => a.datum.localeCompare(b.datum)).map(t => `<div class="u-rad${t.status === "ersatt" ? " ersatt" : ""}" data-id="${esc(t.id)}">
+          <span>${t.datum}</span>
+          <span>${esc(t.text)}</span>
+          <input class="not" type="text" value="${esc(t.notering)}" placeholder="Vad gällde det?" aria-label="Vad gällde utlägget">
+          <span class="bel">${fmtOre(-t.belopp)}</span>
+          <select class="status" aria-label="Status">${sel(t)}</select>
+        </div>`).join("")}
+        <div class="knapprad no-print">
+          <button class="btn small" type="button" data-gor="kopiera">Kopiera rapporten</button>
+          <button class="btn small" type="button" data-gor="csv">Ladda ner som csv</button>
+          <button class="btn small" type="button" data-gor="rapporterad">Markera som rapporterade</button>
+          <button class="btn small" type="button" data-gor="ersatt">Markera som ersatta</button>
+        </div>
+      </div>`;
+    }).join("") : `<p class="tom">Inga utlägg ännu. Gå till Månaden och välj <b>Utlägg för bolaget</b> som typ på de rader du har lagt ut åt salongen.</p>`;
+    raknaUtlagg();
+  }
+  function raknaUtlagg() {
+    const utlagg = S.trans.filter(t => t.typ === "utlagg");
+    const total = utlagg.reduce((a, t) => a - t.belopp, 0);
+    const ersatt = utlagg.filter(t => t.status === "ersatt").reduce((a, t) => a - t.belopp, 0);
+    const rapporterat = utlagg.filter(t => t.status === "rapporterad").reduce((a, t) => a - t.belopp, 0);
+    const inkommet = S.trans.filter(t => t.typ === "ersattning").reduce((a, t) => a + t.belopp, 0);
+    $("#u-skuld").textContent = fmt(total - ersatt);
+    $("#u-nyckel").innerHTML = `
+      <dt>Utlägg totalt</dt><dd>${fmt(total)}</dd>
+      <dt>Varav rapporterat, inte betalt</dt><dd>${fmt(rapporterat)}</dd>
+      <dt>Varav inte rapporterat</dt><dd>${fmt(total - ersatt - rapporterat)}</dd>
+      <dt>Markerat som ersatt</dt><dd>${fmt(ersatt)}</dd>
+      <dt>Ersättningar inlästa från kontot</dt><dd>${fmt(inkommet)}</dd>`;
+    const fri = Math.round((inkommet - ersatt) * 100) / 100;
+    $("#u-matcha").innerHTML = fri > 0.5 && total - ersatt > 0.5
+      ? `<p class="note warn" style="margin-top:12px">Det har kommit in ${fmtOre(fri)} från bolaget som inte är kopplat till något utlägg.</p>
+         <button class="btn small" id="u-koppla" type="button" style="margin-top:8px">Markera de äldsta utläggen som ersatta</button>`
+      : fri < -0.5 ? `<p class="note" style="margin-top:12px">Du har markerat ${fmtOre(-fri)} mer som ersatt än det som finns inläst som ersättning. Det stämmer om ersättningen kom till ett annat konto.</p>` : "";
+    const k = $("#u-koppla");
+    if (k) k.onclick = () => {
+      // Äldsta först, så länge ersättningen räcker till hela utlägget.
+      let kvar = fri;
+      S.trans.filter(t => t.typ === "utlagg" && t.status !== "ersatt").sort((a, b) => a.datum.localeCompare(b.datum)).forEach(t => {
+        if (-t.belopp <= kvar + 0.5) { t.status = "ersatt"; kvar += t.belopp; }
+      });
+      ritaUtlagg(); ritaFlikRaknare(); save();
+    };
+  }
+  function rapportText(m) {
+    const lista = S.trans.filter(t => t.typ === "utlagg" && t.datum.slice(0, 7) === m).sort((a, b) => a.datum.localeCompare(b.datum));
+    const sum = lista.reduce((a, t) => a - t.belopp, 0);
+    return [
+      "Utläggsrapport " + manadNamn(m).toLowerCase(),
+      S.namn ? "Namn: " + S.namn : "",
+      S.bolag ? "Bolag: " + S.bolag : "",
+      "",
+      ...lista.map(t => `${t.datum}\t${t.text}${t.notering ? " – " + t.notering : ""}\t${fmtOre(-t.belopp)}`),
+      "",
+      "Summa att betala ut: " + fmtOre(sum)
+    ].filter((x, i) => x || i > 2).join("\n");
+  }
+  $("#utlagg").addEventListener("change", e => {
+    const rad = e.target.closest(".u-rad[data-id]");
+    if (!rad) return;
+    const t = S.trans.find(x => x.id === rad.dataset.id);
+    if (!t) return;
+    if (e.target.classList.contains("status")) { t.status = e.target.value; ritaUtlagg(); ritaFlikRaknare(); }
+    save();
+  });
+  $("#utlagg").addEventListener("input", e => {
+    if (!e.target.classList.contains("not")) return;
+    const t = S.trans.find(x => x.id === e.target.closest(".u-rad").dataset.id);
+    if (t) { t.notering = e.target.value; save(); }
+  });
+  $("#utlagg").addEventListener("click", async e => {
+    const b = e.target.closest("button[data-gor]");
+    if (!b) return;
+    const m = b.closest(".u-manad").dataset.m;
+    const lista = S.trans.filter(t => t.typ === "utlagg" && t.datum.slice(0, 7) === m);
+    const gor = b.dataset.gor;
+    if (gor === "kopiera") {
+      try { await navigator.clipboard.writeText(rapportText(m)); meddela("Rapporten är kopierad. Klistra in den i Fortnox eller i ett mejl."); }
+      catch (err) { meddela("Det gick inte att kopiera. Använd Skriv ut i stället."); }
+    } else if (gor === "csv") {
+      const rader = [["Datum", "Beskrivning", "Vad det gällde", "Belopp"], ...lista.sort((a, c) => a.datum.localeCompare(c.datum)).map(t => [t.datum, t.text, t.notering, (-t.belopp).toFixed(2).replace(".", ",")])];
+      const csv = "﻿" + rader.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(";")).join("\r\n");
+      ladda(new Blob([csv], { type: "text/csv;charset=utf-8" }), `utlagg-${m}.csv`);
+    } else {
+      lista.forEach(t => { if (gor === "ersatt" || t.status === "ny") t.status = gor; });
+      ritaUtlagg(); ritaFlikRaknare(); save();
+    }
+  });
+  $("#u-namn").addEventListener("input", e => { S.namn = e.target.value; save(); });
+  $("#u-bolag").addEventListener("input", e => { S.bolag = e.target.value; save(); });
+
+  // ================================================================ fil och utskrift
+  function ladda(blob, namn) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = namn;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  $("#skriv").addEventListener("click", () => window.print());
+  $("#reset").addEventListener("click", () => {
+    if (!confirm("Börja om? Budgeten, alla transaktioner och utlägg tas bort. Spara som fil först om du vill ha kvar dem.")) return;
+    S = standard();
+    ritaAllt(); save();
+    meddela("Kalkylen är tom igen.");
+  });
+  $("#exportera").addEventListener("click", () => {
+    ladda(new Blob([JSON.stringify(S, null, 2)], { type: "application/json" }), "hushallskalkylen-" + idag() + ".json");
+    meddela("Filen är sparad. Öppna den här eller på en annan enhet.");
+  });
+  $("#importera").addEventListener("click", () => $("#fil").click());
+  $("#fil").addEventListener("change", e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const lasare = new FileReader();
+    lasare.onload = () => {
+      try { S = rensa(JSON.parse(lasare.result)); ritaAllt(); save(); meddela("Kalkylen är inläst."); }
+      catch (err) { meddela("Filen gick inte att läsa. Välj en fil som sparats från Hushållskalkylen."); }
+      e.target.value = "";
+    };
+    lasare.readAsText(f);
+  });
+
+  function ritaAllt() {
+    ritaHushall(); ritaInkomster(); ritaGrupper(); raknaBudget();
+    ritaManad(); ritaUtlagg();
+    visaFlik(S.flik);
+  }
+  load();
+  ritaAllt();
+  kopplaClaude();
+</script>
+</body>
+</html>
