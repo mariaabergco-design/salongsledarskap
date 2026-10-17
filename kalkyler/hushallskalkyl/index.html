@@ -349,6 +349,31 @@
 <!-- ============================================================ Utlägg -->
 <div class="wrap" data-flik="utlagg" hidden>
   <main>
+    <section class="panel no-print">
+      <div class="head">
+        <div>
+          <h2>Läs in utläggsrapporten</h2>
+          <p>Ladda upp utläggsrapporten från Fortnox som pdf eller skärmdump, eller klistra in raderna. Utläggen läggs in som rapporterade och kopplas till samma köp på kontot, så att de inte dras från ditt privata resultat och inte räknas två gånger.</p>
+        </div>
+      </div>
+      <div class="body">
+        <label class="slapp" id="u-slapp">
+          <strong>Välj utläggsrapport, pdf eller skärmdump</strong>
+          <p>Eller dra hit filen. Upp till fyra bilder åt gången.</p>
+          <input type="file" id="u-filer" accept="image/*,application/pdf" multiple hidden>
+        </label>
+        <div style="margin-top:14px">
+          <label class="field"><span>Eller klistra in raderna</span>
+            <textarea id="u-klistra" placeholder="2026-10-04  Grossisten AB, hårfärg  1 245,00"></textarea>
+          </label>
+        </div>
+        <div class="knapprad">
+          <button class="btn primary" id="u-las" type="button">Läs in rapporten</button>
+        </div>
+        <div class="status" id="u-status" aria-live="polite"></div>
+        <p class="hint" id="u-kod-hint"></p>
+      </div>
+    </section>
     <section class="panel">
       <div class="head">
         <div>
@@ -491,7 +516,7 @@
   const INKOMSTER = [r("Partners lön efter skatt"), r("Barnbidrag"), r("Övriga inkomster")];
   // Typen avgör om en transaktion räknas i månadens resultat. Bara privat gör det.
   const TYPER = { privat: "Privat", utlagg: "Utlägg för bolaget", ersattning: "Ersättning från bolaget", egna: "Mellan egna konton" };
-  const STATUS = { ny: "Inte rapporterat", rapporterad: "Rapporterat till bolaget", ersatt: "Ersatt" };
+  const STATUS = { ny: "Inte rapporterat", rapporterad: "Rapporterat", ersatt: "Ersatt" };
   const MANADER = ["januari", "februari", "mars", "april", "maj", "juni", "juli", "augusti", "september", "oktober", "november", "december"];
   const KEY = "hushallskalkylen-v1";
   // Samma nyckel som Salongskalkylen, så att salongskoden bara behöver skrivas in en gång.
@@ -522,6 +547,7 @@
   const idag = () => new Date().toISOString().slice(0, 10);
   // Butiksnamnet utan kortnummer, datum och referenser, så att regeln gäller nästa gång också.
   const normText = s => String(s || "").toLowerCase().replace(/[0-9]+/g, " ").replace(/[^a-zåäöéü]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 40);
+  const dagar = (a, b) => Math.abs(new Date(a) - new Date(b)) / 864e5;
   const nyId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 
   function standardBudget() {
@@ -558,7 +584,9 @@
     return {
       id: strang(x.id || nyId(), 20), datum: x.datum, text: strang(x.text, 120), belopp: belopp(x.belopp),
       typ: x.typ in TYPER ? x.typ : "privat", kat: strang(x.kat, 20), status: x.status in STATUS ? x.status : "ny",
-      notering: strang(x.notering, 200)
+      notering: strang(x.notering, 200),
+      // bank: läst från kontot, rapport: bara från en utläggsrapport, kopplad: båda, samma köp.
+      kalla: ["rapport", "kopplad"].includes(x.kalla) ? x.kalla : "bank", rapport: strang(x.rapport, 80)
     };
   }
   function rensa(o) {
@@ -932,7 +960,7 @@
   function laggTill(rader) {
     const finns = new Set(S.trans.map(t => t.datum + "|" + t.belopp.toFixed(2) + "|" + normText(t.text)));
     const kat = new Set(KATEGORIER().map(k => k.id));
-    let nya = 0, dubbel = 0;
+    let nya = 0, dubbel = 0, kopplade = 0;
     const manader = {};
     rader.forEach(x => {
       const t = rensaTrans({ ...x, id: nyId() });
@@ -940,6 +968,9 @@
       const nyckel = t.datum + "|" + t.belopp.toFixed(2) + "|" + normText(t.text);
       if (finns.has(nyckel)) { dubbel++; return; }
       finns.add(nyckel);
+      // Köpet finns redan som utlägg från en inläst utläggsrapport. Koppla i stället för att lägga till.
+      const rapport = S.trans.find(u => u.kalla === "rapport" && Math.abs(u.belopp - t.belopp) < 0.01 && dagar(u.datum, t.datum) <= 4);
+      if (rapport) { rapport.kalla = "kopplad"; kopplade++; return; }
       const regel = S.regler[normText(t.text)];
       if (regel) { t.typ = regel.typ; t.kat = regel.kat; }
       else {
@@ -954,7 +985,33 @@
     const mest = Object.entries(manader).sort((a, b) => b[1] - a[1])[0];
     if (mest) S.manad = mest[0];
     ritaManad(); save();
-    return { nya, dubbel };
+    return { nya, dubbel, kopplade };
+  }
+
+  // Utlägg från en utläggsrapport. Finns samma köp på kontot blir den raden utlägget, annars läggs det till.
+  function laggTillUtlagg(rader) {
+    let nya = 0, kopplade = 0, fanns = 0;
+    rader.forEach(x => {
+      const bel = -Math.abs(belopp(x.belopp));
+      if (!bel || !/^\d{4}-\d{2}-\d{2}$/.test(x.datum)) return;
+      const text = strang(x.text, 120), not = strang(x.notering, 200);
+      const ref = x.datum + "|" + bel.toFixed(2) + "|" + normText(text);
+      if (S.trans.some(t => t.rapport === ref)) { fanns++; return; }
+      const bank = S.trans
+        .filter(t => t.kalla === "bank" && (t.typ === "privat" || t.typ === "utlagg") && Math.abs(t.belopp - bel) < 0.01 && dagar(t.datum, x.datum) <= 4)
+        .sort((a, b) => (a.typ === "utlagg" ? 0 : 1) - (b.typ === "utlagg" ? 0 : 1) || dagar(a.datum, x.datum) - dagar(b.datum, x.datum))[0];
+      if (bank) {
+        bank.typ = "utlagg"; bank.kat = ""; bank.kalla = "kopplad"; bank.rapport = ref;
+        if (bank.status === "ny") bank.status = "rapporterad";
+        if (!bank.notering) bank.notering = not || text;
+        kopplade++;
+      } else {
+        S.trans.push({ id: nyId(), datum: x.datum, text, belopp: bel, typ: "utlagg", kat: "", status: "rapporterad", notering: not, kalla: "rapport", rapport: ref });
+        nya++;
+      }
+    });
+    ritaUtlagg(); ritaManad(); save();
+    return { nya, kopplade, fanns };
   }
 
   // Utan Claude: plocka datum, text och belopp ur inklistrade rader från internetbanken.
@@ -1018,6 +1075,9 @@
     } else { claudeStatus = "inget"; ritaKodRuta(); }
   }
   function ritaKodRuta() {
+    $("#u-kod-hint").textContent = claudeStatus === "ok" ? "" : serverLage && claudeStatus === "kod"
+      ? "Skärmdumpar läses med salongskoden, som du sparar under Månaden. Pdf med text och inklistrade rader fungerar utan kod."
+      : claudeStatus === "inget" ? "Skärmdumpar kan läsas på salongskalkylen.vercel.app med salongskod. Pdf med text och inklistrade rader fungerar ändå." : "";
     const el = $("#kod-ruta");
     if (serverLage && claudeStatus === "kod") {
       el.innerHTML = `<div class="kodrad"><label class="field"><span>Salongskod för att läsa skärmdumpar</span><input id="kod-in" type="text" autocomplete="off"></label><button class="btn" id="kod-spara" type="button" style="align-self:flex-end">Spara koden</button></div>
@@ -1056,6 +1116,23 @@
       text ? "\nTexten från kontoutdraget:\n" + text.slice(0, 60000) : ""
     ].join("\n");
   }
+  function utlaggPrompt(text, harBild) {
+    return [
+      "Du läser en utläggsrapport från Fortnox, eller ett annat underlag för utlägg, åt en salongsägare som har betalat saker privat åt sitt bolag. Läs" + (harBild ? " de bifogade bilderna eller sidorna" : " texten nedan") + " och plocka ut varje utlägg en gång.",
+      "",
+      "Regler:",
+      "- \"datum\" är kvittots eller köpets datum som YYYY-MM-DD. Saknas året, anta " + S.manad.slice(0, 4) + ".",
+      "- \"text\" är leverantören eller butiken.",
+      "- \"notering\" är vad utlägget gällde, om det står. Annars en tom sträng.",
+      "- \"belopp\" är det som ska betalas tillbaka för utlägget, inklusive moms, som ett positivt tal. 1 245,00 skrivs 1245.",
+      "- Är ett kvitto uppdelat på flera konteringsrader, till exempel kostnad och ingående moms, slå ihop dem till ett utlägg med totalbeloppet.",
+      "- Hoppa över rubriker, summeringar, totalsumma, attest och betalningsuppgifter.",
+      "",
+      "Svara med enbart ett JSON-objekt med exakt den här formen:",
+      "{\"utlagg\": [{\"datum\": \"2026-10-04\", \"text\": \"Grossisten AB\", \"notering\": \"Hårfärg\", \"belopp\": 1245}]}",
+      text ? "\nTexten från underlaget:\n" + text.slice(0, 60000) : ""
+    ].join("\n");
+  }
   function tolkaJson(t) {
     try { return JSON.parse(t); } catch (e) {}
     const m = String(t).match(/```(?:json)?\s*([\s\S]*?)```/); if (m) { try { return JSON.parse(m[1]); } catch (e) {} }
@@ -1088,52 +1165,86 @@
     return ut.join("\n");
   }
 
-  let filer = [];
-  function valdaFiler(lista) {
-    filer = [...lista].filter(f => /^image\//.test(f.type) || f.type === "application/pdf");
-    status(filer.length ? `${filer.length} ${filer.length === 1 ? "fil vald" : "filer valda"}: ${filer.map(f => f.name).join(", ")}. Tryck Läs in.` : "");
+  // Kopplar en slappyta och ett filfält. Valda filer ligger i val.filer tills de läses in.
+  function filval(ytan, falt, visa) {
+    const val = { filer: [] };
+    const valj = lista => {
+      val.filer = [...lista].filter(f => /^image\//.test(f.type) || f.type === "application/pdf");
+      visa(val.filer.length ? `${val.filer.length} ${val.filer.length === 1 ? "fil vald" : "filer valda"}: ${val.filer.map(f => f.name).join(", ")}. Tryck Läs in.` : "");
+    };
+    falt.addEventListener("change", e => valj(e.target.files));
+    ytan.addEventListener("dragover", e => { e.preventDefault(); ytan.classList.add("over"); });
+    ytan.addEventListener("dragleave", () => ytan.classList.remove("over"));
+    ytan.addEventListener("drop", e => { e.preventDefault(); ytan.classList.remove("over"); valj(e.dataTransfer.files); });
+    val.tom = () => { val.filer = []; falt.value = ""; };
+    return val;
   }
-  $("#bilder").addEventListener("change", e => valdaFiler(e.target.files));
-  const slapp = $("#slapp");
-  slapp.addEventListener("dragover", e => { e.preventDefault(); slapp.classList.add("over"); });
-  slapp.addEventListener("dragleave", () => slapp.classList.remove("over"));
-  slapp.addEventListener("drop", e => { e.preventDefault(); slapp.classList.remove("over"); valdaFiler(e.dataTransfer.files); });
+  // Läser bilder, pdf och inklistrad text. Med Claude om det går, annars raderna i webbläsaren.
+  async function lasUnderlag(filer, text, prompt, nyckel, visa, vad) {
+    const bilder = [];
+    for (const f of filer) {
+      if (f.type === "application/pdf") { visa("Läser pdf:en…"); text += "\n" + await pdfText(f); }
+      else bilder.push(await forminska(f));
+    }
+    text = text.trim();
+    if (claudeFn) {
+      if (bilder.length > SERVER_BILDER) visa(`Läser de ${SERVER_BILDER} första bilderna. Läs in resten efteråt.`);
+      else visa(`Claude läser ${vad}. Det tar ofta en halv minut…`);
+      const svar = tolkaJson(await claudeFn(prompt(text, bilder.length > 0), bilder.slice(0, SERVER_BILDER)));
+      if (!svar || !Array.isArray(svar[nyckel])) throw { message: "Claude svarade i ett format som inte gick att tolka. Försök igen." };
+      return svar[nyckel];
+    }
+    if (bilder.length) throw { message: "Skärmdumpar kan bara läsas med Claude. Klistra in raderna som text eller välj en pdf i stället." };
+    const rader = lasLokalt(text);
+    if (!rader.length) throw { message: "Hittade inga rader med datum och belopp. Varje rad behöver ett datum som 2026-10-03 och ett belopp." };
+    return rader;
+  }
 
+  const kontoVal = filval($("#slapp"), $("#bilder"), t => status(t));
   let lasBusy = false;
   $("#las").addEventListener("click", async () => {
     if (lasBusy) return;
-    let text = $("#klistra").value.trim();
-    if (!filer.length && !text) { status("Välj en skärmdump eller klistra in rader först.", true); return; }
+    const text = $("#klistra").value.trim();
+    if (!kontoVal.filer.length && !text) { status("Välj en skärmdump eller klistra in rader först.", true); return; }
     lasBusy = true;
     $("#las").disabled = true;
     try {
-      const bilder = [];
-      for (const f of filer) {
-        if (f.type === "application/pdf") { status("Läser pdf:en…"); text += "\n" + await pdfText(f); }
-        else bilder.push(await forminska(f));
-      }
-      text = text.trim();
-      let rader;
-      if (claudeFn) {
-        if (bilder.length > SERVER_BILDER) status(`Läser de ${SERVER_BILDER} första bilderna. Läs in resten efteråt.`);
-        else status("Claude läser kontohändelserna. Det tar ofta en halv minut…");
-        const svar = tolkaJson(await claudeFn(lasPrompt(text, bilder.length > 0), bilder.slice(0, SERVER_BILDER)));
-        if (!svar || !Array.isArray(svar.transaktioner)) throw { message: "Claude svarade i ett format som inte gick att tolka. Försök igen." };
-        rader = svar.transaktioner;
-      } else {
-        if (bilder.length) throw { message: "Skärmdumpar kan bara läsas med Claude. Klistra in raderna som text i stället, eller öppna sidan där Claude är tillgänglig." };
-        rader = lasLokalt(text);
-        if (!rader.length) throw { message: "Hittade inga rader med datum och belopp. Varje rad behöver ett datum som 2026-10-03 och ett belopp." };
-      }
-      const { nya, dubbel } = laggTill(rader);
-      status(`${nya} ${nya === 1 ? "ny rad" : "nya rader"} inlästa${dubbel ? `, ${dubbel} fanns redan` : ""}. Kontrollera beloppen och välj typ på det som är utlägg.`);
+      const rader = await lasUnderlag(kontoVal.filer, text, lasPrompt, "transaktioner", t => status(t), "kontohändelserna");
+      const { nya, dubbel, kopplade } = laggTill(rader);
+      status(`${nya} ${nya === 1 ? "ny rad" : "nya rader"} inlästa${dubbel ? `, ${dubbel} fanns redan` : ""}${kopplade ? `, ${kopplade} kopplade till utlägg från utläggsrapporten` : ""}. Kontrollera beloppen och välj typ på det som är utlägg.`);
       $("#klistra").value = "";
-      filer = []; $("#bilder").value = "";
+      kontoVal.tom();
     } catch (e) {
       status((e && e.message) || "Något gick fel. Försök igen.", true);
     } finally {
       lasBusy = false;
       $("#las").disabled = false;
+    }
+  });
+
+  function uStatus(t, fel) { const el = $("#u-status"); el.textContent = t; el.className = "status" + (fel ? " fel" : ""); }
+  const utlaggVal = filval($("#u-slapp"), $("#u-filer"), t => uStatus(t));
+  $("#u-las").addEventListener("click", async () => {
+    if (lasBusy) return;
+    const text = $("#u-klistra").value.trim();
+    if (!utlaggVal.filer.length && !text) { uStatus("Välj utläggsrapporten eller klistra in raderna först.", true); return; }
+    lasBusy = true;
+    $("#u-las").disabled = true;
+    try {
+      const rader = await lasUnderlag(utlaggVal.filer, text, utlaggPrompt, "utlagg", t => uStatus(t), "utläggsrapporten");
+      const { nya, kopplade, fanns } = laggTillUtlagg(rader);
+      const delar = [];
+      if (kopplade) delar.push(`${kopplade} kopplade till köp på kontot`);
+      if (nya) delar.push(`${nya} som inte finns på kontot ännu`);
+      if (fanns) delar.push(`${fanns} fanns redan`);
+      uStatus(delar.length ? `Rapporten är inläst: ${delar.join(", ")}.${nya ? " De som inte finns på kontot kopplas när du läser in kontoutdraget." : ""}` : "Hittade inga utlägg i underlaget.");
+      $("#u-klistra").value = "";
+      utlaggVal.tom();
+    } catch (e) {
+      uStatus((e && e.message) || "Något gick fel. Försök igen.", true);
+    } finally {
+      lasBusy = false;
+      $("#u-las").disabled = false;
     }
   });
 
@@ -1152,7 +1263,7 @@
         <h3><span>${manadNamn(m)}</span><span class="small muted">${fmtOre(sum)}${kvar && kvar !== sum ? ` · ${fmtOre(kvar)} kvar att få` : !kvar ? " · ersatt" : ""}</span></h3>
         ${lista.sort((a, b) => a.datum.localeCompare(b.datum)).map(t => `<div class="u-rad${t.status === "ersatt" ? " ersatt" : ""}" data-id="${esc(t.id)}">
           <span>${t.datum}</span>
-          <span>${esc(t.text)}</span>
+          <span>${esc(t.text)}${t.kalla === "rapport" ? ` <span class="small muted" title="Kopplas när du läser in kontoutdraget">· inte på kontot än</span>` : ""}</span>
           <input class="not" type="text" value="${esc(t.notering)}" placeholder="Vad gällde det?" aria-label="Vad gällde utlägget">
           <span class="bel">${fmtOre(-t.belopp)}</span>
           <select class="status" aria-label="Status">${sel(t)}</select>
