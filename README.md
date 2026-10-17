@@ -26,7 +26,7 @@ Kunskapssajt för salongsägare med fyra anställda eller fler. Innehållet ägs
 
 `kalkyler/index.html` är Salongskalkylen, `kalkyler/frisor/index.html` är
 Frisörkalkylen `kalkyler/veckoschema/index.html` är Veckoschemat och
-`kalkyler/ekonomi/index.html` är Hushållskalkylen, som inte länkas från sajten. Veckoschemat
+`kalkyler/hushallskalkyl/index.html` är Hushållskalkylen, som inte länkas från sajten. Veckoschemat
 länkas från sajtens verktygssida, startsidan och pelare 5 via `url` i listan
 `VERKTYG` i `scripts/bygg-sajt.py`. Vercel-projektet salongskalkylen är kopplat till det här repot
 med `kalkyler` som rotmapp, så varje push till `main` som rör de filerna
