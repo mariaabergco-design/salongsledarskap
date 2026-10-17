@@ -10,7 +10,7 @@ Kunskapssajt för salongsägare med fyra anställda eller fler. Innehållet ägs
 | `artiklar/` | 46 artiklar som markdown, fem pelarartiklar och resten stödartiklar |
 | `kundcase/` | Fyra kundcase |
 | `verktyg/` | Fyra interaktiva verktyg i html, plus Flaskhalstestets text |
-| `kalkyler/` | Salongskalkylen, Frisörkalkylen och Veckoschemat, färdiga html-sidor som Vercel publicerar på salongskalkylen.vercel.app. Ingår inte i sajtbygget |
+| `kalkyler/` | Salongskalkylen, Frisörkalkylen, Veckoschemat och Hushållskalkylen, färdiga html-sidor som Vercel publicerar på salongskalkylen.vercel.app. Ingår inte i sajtbygget |
 | `site/` | Den färdiga sajten, genererad. Redigera aldrig här, ändringar skrivs över |
 | `scripts/` | Byggskript och stilmall |
 | `typsnitt/` | Montserrat och Playfair Display som filer, med licenser |
@@ -25,7 +25,8 @@ Kunskapssajt för salongsägare med fyra anställda eller fler. Innehållet ägs
 ## Kalkylerna på Vercel
 
 `kalkyler/index.html` är Salongskalkylen, `kalkyler/frisor/index.html` är
-Frisörkalkylen och `kalkyler/veckoschema/index.html` är Veckoschemat. Veckoschemat
+Frisörkalkylen `kalkyler/veckoschema/index.html` är Veckoschemat och
+`kalkyler/hushallskalkyl/index.html` är Hushållskalkylen, som inte länkas från sajten. Veckoschemat
 länkas från sajtens verktygssida, startsidan och pelare 5 via `url` i listan
 `VERKTYG` i `scripts/bygg-sajt.py`. Vercel-projektet salongskalkylen är kopplat till det här repot
 med `kalkyler` som rotmapp, så varje push till `main` som rör de filerna
