@@ -349,6 +349,7 @@
       <button class="btn" id="salong-link" type="button">Skapa tom länk</button>
       <button class="btn primary" id="share-link" type="button">Kopiera länk med mina siffror</button>
       <div id="top-msg" class="small muted" style="flex-basis:100%"></div>
+      <span class="pill steel" id="sync-status" style="flex-basis:100%;justify-self:start">Ansluter…</span>
       <button class="btn" id="toggle-all" type="button">Fäll ihop alla</button>
       <button class="btn" id="reset" type="button">Återställ exempel</button>
       <button class="btn" id="team-link" type="button">Länk till Frisörkalkylen med våra fasta kostnader</button>
@@ -358,18 +359,6 @@
 
 <div class="wrap">
   <main>
-
-    <!-- Omsättning -->
-    <section class="panel" id="sec-oms">
-      <div class="head">
-        <div><h2>Omsättning per månad</h2><p>Det salongen drar in på en månad: tjänsterna ägaren och frisörerna utför, och produkterna de säljer. Summorna hämtas från personkorten här nedanför, där du skriver in vad var och en drar in.</p></div>
-        <span class="pill steel" id="sync-status">Ansluter…</span>
-      </div>
-      <div class="body">
-        <div class="kpis" id="oms-kpis" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr))"></div>
-        <p class="small muted" id="oms-note" style="margin-top:10px"></p>
-      </div>
-    </section>
 
     <!-- Antaganden -->
     <section class="panel" id="sec-settings">
@@ -1151,18 +1140,6 @@
       '<div><b>' + kr(breakEvenFor(r.stolKost)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div></div>';
   }
 
-  function renderOms(a) {
-    const m = S.view === 'ar' ? 12 : 1; const per = S.view === 'ar' ? 'per år' : 'per månad';
-    $('#oms-kpis').innerHTML =
-      '<div><b>' + kr(a.behandling * m) + '</b><span>tjänster exkl. moms, ' + per + '</span></div>' +
-      '<div><b>' + kr(a.produkt * m) + '</b><span>produktförsäljning exkl. moms, ' + per + '</span></div>' +
-      '<div><b>' + kr(a.oms * m) + '</b><span>omsättning exkl. moms, ' + per + '</span></div>' +
-      '<div><b>' + kr(a.oms * MK() * m) + '</b><span>kunderna betalar inkl. moms, ' + per + '</span></div>' +
-      '<div><b>' + kr(a.schemaHours > 0 ? a.oms / a.schemaHours : 0) + '</b><span>omsättning per schemalagd timme</span></div>';
-    const namn = [...S.frisorer.map(f => f.namn), ...S.elever.map(e => e.namn + ' (elev)')]; const n = 1 + namn.length;
-    $('#oms-note').textContent = n + (n === 1 ? ' person' : ' personer') + ' i stolarna: ägaren' + (namn.length ? ' och ' + namn.join(', ') : '') + '. Ändra beloppen på personkorten nedanför så räknas omsättningen om.';
-  }
-
   function renderSummary(a) {
     const m = S.view === 'ar' ? 12 : 1;
     const K = n => kr(n * m);
@@ -1261,7 +1238,6 @@
     $('#cost-total').textContent = kr(a.fasta);
     const an = $('#cost-admin-note'); if (an) an.textContent = S.owner.adminTimmar + ' h/vecka admin, ledning och handledning = ' + Math.round(a.ow.adminShare * 100) + ' % av lönekostnaden. Framräknat: ' + kr(a.ow.adminAuto) + (a.ow.adminKost !== a.ow.adminAuto ? '. Eget belopp används: ' + kr(a.ow.adminKost) : '') + '.';
     const ai = document.querySelector('.admin-row input[type="number"]'); if (ai && S.owner.adminBelopp == null) ai.placeholder = num(a.ow.adminAuto);
-    renderOms(a);
     renderSummary(a);
     save();
   }
