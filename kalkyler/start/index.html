@@ -325,6 +325,11 @@
   .kassa-grid textarea { width: 100%; min-height: 120px; font: inherit; font-size: 12px; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 6px; padding: 8px 10px; resize: vertical; }
   .kassa-grid textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   /* Startversionen */
+  /* Utbetalt och täckningsanalys */
+  .slip tr.netto td { font-weight: 700; color: var(--good); }
+  .slip .analys { margin-top: 10px; padding: 10px 12px; border-left: 3px solid var(--good); background: var(--surface); border-radius: 6px; font-size: 12px; line-height: 1.5; }
+  .slip .analys.warn { border-color: var(--warn); }
+  .slip .analys.bad { border-color: var(--bad); }
   .p-inputs, .p-inputs .group, .p-inputs .fields { align-content: start; }
   .uppdrag-rad { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(130px, 0.8fr) auto; gap: 8px; align-items: center; }
 </style>
@@ -362,7 +367,7 @@
 
     <!-- Grundsiffror -->
     <section class="panel" id="sec-settings">
-      <div class="head"><h2>Grundsiffror</h2><p>Procentsatserna och schablonerna som allt annat räknas på: sociala avgifter, semesterersättning, pension med särskild löneskatt, friskvård, utbildning, material och moms. Förvalt ligger branschens vanliga värden, så ändra bara det som skiljer sig hos er.</p></div>
+      <div class="head"><h2>Grundsiffror</h2><p>Procentsatserna och schablonerna som allt annat räknas på: sociala avgifter, semesterersättning, pension med särskild löneskatt, friskvård, utbildning, material, moms och ett ungefärligt skatteavdrag för att visa vad som betalas ut. Förvalt ligger branschens vanliga värden, så ändra bara det som skiljer sig hos er.</p></div>
       <div class="body">
         <div class="fields">
           <label class="field"><span>Arbetsgivaravgift</span><div class="unit"><input type="number" step="0.01" data-s="ag"><em>%</em></div></label>
@@ -380,6 +385,7 @@
           <label class="field"><span>Buffert/vinst som ska bli kvar</span><div class="unit"><input type="number" step="0.1" data-s="buffert"><em>% av omsättn.</em></div></label>
           <label class="field"><span>Bolagsskatt, även kallad vinstskatt (aktiebolag)</span><div class="unit"><input type="number" step="0.1" data-s="bolagsskatt"><em>% av vinsten</em></div></label>
           <label class="field"><span>Skatt på utdelning till ägaren</span><div class="unit"><input type="number" step="0.1" data-s="utdelningsskatt"><em>%</em></div></label>
+          <label class="field"><span>Skatteavdrag på lönen, ungefär enligt skattetabell</span><div class="unit"><input type="number" step="0.5" data-s="skatt"><em>% av bruttolön</em></div></label>
           <label class="field"><span>Handledartillägg per elev</span><div class="unit"><input type="number" step="100" data-s="handledarTillagg"><em>kr/mån</em></div></label>
         </div>
       </div>
@@ -475,7 +481,7 @@
     return {
       period: '2026',
       ag: 31.42, semester: 13, pension: 4.5, loneskatt: 24.26, friskvard: 2600, utbildning: 1000, veckor: 4.325,
-      material: 10, produktInkop: 70, produktMarginal: 30, kort: 1.5, handledarTillagg: 0, moms: 25, arbMan: 10.5, buffert: 5, bolagsskatt: 20.6, utdelningsskatt: 20,
+      material: 10, produktInkop: 70, produktMarginal: 30, kort: 1.5, handledarTillagg: 0, skatt: 23, moms: 25, arbMan: 10.5, buffert: 5, bolagsskatt: 20.6, utdelningsskatt: 20,
       view: 'man',
       owner: { namn: 'Salongsägaren', lon: 38000, soc: 31.42, stolTimmar: 30, adminTimmar: 10, tjanster: 84000, produkt: 6000, adminKat: 'Fasta kostnader', adminBelopp: null },
       frisorer: [
@@ -1020,6 +1026,16 @@
       { l: 'Andel av driftkostnaderna (' + Math.round(fte * 100) + ' % tjänst)', v: '−' + kr(andel), cls: 'sub' },
       { l: 'Kvar hos salongen på ' + namn, v: (kvar < 0 ? '−' : '') + kr(Math.abs(kvar)), cls: 'total' } ] };
   }
+  // Utbetalt efter skatt, och en kort analys: täcker personen sin lön, och sin andel av driftkostnaderna?
+  const netto = brutto => brutto * (1 - (S.skatt || 0) / 100);
+  function tackningText(hon, r, lonKost, kv) {
+    const efter = r.intakt - r.rorlig;
+    const H = hon.charAt(0).toUpperCase() + hon.slice(1);
+    if (efter < lonKost) return { cls: 'bad', txt: H + ' drar in ' + kr(r.intakt) + ' exkl. moms. När material, produktinköp och kortavgifter är betalda är ' + kr(efter) + ' kvar, men lönekostnaden är ' + kr(lonKost) + '. ' + H + ' täcker alltså inte sin egen lön: bolaget skjuter till ' + kr(lonKost - efter) + ' till lönen och betalar dessutom hela andelen av driftkostnaderna, ' + kr(kv.andel) + '.' };
+    if (kv.kvar < 0) return { cls: 'warn', txt: H + ' täcker sin egen lönekostnad, ' + kr(lonKost) + ', och lämnar ' + kr(r.bidrag) + ' till driftkostnaderna. Men andelen av bolagets driftkostnader är ' + kr(kv.andel) + ', så ' + kr(-kv.kvar) + ' saknas varje månad. ' + H + ' är med och betalar sin lön, men inte salongens hyra, el, system och ledning.' };
+    return { cls: 'good', txt: H + ' täcker sin egen lönekostnad, ' + kr(lonKost) + ', hela andelen av driftkostnaderna, ' + kr(kv.andel) + ', och lämnar ' + kr(kv.kvar) + ' i vinst till salongen varje månad.' };
+  }
+  const analysHtml = (rubrik, t) => '<div class="analys ' + t.cls + '"><b>' + rubrik + '</b> ' + t.txt + '</div>';
   function setSum(id, txt) { const e = $('#' + id); if (e) e.textContent = txt; }
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -1048,6 +1064,7 @@
     }
     (f.uppdrag || []).forEach(u => { if ((u.belopp || 0) > 0) rows.push({ l: 'Extra uppdrag: ' + esc(u.namn || 'uppdrag'), v: kr(u.belopp) }); });
     rows.push({ l: 'Bruttolön, det som betalas ut före skatt', v: kr(r.brutto), cls: 'sum' });
+    rows.push({ l: 'På kontot den 25:e, efter ' + pct(S.skatt) + ' skatt', v: kr(netto(r.brutto)), cls: 'netto' });
     rows.push({ l: 'Sociala avgifter ' + pct(S.ag), v: kr(r.ag), cls: 'sub' });
     rows.push({ l: 'Semesterersättning ' + pct(S.semester) + ' + sociala avg.', v: kr(r.semester), cls: 'sub' });
     rows.push({ l: 'Pension ' + pct(S.pension) + ' + särskild löneskatt', v: kr(r.pension), cls: 'sub' });
@@ -1060,14 +1077,15 @@
     }
     const bidragOk = r.bidrag >= 0;
     const kv = kvarRows(r, f.veckotid / 40, a, f.namn); rows.push({ l: 'Hon drar in exkl. moms, tjänster och produkter', v: kr(r.intakt) }, ...kv.rows);
-    setSum('fr-sum-' + idx, 'Bruttolön ' + kr(r.brutto) + ' · kvar hos salongen ' + (kv.kvar < 0 ? '−' : '') + kr(Math.abs(kv.kvar)));
+    setSum('fr-sum-' + idx, 'Bruttolön ' + kr(r.brutto) + ' · på kontot ' + kr(netto(r.brutto)) + ' · kvar hos salongen ' + (kv.kvar < 0 ? '−' : '') + kr(Math.abs(kv.kvar)));
     $('#fr-slip-' + idx).innerHTML = '<div class="eyebrow">Lönespecifikation · ' + typLabel + ' · ' + T[S.period].label + '</div>' + slipRows(rows) +
       '<div class="kpi"><div><b>' + kr(r.hours > 0 ? r.total / r.hours : 0) + '</b><span>kostnad per schemalagd timme</span></div>' +
       '<div><b>' + (r.behandling > 0 ? pct(r.stolKost / r.behandling * 100) : '–') + '</b><span>lönekostnad för stoltiden av det hon drar in i tjänster</span></div>' +
       '<div><b style="color:var(--' + (bidragOk ? 'good' : 'bad') + ')">' + kr(r.bidrag) + '</b><span>kan bidra till driftkostnaderna, efter egen lönekostnad och material</span></div>' +
       '<div><b>' + kr(kv.andel) + '</b><span>hennes andel av salongens driftkostnader</span></div>' +
       '<div><b style="color:var(--' + (kv.kvar >= 0 ? 'good' : 'bad') + ')">' + (kv.kvar < 0 ? '−' : '') + kr(Math.abs(kv.kvar)) + '</b><span>kvar hos salongen när andelen är betald</span></div>' +
-      '<div><b>' + kr(breakEvenFor(r.stolKost)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div></div>';
+      '<div><b>' + kr(breakEvenFor(r.stolKost)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div></div>' +
+      analysHtml('Täcker hon sin lön?', tackningText('hon', r, r.stolKost, kv));
   }
 
   function renderElev(e, r, idx, a) {
@@ -1080,6 +1098,7 @@
       { l: 'Månadslön nivå 2 (' + e.veckotid + ' h)', v: kr(r.manadslon) },
       { l: r.harProv ? 'Arbetsprovision 10 %' : 'Arbetsprovision (från 1 000 h)', v: kr(r.prov) },
       { l: 'Bruttolön, det som betalas ut före skatt', v: kr(r.brutto), cls: 'sum' },
+      { l: 'På kontot den 25:e, efter ' + pct(S.skatt) + ' skatt', v: kr(netto(r.brutto)), cls: 'netto' },
       { l: 'Sociala avgifter ' + pct(S.ag), v: kr(r.ag), cls: 'sub' },
       { l: 'Semesterersättning ' + pct(S.semester) + ' + sociala avg.', v: kr(r.semester), cls: 'sub' },
       { l: 'Pension ' + pct(S.pension) + ' + särskild löneskatt', v: kr(r.pension), cls: 'sub' },
@@ -1091,7 +1110,7 @@
     const bidragOk = r.bidrag >= 0;
     const kvarTxt = r.kvar > 0 ? num(r.kvar) + ' h kvar till gesällprov, ca ' + r.manaderKvar.toLocaleString('sv-SE', { maximumFractionDigits: 1 }) + ' mån' : 'Klar för gesällprov';
     const kvE = kvarRows(r, e.veckotid / 40, a, e.namn); rows.push({ l: 'Eleven drar in exkl. moms', v: kr(r.intakt) }, ...kvE.rows);
-    setSum('ev-sum-' + idx, 'Bruttolön ' + kr(r.brutto) + ' · kvar hos salongen ' + (kvE.kvar < 0 ? '−' : '') + kr(Math.abs(kvE.kvar)));
+    setSum('ev-sum-' + idx, 'Bruttolön ' + kr(r.brutto) + ' · på kontot ' + kr(netto(r.brutto)) + ' · kvar hos salongen ' + (kvE.kvar < 0 ? '−' : '') + kr(Math.abs(kvE.kvar)));
     $('#ev-slip-' + idx).innerHTML = '<div class="eyebrow">Lönespecifikation · Elev nivå 2 · ' + T[S.period].label + '</div>' + slipRows(rows) +
       '<div class="kpi"><div><b>' + kr(r.hours > 0 ? r.total / r.hours : 0) + '</b><span>kostnad per schemalagd timme</span></div>' +
       '<div><b>' + (r.behandling > 0 ? pct(r.total / r.behandling * 100) : '–') + '</b><span>lönekostnad av det hon drar in i tjänster</span></div>' +
@@ -1099,7 +1118,8 @@
       '<div><b>' + kr(kvE.andel) + '</b><span>hennes andel av salongens driftkostnader</span></div>' +
       '<div><b style="color:var(--' + (kvE.kvar >= 0 ? 'good' : 'bad') + ')">' + (kvE.kvar < 0 ? '−' : '') + kr(Math.abs(kvE.kvar)) + '</b><span>kvar hos salongen när andelen är betald</span></div>' +
       '<div><b>' + kr(breakEvenFor(r.total)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div>' +
-      '<div><b style="font-size:13px">' + kvarTxt + '</b><span>utbildningstid</span></div></div>';
+      '<div><b style="font-size:13px">' + kvarTxt + '</b><span>utbildningstid</span></div></div>' +
+      analysHtml('Täcker eleven sin lön?', tackningText('eleven', r, r.total, kvE));
   }
   function renderHandledarNote() {
     const box = $('#handledar-note'); if (!box) return;
@@ -1119,6 +1139,7 @@
       { l: 'Timmar i stolen per månad', v: num(r.hours) + ' h', cls: 'sub' },
       { l: 'Drar in i tjänster exkl. moms', v: kr(r.behandling) },
       { l: 'Egen bruttolön, det som betalas ut före skatt', v: kr(o.lon), cls: 'sum' },
+      { l: 'På kontot den 25:e, efter ' + pct(S.skatt) + ' skatt', v: kr(netto(o.lon)), cls: 'netto' },
       { l: 'Sociala avgifter ' + pct(o.soc), v: kr(r.soc), cls: 'sub' },
       { l: 'Semesterersättning ' + pct(S.semester) + ' + sociala avg.', v: kr(r.semester), cls: 'sub' },
       { l: 'Pension ' + pct(S.pension) + ' + särskild löneskatt', v: kr(r.pension), cls: 'sub' },
@@ -1130,14 +1151,15 @@
     ];
     const bidragOk = r.bidrag >= 0;
     const kvO = kvarRows(r, S.owner.stolTimmar / 40, a, 'ägarens tid i stolen'); rows.push({ l: 'Ägaren drar in exkl. moms, tjänster och produkter', v: kr(r.intakt) }, ...kvO.rows);
-    setSum('ow-sum', 'Egen lön ' + kr(S.owner.lon) + ' · kvar på stoltiden ' + (kvO.kvar < 0 ? '−' : '') + kr(Math.abs(kvO.kvar)));
+    setSum('ow-sum', 'Egen lön ' + kr(S.owner.lon) + ' · på kontot ' + kr(netto(S.owner.lon)) + ' · kvar på stoltiden ' + (kvO.kvar < 0 ? '−' : '') + kr(Math.abs(kvO.kvar)));
     $('#owner-slip').innerHTML = '<div class="eyebrow">Ägarens kostnad och intäkt</div>' + slipRows(rows) +
       '<div class="kpi"><div><b>' + kr(r.adminKost) + '</b><span>overhead till driftkostnaderna: lön för att driva salongen</span></div>' +
       '<div><b>' + kr(r.totHours > 0 ? r.total / r.totHours : 0) + '</b><span>kostnad per arbetad ägartimme</span></div>' +
       '<div><b style="color:var(--' + (bidragOk ? 'good' : 'bad') + ')">' + kr(r.bidrag) + '</b><span>kan bidra till driftkostnaderna, efter kostnaden för stoltiden och material</span></div>' +
       '<div><b>' + kr(kvO.andel) + '</b><span>stoltidens andel av salongens driftkostnader</span></div>' +
       '<div><b style="color:var(--' + (kvO.kvar >= 0 ? 'good' : 'bad') + ')">' + (kvO.kvar < 0 ? '−' : '') + kr(Math.abs(kvO.kvar)) + '</b><span>kvar hos salongen när andelen är betald</span></div>' +
-      '<div><b>' + kr(breakEvenFor(r.stolKost)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div></div>';
+      '<div><b>' + kr(breakEvenFor(r.stolKost)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div></div>' +
+      analysHtml('Täcker stoltiden sin kostnad?', tackningText('ägaren', r, r.stolKost, kvO));
   }
 
   function renderSummary(a) {
