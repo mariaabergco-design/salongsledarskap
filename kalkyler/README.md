@@ -7,6 +7,8 @@ Den här mappen publiceras av Vercel på salongskalkylen.vercel.app.
 | `index.html` | Salongskalkylen, för salongsägare |
 | `start/index.html` | Salongskalkylen Start, den avskalade versionen för första mötet med en salongsägare |
 | `frisor/index.html` | Frisörkalkylen, för anställda frisörer |
+| `veckoschema/index.html` | Veckoschemat, där salongsledaren bygger sin vecka från 06 till 23 med färdiga och egna block och ser timmarna per vecka och månad |
+| `hushallskalkyl/index.html` | Hushållskalkylen, privatekonomi för salongsledaren: läser in kontoutdrag från skärmdump, pdf eller inklistrad text, räknar månadens verkliga över- eller underskott, håller utläggsrapporten till bolaget och en hushållsbudget med lönen salongen måste bära |
 | `api/las.js` | Serverfunktion som läser fakturor och kassalistor med Claude |
 
 Sidorna redigeras som artefakter på claude.ai. Den färdiga html-filen läggs
@@ -31,5 +33,7 @@ gjorts.
 Sidan sparar salongskoden i webbläsaren och skickar den som rubriken
 `x-salongskod` vid varje läsning. Fel kod ger svaret 401. Varje läsning
 loggas i Vercel med antal tecken, bilder och tokens, så kostnaden går att
-följa där. Inne på claude.ai används i stället besökarens eget Claude-konto,
+följa där. Hushållskalkylen använder samma funktion och samma salongskod för att läsa
+skärmdumpar av kontoutdrag. Inklistrade rader läses i webbläsaren när ingen kod
+finns. Inne på claude.ai används i stället besökarens eget Claude-konto,
 när kontot tillåter det.

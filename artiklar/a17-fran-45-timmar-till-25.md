@@ -107,3 +107,5 @@ Skriv upp dem bredvid varandra.
 Sätt sedan de tal du vill ha om sex månader bredvid de tal du har i dag.
 
 Skillnaden mellan de två kolumnerna är hela ditt förändringsarbete.
+
+Vill du slippa räkna för hand, lägg in veckan i [Veckoschemat](https://salongskalkylen.vercel.app/veckoschema/). Det räknar timmarna per block åt dig, per vecka och per månad. Gör en vecka som den ser ut i dag och en som den ska se ut om sex månader.

@@ -62,6 +62,8 @@ Lägg den på förmiddagen. Det som ligger efter stängning görs när du är tr
 
 Berätta för teamet när du har den. Dela kalendern om ni har ett gemensamt system, så slipper de fråga och du slipper förklara.
 
+Vill du se hur rytmen ryms i din vecka, lägg in den i [Veckoschemat](https://salongskalkylen.vercel.app/veckoschema/). Där bygger du veckan från sex på morgonen till elva på kvällen och ser hur många timmar ledartiden blir per vecka och per månad.
+
 ## Koppla rytmen till något du vill ha
 
 En struktur som bara är en regel håller till första gången någon ringer.

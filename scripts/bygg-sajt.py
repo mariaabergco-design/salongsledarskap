@@ -78,7 +78,7 @@ PELARE = [
         "gloss": "Ensamheten i ledarrollen är ett strukturfel, inte ett karaktärsfel.",
         "helvete": "Ensamheten",
         "himmel": "Gemenskap",
-        "verktyg": None,
+        "verktyg": "veckoschemat",
         "artiklar": ["05-ensam-mitt-bland-manniskor", "a03-ensamheten-ar-ett-strukturfel",
                      "a04-det-du-inte-sager", "c01-kollega-och-chef",
                      "c02-konflikt-i-personalrummet", "c03-vad-tycker-personalen",
@@ -96,7 +96,19 @@ VERKTYG = [
      "text": "Räknar fram beläggning, snittintäkt per kundtimme och bidrag per stol med dina egna tal."},
     {"slug": "introduktion", "namn": "Introduktion av ny frisör",
      "text": "Checklista för de sex första veckorna, med de tre samtalen som avgör om hon stannar."},
+    # Veckoschemat ligger bland kalkylerna på Vercel, se kalkyler/veckoschema/.
+    # Verktyg med url byggs inte här, korten länkar dit i stället.
+    {"slug": "veckoschemat", "namn": "Veckoschemat",
+     "text": "Bygg din vecka från 06 till 23 med färdiga block och se hur många timmar varje uppgift tar per vecka och månad.",
+     "url": "https://salongskalkylen.vercel.app/veckoschema/"},
 ]
+
+
+def verktyg_lank(v, p):
+    """Adress och attribut till ett verktyg, på sajten eller utanför."""
+    if v.get("url"):
+        return '%s" target="_blank" rel="noopener' % v["url"]
+    return "%sverktyg/%s.html" % (p, v["slug"])
 
 BILDER = {
     "portratt": {"fil": "maria-portratt.jpg",
@@ -349,8 +361,8 @@ def cta_block(pelare, depth):
   <span class="label">Nästa steg</span>
   <h2>{namn}</h2>
   <p>{text}</p>
-  <a class="knapp" href="{p}verktyg/{slug}.html">Öppna verktyget</a>
-</div>""".format(namn=v["namn"], text=v["text"], p=p, slug=v["slug"])
+  <a class="knapp" href="{href}">Öppna verktyget</a>
+</div>""".format(namn=v["namn"], text=v["text"], href=verktyg_lank(v, p))
     return """<div class="cta">
   <span class="label">Nästa steg</span>
   <h2>Det svåra är att hålla i det</h2>
@@ -466,6 +478,8 @@ def bygg():
 
     # verktyg
     for v in VERKTYG:
+        if v.get("url"):
+            continue
         frag = open(os.path.join(ROOT, "verktyg", v["slug"] + ".html"), encoding="utf-8").read()
         m_title = re.search(r"<title>(.*?)</title>", frag, re.S)
         titel = m_title.group(1) if m_title else v["namn"]
@@ -502,15 +516,15 @@ def bygg():
                   nav=nav(1, "verktyg"), kropp=kropp, foot="")
         open(os.path.join(OUT, "verktyg", v["slug"] + ".html"), "w", encoding="utf-8").write(full)
 
-    kort = "".join("""<a class="vkort" href="verktyg/{slug}.html">
+    kort = "".join("""<a class="vkort" href="{href}">
     <span class="pnr">{nr:02d}</span>
     <span class="vnamn">{namn}</span><span class="vtext">{text}</span>
-    <span class="pantal">Öppna verktyget</span></a>""".format(nr=i, **v)
+    <span class="pantal">Öppna verktyget</span></a>""".format(nr=i, href=verktyg_lank(v, ""), **v)
         for i, v in enumerate(VERKTYG, 1))
     inne = """<div class="sidhuvud herogrid">
   <div>
     <span class="ovan">Verktyg</span>
-    <h1>Fyra saker du kan göra i veckan</h1>
+    <h1>Fem saker du kan göra i veckan</h1>
     <p class="ingress">Verktygen räknar och håller ordning. De sparar allt i din egen webbläsare och skickar ingenting vidare.</p>
   </div>
   {sidbild}
@@ -518,7 +532,7 @@ def bygg():
 <div class="block"><div class="vkortgrid">{kort}</div></div>""".format(
         kort=kort, sidbild=bild("klipper", "sidbild").format(p=""))
     open(os.path.join(OUT, "verktyg.html"), "w", encoding="utf-8").write(
-        sida("Verktyg · Salongsledarskap", "Fyra verktyg för salongsägare med anställda.",
+        sida("Verktyg · Salongsledarskap", "Fem verktyg för salongsägare med anställda.",
              inne, 0, "verktyg"))
 
     # kundcase
@@ -621,8 +635,8 @@ def bygg():
         deck=inline(artiklar[p["artiklar"][0]]["deck"]), nr=p["nr"],
         min=artiklar[p["artiklar"][0]]["minuter"]) for p in PELARE)
 
-    vkort = "".join("""<a class="vkort" href="verktyg/{slug}.html">
-    <span class="vnamn">{namn}</span><span class="vtext">{text}</span></a>""".format(**v)
+    vkort = "".join("""<a class="vkort" href="{href}">
+    <span class="vnamn">{namn}</span><span class="vtext">{text}</span></a>""".format(href=verktyg_lank(v, ""), **v)
         for v in VERKTYG)
 
     inne = """<section class="hero herogrid">
@@ -637,7 +651,7 @@ def bygg():
     <div class="fakta">
       <div><strong>{n}</strong><span>artiklar</span></div>
       <div><strong>5</strong><span>pelare</span></div>
-      <div><strong>4</strong><span>verktyg</span></div>
+      <div><strong>{nv}</strong><span>verktyg</span></div>
       <div><strong>3 min</strong><span>tar testet</span></div>
     </div>
   </div>
@@ -671,7 +685,7 @@ def bygg():
     <p>Ett kort resonemang, en länk och ett konkret tips. Inget annat.</p>
   </div>
   {brevform}
-</section>""".format(n=len(artiklar), pelarkort=pelarkort, utvalda=utvalda, vkort=vkort,
+</section>""".format(n=len(artiklar), nv=len(VERKTYG), pelarkort=pelarkort, utvalda=utvalda, vkort=vkort,
            brevform=brevform(),
            herobild=bild("kaffe", "herobild").format(p=""),
            band=('<section class="band">%s<div class="bandtext"><span class="label">Vem som skriver</span>'
