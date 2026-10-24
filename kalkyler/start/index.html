@@ -413,7 +413,7 @@
     <!-- Frisörer -->
     <section class="panel" id="sec-frisor">
       <div class="head">
-        <div><h2>Anställda frisörer</h2><p>Avtalets provisionsmodell: basbelopp + arbetsprovision, aldrig under garantilönen. Skriv in vad varje frisör drar in per månad. Får frisören betalt för ett extra uppdrag, till exempel ledning eller sociala medier, lägger du till det på kortet: det läggs ovanpå lönen och bokförs som overhead bland driftkostnaderna, inte på stoltiden.</p></div>
+        <div><h2>Anställda frisörer</h2><p>Avtalets provisionsmodell: basbelopp + arbetsprovision, aldrig under garantilönen. Skriv in vad varje frisör drar in per månad och hur många OB-timmar hon jobbar. Får frisören betalt för ett extra uppdrag, till exempel ledning eller sociala medier, lägger du till det på kortet: det läggs ovanpå lönen och bokförs som overhead bland driftkostnaderna, inte på stoltiden.</p></div>
         <button class="btn" type="button" id="add-frisor">+ Lägg till frisör</button>
       </div>
       <div class="body" id="frisor-list"></div>
@@ -498,11 +498,11 @@
       view: 'man',
       owner: { namn: 'Salongsägaren', lon: 38000, soc: 31.42, stolTimmar: 30, adminTimmar: 10, tjanster: 84000, produkt: 6000, adminKat: 'Fasta kostnader', adminBelopp: null },
       frisorer: [
-        { namn: 'Anna', typ: 'beh', veckotid: 40, tjanster: 96000, produkt: 5000, prov: false, bv1: true, bv2: false, tt: false, fast: 0, uppdrag: nyaUppdrag() },
-        { namn: 'Sara', typ: 'beh', veckotid: 32, tjanster: 72000, produkt: 4000, prov: false, bv1: false, bv2: false, tt: false, fast: 0, uppdrag: nyaUppdrag() }
+        { namn: 'Anna', typ: 'beh', veckotid: 40, tjanster: 96000, produkt: 5000, prov: false, bv1: true, bv2: false, tt: false, ob50: 0, ob70: 0, ob100: 0, fast: 0, uppdrag: nyaUppdrag() },
+        { namn: 'Sara', typ: 'beh', veckotid: 32, tjanster: 72000, produkt: 4000, prov: false, bv1: false, bv2: false, tt: false, ob50: 0, ob70: 0, ob100: 0, fast: 0, uppdrag: nyaUppdrag() }
       ],
       elever: [
-        { namn: 'Elev', veckotid: 40, timmar: 1200, tjanster: 30000 }
+        { namn: 'Elev', veckotid: 40, timmar: 1200, tjanster: 30000, ob50: 0, ob70: 0, ob100: 0 }
       ],
       kostnader: [
         { kat: 'Fasta kostnader', namn: 'Hyra', belopp: 19000 },
@@ -717,14 +717,15 @@
     const bv2 = (!fastAnv && f.bv2 && f.bv1) ? tab.bv2 * share : 0;
     const tt = (!fastAnv && f.tt) ? tab.tt * share : 0;
     const uppdrag = uppdragSum(f);
-    const brutto = grund + salesProv + bv1 + bv2 + tt + uppdrag;
+    const ob = ((f.ob50 || 0) * 0.5 + (f.ob70 || 0) * 0.7 + (f.ob100 || 0) * 1.0) * tab.obBas;
+    const brutto = grund + salesProv + bv1 + bv2 + tt + ob + uppdrag;
     const p = payroll(brutto, f.veckotid);
     // Extra uppdrag är overhead: lönen för uppdraget med påslag flyttas från stoltiden till driftkostnaderna
     const uppdragKost = paslag(uppdrag);
     const stolKost = Math.max(0, p.total - uppdragKost);
     const intakt = behandling + f.produkt;
     const rorlig = behandling * S.material / 100 + f.produkt * S.produktInkop / 100 + intakt * S.kort / 100;
-    return { hours, behandling, bb, arbProv, gl, modell, garantiSlar, grund, fastAnv, salesProv, bv1, bv2, tt, uppdrag, brutto, ...p, uppdragKost, stolKost, intakt, rorlig, bidrag: intakt - rorlig - stolKost, tab };
+    return { hours, behandling, bb, arbProv, gl, modell, garantiSlar, grund, fastAnv, salesProv, bv1, bv2, tt, ob, uppdrag, brutto, ...p, uppdragKost, stolKost, intakt, rorlig, bidrag: intakt - rorlig - stolKost, tab };
   }
 
   function calcElev(e) {
@@ -735,7 +736,10 @@
     const manadslon = t.elevN2 * share;
     const harProv = e.timmar >= 1000;
     const prov = harProv ? behandling * t.elevProv / 100 : 0;
-    const brutto = manadslon + prov;
+    const timlon = hours > 0 ? manadslon / hours : 0;
+    const obBas = harProv ? t.elevOb : timlon;
+    const ob = ((e.ob50 || 0) * 0.5 + (e.ob70 || 0) * 0.7 + (e.ob100 || 0) * 1.0) * obBas;
+    const brutto = manadslon + prov + ob;
     const p = payroll(brutto, e.veckotid);
     const handledarKost = paslag(S.handledarTillagg || 0);
     const total = p.total + handledarKost;
@@ -743,7 +747,7 @@
     const rorlig = behandling * S.material / 100 + intakt * S.kort / 100;
     const kvar = Math.max(0, 2000 - e.timmar);
     const manaderKvar = hours > 0 ? kvar / hours : 0;
-    return { hours, behandling, manadslon, harProv, prov, brutto, ...p, handledarKost, total, intakt, rorlig, bidrag: intakt - rorlig - total, kvar, manaderKvar };
+    return { hours, behandling, manadslon, harProv, prov, obBas, ob, brutto, ...p, handledarKost, total, intakt, rorlig, bidrag: intakt - rorlig - total, kvar, manaderKvar };
   }
 
   function calcOwner() {
@@ -903,6 +907,17 @@
     return g;
   }
 
+  function obBlock(obj) {
+    const g = el('div', { class: 'group' });
+    g.appendChild(el('span', { class: 'eyebrow' }, 'OB-timmar per månad enligt avtalet'));
+    const f = el('div', { class: 'fields' });
+    f.appendChild(numberField('Vardag efter 18 (50 %)', obj, 'ob50', 'h/mån'));
+    f.appendChild(numberField('Lördag 12–13 (70 %)', obj, 'ob70', 'h/mån'));
+    f.appendChild(numberField('Lördag efter 13, sön- och helgdag (100 %)', obj, 'ob100', 'h/mån'));
+    g.appendChild(f);
+    return g;
+  }
+
   function buildFrisorer() {
     const root = $('#frisor-list'); root.innerHTML = '';
     if (!S.frisorer.length) root.appendChild(el('p', { class: 'muted' }, 'Ingen anställd frisör. Lägg till en för att räkna på lönen.'));
@@ -931,6 +946,7 @@
       g1.appendChild(inklField('Egen produktförsäljning per månad', f, 'produkt'));
       g1.appendChild(numberField('Fast månadslön i stället (0 = provisionsmodell)', f, 'fast', 'kr', { step: 500 }));
       inputs.appendChild(g1);
+      inputs.appendChild(obBlock(f));
       inputs.appendChild(uppdragBlock(f));
       const g3 = el('div', { class: 'group' });
       g3.appendChild(el('span', { class: 'eyebrow' }, 'Tillägg enligt avtalet'));
@@ -971,6 +987,7 @@
       g1.appendChild(vt);
       g1.appendChild(inklField('Drar in i tjänster per månad', e, 'tjanster', { step: 1000 }));
       inputs.appendChild(g1);
+      inputs.appendChild(obBlock(e));
       body.appendChild(inputs);
       body.appendChild(el('div', { class: 'slip', id: 'ev-slip-' + idx }));
       card.appendChild(body);
@@ -1081,6 +1098,7 @@
       if (r.bv2) rows.push({ l: 'Branschvana 2', v: kr(r.bv2) });
       if (r.tt) rows.push({ l: 'Tjänstetidstillägg', v: kr(r.tt) });
     }
+    if (r.ob) rows.push({ l: 'OB-ersättning (' + r.tab.obBas.toLocaleString('sv-SE', { maximumFractionDigits: 2 }) + ' kr/h)', v: kr(r.ob) });
     (f.uppdrag || []).forEach(u => { if ((u.belopp || 0) > 0) rows.push({ l: 'Extra uppdrag: ' + esc(u.namn || 'uppdrag'), v: kr(u.belopp) }); });
     rows.push({ l: 'Bruttolön, det som betalas ut före skatt', v: kr(r.brutto), cls: 'sum' });
     rows.push({ l: 'På kontot den 25:e, efter ' + pct(S.skatt) + ' skatt', v: kr(netto(r.brutto)), cls: 'netto' });
@@ -1116,6 +1134,7 @@
       { l: 'Drar in i tjänster exkl. moms', v: kr(r.behandling) },
       { l: 'Månadslön nivå 2 (' + e.veckotid + ' h)', v: kr(r.manadslon) },
       { l: r.harProv ? 'Arbetsprovision 10 %' : 'Arbetsprovision (från 1 000 h)', v: kr(r.prov) },
+      ...(r.ob ? [{ l: 'OB-ersättning (' + r.obBas.toLocaleString('sv-SE', { maximumFractionDigits: 2 }) + ' kr/h)', v: kr(r.ob) }] : []),
       { l: 'Bruttolön, det som betalas ut före skatt', v: kr(r.brutto), cls: 'sum' },
       { l: 'På kontot den 25:e, efter ' + pct(S.skatt) + ' skatt', v: kr(netto(r.brutto)), cls: 'netto' },
       { l: 'Sociala avgifter ' + pct(S.ag), v: kr(r.ag), cls: 'sub' },
@@ -1285,11 +1304,11 @@
 
   // ---------- Händelser ----------
   $('#add-frisor').addEventListener('click', () => {
-    S.frisorer.push({ id: uid(), namn: 'Frisör ' + (S.frisorer.length + 1), typ: 'beh', veckotid: 32, tjanster: 60000, produkt: 3000, prov: false, bv1: false, bv2: false, tt: false, fast: 0, uppdrag: nyaUppdrag() });
+    S.frisorer.push({ id: uid(), namn: 'Frisör ' + (S.frisorer.length + 1), typ: 'beh', veckotid: 32, tjanster: 60000, produkt: 3000, prov: false, bv1: false, bv2: false, tt: false, ob50: 0, ob70: 0, ob100: 0, fast: 0, uppdrag: nyaUppdrag() });
     buildFrisorer(); buildCosts(); recalc();
   });
   $('#add-elev').addEventListener('click', () => {
-    S.elever.push({ id: uid(), namn: 'Elev ' + (S.elever.length + 1), veckotid: 40, timmar: 0, tjanster: 20000 });
+    S.elever.push({ id: uid(), namn: 'Elev ' + (S.elever.length + 1), veckotid: 40, timmar: 0, tjanster: 20000, ob50: 0, ob70: 0, ob100: 0 });
     buildElever(); recalc();
   });
   $('#add-cost').addEventListener('click', () => {
