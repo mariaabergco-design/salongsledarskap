@@ -307,6 +307,10 @@
   .slip .analys { margin-top: 10px; padding: 10px 12px; border-left: 3px solid var(--good); background: var(--surface); border-radius: 6px; font-size: 12px; line-height: 1.5; }
   .slip .analys.warn { border-color: var(--warn); }
   .slip .analys.bad { border-color: var(--bad); }
+  .slip .analys .rad { display: flex; gap: 6px; margin-top: 5px; }
+  .slip .analys .m { font-weight: 700; flex: 0 0 auto; }
+  .slip .analys .m.ok { color: var(--good); }
+  .slip .analys .m.nej { color: var(--bad); }
   /* Fakturasorteraren */
   .drop { border: 2px dashed var(--line-strong); border-radius: 8px; padding: 22px 18px; text-align: center; background: var(--surface-2); display: grid; gap: 8px; justify-items: center; transition: border-color .15s ease, background .15s ease; }
   .drop.over { border-color: var(--accent); background: var(--tint); }
@@ -1384,16 +1388,22 @@
       { l: 'Andel av driftkostnaderna (' + Math.round(fte * 100) + ' % tjänst)', v: '−' + kr(andel), cls: 'sub' },
       { l: 'Kvar hos salongen på ' + namn, v: (kvar < 0 ? '−' : '') + kr(Math.abs(kvar)), cls: 'total' } ] };
   }
-  // Utbetalt efter skatt, och en kort analys: täcker personen sin lön, och sin andel av driftkostnaderna?
+  // Utbetalt efter skatt, och tre korta rader: täcker personen sitt material, sin lön och sin del av bolagets fasta kostnader?
   const netto = brutto => brutto * (1 - (S.skatt || 0) / 100);
   function tackningText(hon, r, lonKost, kv) {
-    const efter = r.intakt - r.rorlig;
     const H = hon.charAt(0).toUpperCase() + hon.slice(1);
-    if (efter < lonKost) return { cls: 'bad', txt: H + ' drar in ' + kr(r.intakt) + ' exkl. moms. När material, produktinköp och kortavgifter är betalda är ' + kr(efter) + ' kvar, men lönekostnaden är ' + kr(lonKost) + '. ' + H + ' täcker alltså inte sin egen lön: bolaget skjuter till ' + kr(lonKost - efter) + ' till lönen och betalar dessutom hela andelen av driftkostnaderna, ' + kr(kv.andel) + '.' };
-    if (kv.kvar < 0) return { cls: 'warn', txt: H + ' täcker sin egen lönekostnad, ' + kr(lonKost) + ', och lämnar ' + kr(r.bidrag) + ' till driftkostnaderna. Men andelen av bolagets driftkostnader är ' + kr(kv.andel) + ', så ' + kr(-kv.kvar) + ' saknas varje månad. ' + H + ' är med och betalar sin lön, men inte salongens hyra, el, system och ledning.' };
-    return { cls: 'good', txt: H + ' täcker sin egen lönekostnad, ' + kr(lonKost) + ', hela andelen av driftkostnaderna, ' + kr(kv.andel) + ', och lämnar ' + kr(kv.kvar) + ' i vinst till salongen varje månad.' };
+    const efter = r.intakt - r.rorlig;
+    const rad = (ok, txt) => ({ ok, txt });
+    const rader = [];
+    rader.push(r.intakt >= r.rorlig ? rad(true, H + ' täcker sitt material, sina produktinköp och kortavgifter, ' + kr(r.rorlig) + '.') : rad(false, 'Det saknas ' + kr(r.rorlig - r.intakt) + ' för att ' + hon + ' ska täcka sitt material, sina produktinköp och kortavgifter, ' + kr(r.rorlig) + '.'));
+    const lonOk = efter >= lonKost;
+    rader.push(lonOk ? rad(true, H + ' täcker sin lön med alla påslag, ' + kr(lonKost) + '.') : rad(false, 'Det saknas ' + kr(lonKost - efter) + ' för att ' + hon + ' ska täcka sin lön med alla påslag, ' + kr(lonKost) + '.'));
+    if (!lonOk) rader.push(rad(false, H + ' bidrar inte till bolagets fasta kostnader. ' + H.replace(/^Ä/, 'Ä').replace(/^(Hon|Eleven|Ägaren)$/, m => m === 'Hon' ? 'Hennes' : m + 's') + ' del är ' + kr(kv.andel) + '.'));
+    else if (kv.kvar >= 0) rader.push(rad(true, H + ' täcker hela sin del av bolagets fasta kostnader, ' + kr(kv.andel) + ', och lämnar ' + kr(kv.kvar) + ' över.'));
+    else rader.push(rad(false, 'Det saknas ' + kr(-kv.kvar) + ' för att ' + hon + ' ska täcka hela sin del av bolagets fasta kostnader, ' + kr(kv.andel) + '.'));
+    return { cls: rader.every(x => x.ok) ? 'good' : lonOk ? 'warn' : 'bad', rader };
   }
-  const analysHtml = (rubrik, t) => '<div class="analys ' + t.cls + '"><b>' + rubrik + '</b> ' + t.txt + '</div>';
+  const analysHtml = (rubrik, t) => '<div class="analys ' + t.cls + '"><b>' + rubrik + '</b>' + t.rader.map(x => '<div class="rad"><span class="m ' + (x.ok ? 'ok' : 'nej') + '">' + (x.ok ? '✓' : '✗') + '</span>' + x.txt + '</div>').join('') + '</div>';
   function setSum(id, txt) { const e = $('#' + id); if (e) e.textContent = txt; }
   function renderFrisor(f, r, idx, a) {
     const pill = $('#fr-pill-' + idx);
@@ -1439,7 +1449,7 @@
       '<div><b>' + kr(kv.andel) + '</b><span>hennes andel av salongens driftkostnader</span></div>' +
       '<div><b style="color:var(--' + (kv.kvar >= 0 ? 'good' : 'bad') + ')">' + (kv.kvar < 0 ? '−' : '') + kr(Math.abs(kv.kvar)) + '</b><span>kvar hos salongen när andelen är betald</span></div>' +
       '<div><b>' + kr(breakEvenFor(r.total)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div></div>' +
-      analysHtml('Täcker hon sin lön?', tackningText('hon', r, r.total, kv));
+      analysHtml('Så bidrar hon', tackningText('hon', r, r.total, kv));
   }
 
   function renderElev(e, r, idx, a) {
@@ -1475,7 +1485,7 @@
       '<div><b style="color:var(--' + (kvE.kvar >= 0 ? 'good' : 'bad') + ')">' + (kvE.kvar < 0 ? '−' : '') + kr(Math.abs(kvE.kvar)) + '</b><span>kvar hos salongen när andelen är betald</span></div>' +
       '<div><b>' + kr(breakEvenFor(r.total)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div>' +
       '<div><b style="font-size:13px">' + kvarTxt + '</b><span>utbildningstid</span></div></div>' +
-      analysHtml('Täcker eleven sin lön?', tackningText('eleven', r, r.total, kvE));
+      analysHtml('Så bidrar eleven', tackningText('eleven', r, r.total, kvE));
   }
 
   function renderOwner(r, a) {
@@ -1505,7 +1515,7 @@
       '<div><b>' + kr(kvO.andel) + '</b><span>stoltidens andel av salongens driftkostnader</span></div>' +
       '<div><b style="color:var(--' + (kvO.kvar >= 0 ? 'good' : 'bad') + ')">' + (kvO.kvar < 0 ? '−' : '') + kr(Math.abs(kvO.kvar)) + '</b><span>kvar hos salongen när andelen är betald</span></div>' +
       '<div><b>' + kr(breakEvenFor(r.stolKost)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div></div>' +
-      analysHtml('Täcker stoltiden sin kostnad?', tackningText('ägaren', r, r.stolKost, kvO));
+      analysHtml('Så bidrar ägarens tid i stolen', tackningText('ägaren', r, r.stolKost, kvO));
   }
 
   function buildKonsulter() {
