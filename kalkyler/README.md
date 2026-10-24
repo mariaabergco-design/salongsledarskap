@@ -5,6 +5,7 @@ Den här mappen publiceras av Vercel på salongskalkylen.vercel.app.
 | Fil | Sida |
 |---|---|
 | `index.html` | Salongskalkylen, för salongsägare |
+| `start/index.html` | Salongskalkylen Start, den avskalade versionen för första mötet med en salongsägare |
 | `frisor/index.html` | Frisörkalkylen, för anställda frisörer |
 | `api/las.js` | Serverfunktion som läser fakturor och kassalistor med Claude |
 

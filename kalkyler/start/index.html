@@ -1,0 +1,1167 @@
+<!doctype html><html lang="sv"><meta charset="utf-8">
+<title>Salongskalkylen Start</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #F4F4F2;
+    --surface: #FFFFFF;
+    --surface-2: #F8F8F6;
+    --ink: #3D3D3D;
+    --muted: #767676;
+    --line: #E1E1DD;
+    --line-strong: #C4C4BE;
+    --accent: #F6A313;
+    --accent-ink: #FFFFFF;
+    --tint: #FEF3E0;
+    --brand-yellow: #FCBE04;
+    --brand-grey: #878787;
+    --logo-light: block;
+    --logo-dark: none;
+    --steel: #6F6F6F;
+    --steel-tint: #EEEEEA;
+    --good: #2C7A57;
+    --good-tint: #E4F2EB;
+    --warn: #B7791F;
+    --warn-tint: #FBF1DE;
+    --bad: #B23A31;
+    --bad-tint: #F9E5E3;
+    --shadow: 0 1px 2px rgba(27,36,40,.06), 0 8px 24px rgba(27,36,40,.06);
+    --radius: 10px;
+    --display: "Playfair Display", Georgia, "Times New Roman", serif;
+    --body: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1C1C1B; --surface: #262624; --surface-2: #2D2D2A;
+      --ink: #EFEDE8; --muted: #A5A39D; --line: #3A3A37; --line-strong: #55554F;
+      --accent: #F6A313; --accent-ink: #1C1C1B; --tint: #3A2E17; --brand-grey: #A5A39D; --logo-light: none; --logo-dark: block;
+      --steel: #A9A9A3; --steel-tint: #33332F;
+      --good: #63C293; --good-tint: #1B3229; --warn: #E2AA4F; --warn-tint: #3A2E17; --bad: #E4766C; --bad-tint: #3B211F;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1C1C1B; --surface: #262624; --surface-2: #2D2D2A;
+    --ink: #EFEDE8; --muted: #A5A39D; --line: #3A3A37; --line-strong: #55554F;
+    --accent: #F6A313; --accent-ink: #1C1C1B; --tint: #3A2E17; --brand-grey: #A5A39D; --logo-light: none; --logo-dark: block;
+    --steel: #A9A9A3; --steel-tint: #33332F;
+    --good: #63C293; --good-tint: #1B3229; --warn: #E2AA4F; --warn-tint: #3A2E17; --bad: #E4766C; --bad-tint: #3B211F;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { overflow-x: hidden; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--body); font-size: 13px; line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+  h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; letter-spacing: 0; font-weight: 500; }
+  h1 { font-size: 30px; line-height: 1.1; }
+  h2 { font-size: 20px; }
+  h3 { font-size: 16px; }
+  p { margin: 0; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  input, select { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 6px; padding: 6px 8px; min-width: 0; }
+  input:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  input[type="number"] { text-align: right; width: 100%; }
+  input[type="text"] { width: 100%; }
+  input.ro { background: var(--surface-2); color: var(--muted); border-style: dashed; text-align: right; }
+  input[type="range"] { width: 100%; accent-color: var(--accent); padding: 0; border: 0; background: transparent; }
+  input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .muted { color: var(--muted); }
+  .small { font-size: 12px; }
+
+  /* Header */
+  header.top {
+    background: var(--surface); border-bottom: 6px solid var(--brand-yellow);
+  }
+  .brand { margin-bottom: 16px; }
+  .brand img { height: 56px; width: auto; }
+  .brand .logo-light { display: var(--logo-light); }
+  .brand .logo-dark { display: var(--logo-dark); }
+  .top-inner {
+    max-width: 1180px; margin: 0 auto; padding: 22px 48px 18px;
+    display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: flex-end; justify-content: space-between;
+  }
+  .top-inner .lede { max-width: 62ch; color: var(--muted); margin-top: 6px; }
+  .top-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .top-controls label { display: flex; flex-direction: column; gap: 3px; }
+  .btn {
+    border: 1px solid var(--line-strong); background: var(--surface); border-radius: 6px; padding: 7px 12px; font-weight: 600; font-size: 13px;
+  }
+  .btn:hover { background: var(--surface-2); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn { font-family: var(--body); letter-spacing: .02em; }
+  .btn.ghost { border-color: transparent; color: var(--accent); padding: 4px 6px; }
+  .btn.danger { color: var(--bad); }
+
+  /* Layout */
+  .wrap {
+    max-width: 1180px; margin: 0 auto; padding: 24px 48px 40px;
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; align-items: start;
+  }
+  main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; min-width: 0; }
+  main > section { min-width: 0; max-width: 100%; }
+  .table-scroll { max-width: 100%; }
+  /* Resultatpanel fäst vid högerkanten, kan fällas in */
+  aside {
+    position: fixed; top: 0; right: 0; bottom: 0; width: 380px; max-width: 92vw; z-index: 30;
+    overflow-y: auto; padding: 16px; display: grid; gap: 16px; align-content: start;
+    background: var(--bg); border-left: 1px solid var(--line); box-shadow: -8px 0 24px rgba(0,0,0,.08);
+    transition: transform .25s ease;
+  }
+  body:not(.panel-open) aside { transform: translateX(100%); box-shadow: none; }
+  body { transition: padding-right .25s ease; }
+  body.panel-open { padding-right: 380px; }
+  #panel-toggle {
+    position: fixed; right: 0; top: 38%; z-index: 31; writing-mode: vertical-rl; transform: rotate(180deg);
+    background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 0 8px 8px 0; padding: 14px 8px;
+    font-family: var(--body); font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+    transition: right .25s ease; box-shadow: 0 2px 10px rgba(0,0,0,.15);
+  }
+  body.panel-open #panel-toggle { right: 380px; }
+  @media (max-width: 720px) { .wrap, .top-inner { padding-left: 16px; padding-right: 16px; } }
+  @media (max-width: 960px) {
+    aside { position: static; width: auto; max-width: none; transform: none !important; border-left: 0; box-shadow: none; padding: 0; order: -1; }
+    body.panel-open { padding-right: 0; }
+    #panel-toggle { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { aside, body, #panel-toggle { transition: none; } }
+
+  /* Panels */
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+  .panel > .head { padding: 16px 20px 12px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+  .panel > .head p { color: var(--muted); max-width: 70ch; }
+  .panel > .body { padding: 16px 20px 20px; }
+
+  /* Field grid */
+  .fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px 16px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field > span { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .fields > .field { justify-content: flex-end; }
+  .fields > .check { align-self: end; }
+
+  .field .unit { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px; }
+  .field .unit em { font-style: normal; color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .check { display: flex; align-items: center; gap: 8px; font-weight: 500; padding: 6px 0; }
+  .range-row { display: grid; grid-template-columns: 1fr 64px; gap: 10px; align-items: center; }
+  .range-row output { font-family: var(--display); font-weight: 600; font-size: 18px; text-align: right; }
+
+  /* Person card */
+  .person { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); overflow: hidden; }
+  .person + .person { margin-top: 14px; }
+  .chev { border: 0; background: transparent; color: var(--accent); font-size: 15px; line-height: 1; padding: 4px 6px; cursor: pointer; border-radius: 4px; transition: transform .15s ease; display: inline-block; }
+  .chev:hover { background: var(--tint); }
+  .collapsed > .head .chev, .person.collapsed .chev { transform: rotate(-90deg); }
+  main > section.panel > .head { cursor: pointer; }
+  main > section.panel > .head h2 { display: flex; align-items: center; gap: 4px; }
+  section.panel.collapsed > .body { display: none; }
+  section.panel.collapsed > .head { border-bottom: 0; }
+  section.panel.collapsed > .head p { display: none; }
+  .person.collapsed .p-body { display: none; }
+  .person.collapsed .p-head { border-bottom: 0; }
+  .p-sum { font-size: 12px; color: var(--muted); font-weight: 600; }
+  @media (prefers-reduced-motion: reduce) { .chev { transition: none; } }
+  .person .p-head { display: flex; gap: 10px; align-items: center; padding: 12px 16px; background: var(--surface-2); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .person .p-head input[type="text"] { width: 200px; font-weight: 600; font-family: var(--display); font-size: 15px; }
+  .person .p-head .spacer { flex: 1; }
+  .person .p-body { padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr); gap: 18px; }
+  @media (max-width: 720px) { .person .p-body { grid-template-columns: 1fr; } }
+  .p-inputs { display: grid; gap: 14px; }
+  .p-inputs .group { display: grid; gap: 8px; }
+
+  /* Pay slip */
+  .slip { background: var(--surface-2); border-radius: 8px; padding: 12px 14px; align-self: start; }
+  .slip .eyebrow { margin-bottom: 8px; }
+  .slip table { width: 100%; border-collapse: collapse; }
+  .slip td { padding: 3px 0; vertical-align: top; }
+  .slip td:last-child { text-align: right; white-space: nowrap; }
+  .slip tr.sum td { border-top: 1px solid var(--line-strong); padding-top: 6px; font-weight: 700; }
+  .slip tr.line td { border-top: 1px solid var(--line-strong); padding-top: 6px; font-weight: 400; }
+  .slip tr.total td { font-family: var(--display); font-size: 16px; font-weight: 700; padding-top: 8px; }
+  .slip tr.sub td { color: var(--muted); font-size: 12px; }
+  .slip tr.sub td:first-child { padding-left: 12px; }
+  .slip .kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .slip .kpi div { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+  .slip .kpi b { display: block; font-family: var(--display); font-size: 16px; }
+  .slip .kpi span { font-size: 11px; color: var(--muted); }
+  .slip .kpi div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .pill.good { background: var(--good-tint); color: var(--good); }
+  .pill.warn { background: var(--warn-tint); color: var(--warn); }
+  .pill.bad { background: var(--bad-tint); color: var(--bad); }
+  .pill.steel { background: var(--steel-tint); color: var(--steel); }
+  .pill.accent { background: var(--tint); color: var(--accent); }
+
+  /* Costs table */
+  .costs { width: 100%; border-collapse: collapse; }
+  .costs th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 6px 6px; border-bottom: 1px solid var(--line); }
+  .costs td { padding: 4px 6px; border-bottom: 1px solid var(--line); }
+  .costs td.amt { width: 130px; }
+  .costs td.cat { width: 160px; }
+  .costs td.del { width: 36px; text-align: right; }
+  .costs tr.group-row td { background: var(--surface-2); font-weight: 700; font-family: var(--display); padding: 8px 6px 4px; border-bottom: 1px solid var(--line-strong); }
+  .costs tr.group-row td:last-child { text-align: right; font-family: var(--body); font-weight: 600; }
+  .costs tr.group-row td .eyebrow { display: inline; }
+  .costs tr.admin-row td { background: var(--tint); }
+  .costs tr.foot td { font-weight: 700; border-bottom: 0; padding-top: 10px; font-family: var(--display); font-size: 15px; }
+  .costs tr.foot td:last-child { text-align: right; }
+  .costs .x { border: 0; background: transparent; color: var(--muted); font-size: 16px; line-height: 1; padding: 2px 6px; border-radius: 4px; }
+  .costs .x:hover { color: var(--bad); background: var(--bad-tint); }
+  .costs input[type="text"] { border-color: transparent; background: transparent; padding: 4px 6px; }
+  .costs input[type="text"]:hover, .costs input[type="text"]:focus { border-color: var(--line-strong); background: var(--surface); }
+  .costs select { padding: 4px 6px; }
+  .table-scroll { overflow-x: auto; }
+  .ex-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr); gap: 18px; }
+  @media (max-width: 720px) { .ex-grid { grid-template-columns: 1fr; } }
+  .ex-bar { display: flex; height: 18px; border-radius: 4px; overflow: hidden; margin: 10px 0 6px; background: var(--line); }
+  .ex-bar div { height: 100%; }
+  .ex-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 10px; font-size: 11px; color: var(--muted); }
+  .ex-legend span::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; background: var(--c); }
+
+  /* Summary */
+  .summary .row { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; }
+  .summary .row.sub { color: var(--muted); font-size: 12px; padding: 2px 0 2px 12px; }
+  .summary .row.line { border-top: 1px solid var(--line); margin-top: 4px; padding-top: 8px; font-weight: 700; }
+  .summary .row b { white-space: nowrap; }
+  .summary .result { margin-top: 10px; padding: 14px; border-radius: 8px; background: var(--tint); display: grid; gap: 4px; }
+  .summary .result.pos { background: var(--good-tint); }
+  .summary .result.neg { background: var(--bad-tint); }
+  .summary .result .res-rows { display: grid; gap: 2px; margin: 8px 0 6px; padding-top: 8px; border-top: 1px solid var(--line-strong); }
+  .summary .result .res-rows div { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; }
+  .summary .result .res-rows .after { font-weight: 700; font-size: 14px; }
+  .summary .result .big { font-family: var(--display); font-size: 30px; font-weight: 700; line-height: 1; }
+  .summary .result .big.pos { color: var(--good); }
+  .summary .result .big.neg { color: var(--bad); }
+  .summary .toggle { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; }
+  .summary .toggle button { border: 0; background: transparent; padding: 4px 10px; font-size: 12px; font-weight: 600; color: var(--muted); }
+  .summary .toggle button.on { background: var(--ink); color: var(--bg); }
+
+  .bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--line); margin: 10px 0 8px; }
+  .bar div { height: 100%; min-width: 0; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 12px; }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; background: var(--c); }
+
+  .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .kpis div { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+  .kpis b { display: block; font-family: var(--display); font-size: 20px; font-weight: 700; line-height: 1.1; }
+  .kpis span { font-size: 11px; color: var(--muted); }
+
+  .note { background: var(--steel-tint); color: var(--ink); border-left: 3px solid var(--steel); padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13px; }
+  .note.warn { background: var(--warn-tint); border-left-color: var(--warn); }
+  .rules { columns: 2; column-gap: 24px; font-size: 13px; }
+  .rules p { break-inside: avoid; margin-bottom: 8px; }
+  @media (max-width: 720px) { .rules { columns: 1; } }
+  footer { max-width: 1180px; margin: 0 auto; padding: 8px 48px 40px; color: var(--muted); font-size: 12px; max-width: 80ch; }
+  details summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+  .bel-table td, .bel-table th { text-align: right; padding: 5px 8px; white-space: nowrap; }
+  .bel-table th:first-child, .bel-table td:first-child { text-align: left; }
+  .bel-table tr.cur td { background: var(--tint); font-weight: 700; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+  .bel-chart { width: 100%; height: auto; display: block; margin: 6px 0 4px; }
+  .goal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 12px; }
+  .goal { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; background: var(--surface); }
+  .goal .eyebrow { margin-bottom: 6px; }
+  .goal b { display: block; font-family: var(--display); font-size: 22px; font-weight: 700; line-height: 1.1; }
+  .goal span.sub { display: block; font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .goal.accent { background: var(--tint); border-color: var(--accent); }
+  .jf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+  .jf-col { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; background: var(--surface-2); display: grid; gap: 8px; align-content: start; }
+  .jf-col p { margin: 0; }
+  .jf table.costs th, .jf table.costs td { text-align: right; white-space: nowrap; }
+  .jf table.costs th:first-child, .jf table.costs td:first-child { text-align: left; white-space: normal; }
+  .jf tr.hi td { font-family: var(--display); font-size: 15px; font-weight: 700; background: var(--surface-2); }
+  .jf td.best { color: var(--good); }
+  .formel { margin-top: 14px; padding: 14px 16px; border-radius: 8px; background: var(--tint); border: 1px solid var(--accent); font-size: 14px; line-height: 1.7; }
+  .formel .f { font-family: var(--display); font-size: 17px; font-weight: 600; display: block; }
+  .formel .ex { color: var(--muted); font-size: 12.5px; }
+  .pr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .pr-grid { grid-template-columns: 1fr; } }
+  .pr-col { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; gap: 10px; background: var(--surface-2); }
+  .pr-col:last-child { border-color: var(--accent); background: var(--tint); }
+  .pr-col .range-row output { font-size: 16px; }
+  .cmp th, .cmp td { text-align: right; }
+  .cmp th:first-child, .cmp td:first-child { text-align: left; }
+  .cmp tr.hi td { font-family: var(--display); font-size: 16px; font-weight: 700; background: var(--surface-2); }
+  .costs.log input[type="number"] { width: 110px; }
+  .costs.log td.num { text-align: right; white-space: nowrap; }
+  .costs.log th.num { text-align: right; }
+  .costs.log tr.tot td { font-weight: 700; border-bottom: 0; background: var(--surface-2); }
+  .head-inline { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; }
+  .lchart { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; height: 170px; align-items: end; margin: 8px 0 4px; }
+  .lchart .m { display: flex; gap: 2px; align-items: flex-end; height: 100%; border-bottom: 1px solid var(--line-strong); position: relative; }
+  .lchart .m div { flex: 1; border-radius: 2px 2px 0 0; min-height: 0; }
+  .lchart .m .oms { background: var(--steel); }
+  .lchart .m .kost { background: var(--accent); }
+  .lchart .m span { position: absolute; bottom: -18px; left: 0; right: 0; text-align: center; font-size: 10px; color: var(--muted); }
+  .lchart-legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); margin: 22px 0 10px; }
+  .lchart-legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; background: var(--c); vertical-align: -1px; }
+  .year-table td, .year-table th { padding: 5px 8px; }
+
+  /* Fakturasorteraren */
+  .drop { border: 2px dashed var(--line-strong); border-radius: 8px; padding: 22px 18px; text-align: center; background: var(--surface-2); display: grid; gap: 8px; justify-items: center; transition: border-color .15s ease, background .15s ease; }
+  .drop.over { border-color: var(--accent); background: var(--tint); }
+  .drop b { font-family: var(--display); font-size: 16px; font-weight: 600; }
+  .drop .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; }
+  .fk-prog { display: grid; gap: 4px; margin-top: 10px; }
+  .fk-prog div { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 12px; }
+  .fk-prog .fn { font-weight: 600; }
+  .fk-tools { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin: 20px 0 10px; }
+  .fk-tools label { display: flex; flex-direction: column; gap: 3px; }
+  table.costs.fk td.num, table.costs.fk th.num { text-align: right; white-space: nowrap; }
+  table.costs.fk tr.open td { background: var(--tint); }
+  table.costs.fk tr.rader > td { padding: 0 0 12px; background: var(--surface-2); }
+  table.costs.fk select { padding: 3px 6px; font-size: 12px; }
+  table.costs.fk tr.tot td { font-weight: 700; background: var(--surface-2); border-bottom: 0; }
+  .fk-reg { display: grid; gap: 8px; margin-top: 8px; }
+  .fk-reg input[type="search"] { max-width: 320px; }
+  @media (prefers-reduced-motion: reduce) { .drop { transition: none; } }
+  .kassa-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: stretch; }
+  @media (max-width: 720px) { .kassa-grid { grid-template-columns: 1fr; } }
+  .kassa-grid textarea { width: 100%; min-height: 120px; font: inherit; font-size: 12px; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 6px; padding: 8px 10px; resize: vertical; }
+  .kassa-grid textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  /* Startversionen */
+  .p-inputs, .p-inputs .group, .p-inputs .fields { align-content: start; }
+  .uppdrag-rad { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(130px, 0.8fr) auto; gap: 8px; align-items: center; }
+</style>
+
+<header class="top">
+  <div class="top-inner">
+    <div>
+      <div class="brand"><img class="logo-light" alt="Åberg & Co – Ledarskap, Utveckling, Coaching" src="data:image/png;base64,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"><img class="logo-dark" alt="" src="data:image/png;base64,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"></div>
+      <div class="eyebrow">Frisörbranschens avtal 2025–2027 · Frisörföretagarna &amp; Handels</div>
+      <h1>Salongskalkylen Start</h1>
+      <p class="lede">Första steget för en salongsägare: vad salongen omsätter, vad ägaren och frisörerna kostar enligt avtalet, och vad som blir kvar när driftkostnaderna är betalda. Allt som kunden betalar skriver du in inklusive moms, kalkylen räknar om själv. Behöver du mer, som elever, konsulter, hyrstolar, prisscenarier och fakturor, finns allt i <a href="https://salongskalkylen.vercel.app/" target="_blank" rel="noopener">hela Salongskalkylen</a>.</p>
+    </div>
+    <div class="top-controls">
+      <label><span class="eyebrow">Avtalsår</span>
+        <select id="period">
+          <option value="2025">1 apr 2025 – 31 mar 2026</option>
+          <option value="2026">1 apr 2026 – 31 mar 2027</option>
+        </select>
+      </label>
+      <label><span class="eyebrow">Salong</span><input type="text" id="salong-namn" style="width:170px" placeholder="Salongens namn"></label>
+      <label><span class="eyebrow">Ny salong</span><input type="text" id="ny-salong" style="width:150px" placeholder="t.ex. Elins salong"></label>
+      <button class="btn" id="salong-link" type="button">Skapa tom länk</button>
+      <button class="btn primary" id="share-link" type="button">Kopiera länk med mina siffror</button>
+      <div id="top-msg" class="small muted" style="flex-basis:100%"></div>
+      <button class="btn" id="toggle-all" type="button">Fäll ihop alla</button>
+      <button class="btn" id="reset" type="button">Återställ exempel</button>
+      <button class="btn" id="team-link" type="button">Länk till Frisörkalkylen med våra fasta kostnader</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <main>
+
+    <!-- Omsättning -->
+    <section class="panel" id="sec-oms">
+      <div class="head">
+        <div><h2>Omsättning per månad</h2><p>Det salongen drar in på en månad: tjänsterna ägaren och frisörerna utför, och produkterna de säljer. Summorna hämtas från personkorten här nedanför, där du skriver in vad var och en drar in.</p></div>
+        <span class="pill steel" id="sync-status">Ansluter…</span>
+      </div>
+      <div class="body">
+        <div class="kpis" id="oms-kpis" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr))"></div>
+        <p class="small muted" id="oms-note" style="margin-top:10px"></p>
+      </div>
+    </section>
+
+    <!-- Antaganden -->
+    <section class="panel" id="sec-settings">
+      <div class="head"><h2>Antaganden</h2><p>Påslag ovanpå bruttolönen, uppställda som i er lönekostnadskalkyl: sociala avgifter, semesterersättning 13 % med sociala avgifter, pension med särskild löneskatt, friskvård och utbildning. Förvalt ligger branschens vanliga värden, så du behöver sällan ändra här.</p></div>
+      <div class="body">
+        <div class="fields">
+          <label class="field"><span>Arbetsgivaravgift</span><div class="unit"><input type="number" step="0.01" data-s="ag"><em>%</em></div></label>
+          <label class="field"><span>Semesterersättning (sociala avgifter läggs på)</span><div class="unit"><input type="number" step="0.1" data-s="semester"><em>%</em></div></label>
+          <label class="field"><span>Avtalspension SAF-LO</span><div class="unit"><input type="number" step="0.1" data-s="pension"><em>%</em></div></label>
+          <label class="field"><span>Särskild löneskatt på pensionen</span><div class="unit"><input type="number" step="0.01" data-s="loneskatt"><em>%</em></div></label>
+          <label class="field"><span>Friskvård per anställd</span><div class="unit"><input type="number" step="100" data-s="friskvard"><em>kr/år</em></div></label>
+          <label class="field"><span>Utbildning per anställd</span><div class="unit"><input type="number" step="100" data-s="utbildning"><em>kr/mån</em></div></label>
+          <label class="field"><span>Veckor per månad (avtalets divisor)</span><div class="unit"><input type="number" step="0.001" data-s="veckor"><em>v/mån</em></div></label>
+          <label class="field"><span>Materialschablon på tjänster (färg, schampo m.m., branschstandard 10 %)</span><div class="unit"><input type="number" step="0.1" data-s="material"><em>% av tjänster</em></div></label>
+          <label class="field"><span>Marginal på sålda produkter (branschstandard 30 %)</span><div class="unit"><input type="number" step="0.1" data-s="produktMarginal"><em>% av försäljn.</em></div></label>
+          <label class="field"><span>Kortavgifter</span><div class="unit"><input type="number" step="0.1" data-s="kort"><em>% av omsättn.</em></div></label>
+          <label class="field"><span>Moms på tjänster</span><div class="unit"><input type="number" step="0.1" data-s="moms"><em>%</em></div></label>
+          <label class="field"><span>Arbetade månader per år (semester &amp; röda dagar)</span><div class="unit"><input type="number" step="0.5" data-s="arbMan"><em>mån</em></div></label>
+          <label class="field"><span>Buffert/vinst som ska bli kvar</span><div class="unit"><input type="number" step="0.1" data-s="buffert"><em>% av omsättn.</em></div></label>
+          <label class="field"><span>Bolagsskatt, även kallad vinstskatt (aktiebolag)</span><div class="unit"><input type="number" step="0.1" data-s="bolagsskatt"><em>% av vinsten</em></div></label>
+          <label class="field"><span>Skatt på utdelning till ägaren</span><div class="unit"><input type="number" step="0.1" data-s="utdelningsskatt"><em>%</em></div></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ägare -->
+    <section class="panel" id="sec-owner">
+      <div class="head"><h2>Salongsägare</h2><p>Personen som driver salongen: egen lön, tid i stolen och tid för administration, ledning och handledning. Lönekostnaden delas i proportion till timmarna: stoltiden bedöms som för en frisör, admintiden läggs i salongens driftkostnader.</p></div>
+      <div class="body" id="owner-body"></div>
+    </section>
+
+    <!-- Frisörer -->
+    <section class="panel" id="sec-frisor">
+      <div class="head">
+        <div><h2>Anställda frisörer</h2><p>Avtalets provisionsmodell: basbelopp + arbetsprovision, aldrig under garantilönen. Skriv in vad varje frisör drar in per månad. Får frisören betalt för ett extra uppdrag, till exempel ledning eller sociala medier, lägger du till det på kortet: det läggs ovanpå lönen och bokförs som overhead bland driftkostnaderna, inte på stoltiden.</p></div>
+        <button class="btn" type="button" id="add-frisor">+ Lägg till frisör</button>
+      </div>
+      <div class="body" id="frisor-list"></div>
+    </section>
+
+    <!-- Fasta kostnader -->
+    <section class="panel" id="sec-costs">
+      <div class="head">
+        <div><h2>Salongens driftkostnader per aktiv månad, exklusive moms</h2><p>Skriv in kostnaderna utan moms, som de står i bokföringen. Momsen på inköp får salongen tillbaka och är därför ingen kostnad. Ägarens lön för timmarna utanför salongsgolvet ligger som en egen rad, framräknad från ägarsektionen. Betalda extra uppdrag hos frisörerna ligger också här, som overhead, med sociala avgifter, semester och pension inräknade.</p></div>
+        <button class="btn" type="button" id="add-cost">+ Lägg till kostnad</button>
+      </div>
+      <div class="body table-scroll" id="cost-body"></div>
+    </section>
+
+  </main>
+
+  <button id="panel-toggle" type="button" aria-controls="resultat-panel" aria-expanded="true">Resultat</button>
+  <aside id="resultat-panel">
+    <section class="panel summary">
+      <div class="head" style="align-items:center">
+        <h2>Resultat</h2>
+        <div class="toggle"><button type="button" data-view="man" class="on">Per månad</button><button type="button" data-view="ar">Per år</button></div>
+      </div>
+      <div class="body" id="summary"></div>
+    </section>
+    <section class="panel">
+      <div class="head"><h2>Nyckeltal</h2></div>
+      <div class="body kpis" id="kpis"></div>
+    </section>
+  </aside>
+</div>
+
+<footer>
+  Kalkylen är ett planeringsverktyg och förenklar: sociala avgifter, semesterersättning och pension läggs som procentpåslag på bruttolönen, och alla deltidslöner räknas proportionellt mot heltidstabellen på samma sätt som avtalets tabeller. Ägarens lön räknas som anställd i aktiebolag. Kontrollera alltid mot avtalstexten och er lönehantering innan beslut.
+</footer>
+
+<script>
+(function () {
+  // ---------- Avtalstabeller ----------
+  const T = {
+    '2025': {
+      label: '2025-04-01 – 2026-03-31',
+      beh: { bb40: 16735, gl40: 28713, prov: 17.67, bv1: 500, bv2: 295, tt: 774, obBas: 144.39 },
+      obeh: { bb40: 15423, gl40: 20099, prov: 10.35, bv1: 0, bv2: 0, tt: 0, obBas: 116.18 },
+      elevN2: 14839, elevN1: 8918, elevOb: 98.67, ferie: 82.40, friskvard: 3200, halso: 55,
+      salesProv: 7, elevProv: 10, provanst: 0.87,
+    },
+    '2026': {
+      label: '2026-04-01 – 2027-03-31',
+      beh: { bb40: 16860, gl40: 29574, prov: 17.77, bv1: 555, bv2: 320, tt: 804, obBas: 148.72 },
+      obeh: { bb40: 15613, gl40: 20702, prov: 10.45, bv1: 0, bv2: 0, tt: 0, obBas: 119.66 },
+      elevN2: 15284, elevN1: 9186, elevOb: 101.63, ferie: 84.87, friskvard: 3400, halso: 55,
+      salesProv: 7, elevProv: 10, provanst: 0.87,
+    }
+  };
+
+  const CATS = ['Fasta kostnader', 'Rörliga driftkostnader'];
+  const UPPDRAG_FORSLAG = ['Ledningsuppdrag', 'Sociala medier', 'Utbildningsansvar', 'Lageransvar', 'Handledning av elev'];
+
+  // Startversionen: ägare och anställda frisörer, driftkostnader och resultat. Beloppen per person skrivs in
+  // direkt (vad hon drar in per månad) i stället för att räknas fram ur timpris och beläggning.
+  function defaultState() {
+    return {
+      period: '2026',
+      ag: 31.42, semester: 13, pension: 4.5, loneskatt: 24.26, friskvard: 2600, utbildning: 1000, veckor: 4.325,
+      material: 10, produktInkop: 70, produktMarginal: 30, kort: 1.5, moms: 25, arbMan: 10.5, buffert: 5, bolagsskatt: 20.6, utdelningsskatt: 20,
+      view: 'man',
+      owner: { namn: 'Salongsägaren', lon: 38000, soc: 31.42, stolTimmar: 30, adminTimmar: 10, tjanster: 84000, produkt: 6000, adminKat: 'Fasta kostnader', adminBelopp: null },
+      frisorer: [
+        { namn: 'Anna', typ: 'beh', veckotid: 40, tjanster: 96000, produkt: 5000, prov: false, bv1: true, bv2: false, tt: false, fast: 0, uppdrag: [{ namn: 'Sociala medier', belopp: 1500 }] },
+        { namn: 'Sara', typ: 'beh', veckotid: 32, tjanster: 72000, produkt: 4000, prov: false, bv1: false, bv2: false, tt: false, fast: 0, uppdrag: [] }
+      ],
+      kostnader: [
+        { kat: 'Fasta kostnader', namn: 'Hyra', belopp: 19000 },
+        { kat: 'Fasta kostnader', namn: 'El', belopp: 0 },
+        { kat: 'Fasta kostnader', namn: 'Lån (ränta & amortering)', belopp: 0 },
+        { kat: 'Fasta kostnader', namn: 'Leasing', belopp: 0 },
+        { kat: 'Fasta kostnader', namn: 'Städ', belopp: 4000 },
+        { kat: 'Fasta kostnader', namn: 'Inventarier (avskrivning)', belopp: 2000 },
+        { kat: 'Fasta kostnader', namn: 'Hyra kortdragare', belopp: 499 },
+        { kat: 'Fasta kostnader', namn: 'Bokningsprogram + kassasystem', belopp: 1400 },
+        { kat: 'Fasta kostnader', namn: 'Telefon / data / internet', belopp: 1399 },
+        { kat: 'Fasta kostnader', namn: 'Salongsförsäkring', belopp: 1000 },
+        { kat: 'Fasta kostnader', namn: 'Programvaror', belopp: 499 },
+        { kat: 'Fasta kostnader', namn: 'Frisörföretagarna', belopp: 500 },
+        { kat: 'Fasta kostnader', namn: 'Stim / Sami', belopp: 170 },
+        { kat: 'Rörliga driftkostnader', namn: 'Förbrukning (städmaterial, toalettpapper m.m.)', belopp: 2900 },
+        { kat: 'Rörliga driftkostnader', namn: 'Kaffe / frukt', belopp: 1000 },
+        { kat: 'Rörliga driftkostnader', namn: 'Reklam / PR', belopp: 1500 },
+        { kat: 'Rörliga driftkostnader', namn: 'Kontorsmaterial', belopp: 500 },
+        { kat: 'Rörliga driftkostnader', namn: 'Reparation av lokaler', belopp: 1500 },
+        { kat: 'Rörliga driftkostnader', namn: 'Bankkostnader (t.ex. kortdragare)', belopp: 1200 },
+        { kat: 'Rörliga driftkostnader', namn: 'Tidningar', belopp: 350 },
+        { kat: 'Rörliga driftkostnader', namn: 'Redovisning', belopp: 7000 },
+        { kat: 'Rörliga driftkostnader', namn: 'Teambuilding', belopp: 1000 }
+      ]
+    };
+  }
+
+  // ---------- Salong och lagring ----------
+  const SALONG = (() => {
+    const m = location.hash.match(/salong=([^&]+)/);
+    const raw = m ? decodeURIComponent(m[1]) : 'salongen';
+    const slug = raw.toLowerCase().replace(/å|ä/g, 'a').replace(/ö/g, 'o').replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '');
+    return slug || 'salongen';
+  })();
+  const KEY = 'salongskalkyl-start-v1:' + SALONG;
+  const IMPORT_KEY = 'salongskalkyl-start-import';
+  // ---------- Dela via länk: alla siffror packas i adressen (#salong=...&data=...) ----------
+  const b64u = { enc: bytes => { let bin = ''; for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]); return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); },
+                 dec: str => { const bin = atob(str.replace(/-/g, '+').replace(/_/g, '/')); const out = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i); return out; } };
+  async function encodeShare(obj) {
+    let bytes = new TextEncoder().encode(JSON.stringify(obj)); let mode = 'j';
+    try { if (window.CompressionStream) { const cs = new CompressionStream('gzip'); const w = cs.writable.getWriter(); w.write(bytes); w.close(); bytes = new Uint8Array(await new Response(cs.readable).arrayBuffer()); mode = 'g'; } } catch (e) {}
+    return mode + b64u.enc(bytes);
+  }
+  async function decodeShare(str) {
+    const mode = str[0]; let bytes = b64u.dec(str.slice(1));
+    if (mode === 'g') { const ds = new DecompressionStream('gzip'); const w = ds.writable.getWriter(); w.write(bytes); w.close(); bytes = new Uint8Array(await new Response(ds.readable).arrayBuffer()); }
+    return JSON.parse(new TextDecoder().decode(bytes));
+  }
+  const DATA_IN = (location.hash.match(/data=([^&]+)/) || [])[1];
+  if (DATA_IN) {
+    decodeShare(DATA_IN).then(obj => {
+      if (obj && obj.s) localStorage.setItem(KEY, JSON.stringify(obj.s));
+      sessionStorage.setItem(IMPORT_KEY, SALONG);
+      history.replaceState(null, '', location.pathname + location.search + '#salong=' + encodeURIComponent(SALONG));
+      location.reload();
+    }).catch(() => { alert('Länken gick inte att läsa. Be avsändaren kopiera en ny länk.'); });
+  }
+  const CLIENT = Math.random().toString(36).slice(2);
+  const uid = () => 'p' + Math.random().toString(36).slice(2, 8);
+  function ensureIds(st) {
+    (st.frisorer || []).forEach(f => { if (!f.id) f.id = uid(); if (!Array.isArray(f.uppdrag)) f.uppdrag = []; });
+    if (!st.salongNamn) st.salongNamn = SALONG.charAt(0).toUpperCase() + SALONG.slice(1).replace(/-/g, ' ');
+    return st;
+  }
+  // Fyll på sparade inställningar med nya fält som tillkommit i senare versioner
+  function withDefaults(saved) {
+    const d = defaultState(); if (!saved || typeof saved !== 'object') return d;
+    const out = Object.assign({}, d, saved);
+    out.owner = Object.assign({}, d.owner, saved.owner || {});
+    out.frisorer = Array.isArray(saved.frisorer) ? saved.frisorer : d.frisorer;
+    out.kostnader = Array.isArray(saved.kostnader) ? saved.kostnader : d.kostnader;
+    out.produktInkop = 100 - out.produktMarginal;
+    return out;
+  }
+  let S;
+  try {
+    const raw = localStorage.getItem(KEY);
+    S = raw ? withDefaults(JSON.parse(raw)) : defaultState();
+  } catch (e) { S = defaultState(); }
+  ensureIds(S);
+  let db = null, salongRef = null, saveTimer = null;
+  function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+  function pushRemote() { if (!salongRef) return; salongRef.set({ namn: S.salongNamn, state: S, client: CLIENT, updatedAt: new Date().toISOString() }).catch(() => {}); }
+  function save() { saveLocal(); if (salongRef) { clearTimeout(saveTimer); saveTimer = setTimeout(pushRemote, 700); } }
+
+  // ---------- Hjälpfunktioner ----------
+  const kr = n => Math.round(n).toLocaleString('sv-SE') + ' kr';
+  const pct = n => n.toLocaleString('sv-SE', { maximumFractionDigits: 1 }) + ' %';
+  const num = n => Math.round(n).toLocaleString('sv-SE');
+  const $ = (sel, root) => (root || document).querySelector(sel);
+  const el = (tag, attrs, html) => { const e = document.createElement(tag); if (attrs) for (const k in attrs) { if (k === 'class') e.className = attrs[k]; else e.setAttribute(k, attrs[k]); } if (html != null) e.innerHTML = html; return e; };
+
+  function numberField(label, obj, key, unit, opts) {
+    const f = el('label', { class: 'field' });
+    f.appendChild(el('span', null, label));
+    const u = el('div', { class: 'unit' });
+    const i = el('input', { type: 'number', step: (opts && opts.step) || 1, min: (opts && opts.min != null) ? opts.min : 0 });
+    i.value = obj[key] == null ? 0 : obj[key];
+    i.addEventListener('input', () => { obj[key] = parseFloat(i.value) || 0; recalc(); });
+    u.appendChild(i); u.appendChild(el('em', null, unit));
+    f.appendChild(u);
+    return f;
+  }
+  // Allt som kunden betalar matas in inklusive moms. Internt lagras och räknas beloppen exklusive moms.
+  const MK = () => 1 + (S.moms || 0) / 100;
+  function inklField(label, obj, key, opts) {
+    const f = el('label', { class: 'field' }); f.appendChild(el('span', null, label));
+    const u = el('div', { class: 'unit' }); const i = el('input', { type: 'number', step: (opts && opts.step) || 500, min: 0 });
+    i.value = Math.round((obj[key] || 0) * MK());
+    i.addEventListener('input', () => { obj[key] = (parseFloat(i.value) || 0) / MK(); recalc(); });
+    u.appendChild(i); u.appendChild(el('em', null, (opts && opts.unit) || 'kr inkl. moms')); f.appendChild(u);
+    return f;
+  }
+  function rangeField(label, obj, key, min, max, step, unit) {
+    const f = el('div', { class: 'field' });
+    f.appendChild(el('span', null, label));
+    const r = el('div', { class: 'range-row' });
+    const i = el('input', { type: 'range', min, max, step });
+    i.value = obj[key];
+    const o = el('output', null, obj[key] + (unit || ''));
+    i.addEventListener('input', () => { obj[key] = parseFloat(i.value); o.textContent = obj[key] + (unit || ''); recalc(); });
+    r.appendChild(i); r.appendChild(o); f.appendChild(r);
+    return f;
+  }
+  function gradField(obj, minPct, rangeInput) {
+    const f = el('label', { class: 'field' });
+    f.appendChild(el('span', null, 'Tjänstgöringsgrad'));
+    const sel = el('select');
+    const opts = [100, 90, 80, 75, 70, 60, 50].filter(p => p >= minPct);
+    const cur = Math.round(obj.veckotid / 40 * 100);
+    sel.innerHTML = opts.map(p => '<option value="' + p + '">' + p + ' % (' + (40 * p / 100) + ' h/v)</option>').join('') + (opts.includes(cur) ? '' : '<option value="' + cur + '" selected>' + cur + ' % (' + obj.veckotid + ' h/v)</option>');
+    sel.value = String(cur);
+    sel.addEventListener('change', () => { obj.veckotid = Math.round(40 * parseFloat(sel.value) / 100); const r = rangeInput(); if (r) { r.input.value = obj.veckotid; r.out.textContent = obj.veckotid + ' h'; } recalc(); });
+    f.appendChild(sel);
+    return f;
+  }
+  function checkField(label, obj, key) {
+    const l = el('label', { class: 'check' });
+    const i = el('input', { type: 'checkbox' });
+    i.checked = !!obj[key];
+    i.addEventListener('change', () => { obj[key] = i.checked; recalc(); });
+    l.appendChild(i); l.appendChild(el('span', null, label));
+    return l;
+  }
+  function nameField(obj) {
+    const i = el('input', { type: 'text', 'aria-label': 'Namn' });
+    i.value = obj.namn;
+    i.addEventListener('input', () => { obj.namn = i.value; recalc(); });
+    return i;
+  }
+  // Öppna och stäng sektioner och personkort. Läget sparas i webbläsaren.
+  // Första besöket: inget sparat läge finns, och då är alla sektioner stängda tills man öppnar dem med pilen.
+  const CKEY = 'salongskalkyl-start-collapsed'; let COL = {}; let FORSTA_BESOKET = true; try { const rawCol = localStorage.getItem(CKEY); FORSTA_BESOKET = rawCol == null; COL = JSON.parse(rawCol || '{}'); } catch (e) {}
+  function setCollapsed(node, key, v) { node.classList.toggle('collapsed', v); COL[key] = v; try { localStorage.setItem(CKEY, JSON.stringify(COL)); } catch (e) {} const c = node.querySelector('.chev'); if (c) c.setAttribute('aria-expanded', String(!v)); }
+  function personToggle(card, key, sumId) {
+    const head = card.querySelector('.p-head');
+    const b = el('button', { class: 'chev', type: 'button', 'aria-label': 'Visa eller dölj siffrorna', 'aria-expanded': 'true' }, '▾');
+    head.prepend(b);
+    const sp = head.querySelector('.spacer'); if (sp && sumId) head.insertBefore(el('span', { class: 'p-sum', id: sumId }, ''), sp);
+    b.addEventListener('click', () => setCollapsed(card, 'p:' + key, !card.classList.contains('collapsed')));
+    if (COL['p:' + key]) setCollapsed(card, 'p:' + key, true);
+  }
+  function initPanels() {
+    document.querySelectorAll('main > section.panel').forEach(sec => {
+      if (sec.hidden) return; const head = sec.querySelector(':scope > .head'); const h2 = head && head.querySelector('h2'); if (!h2) return;
+      const b = el('button', { class: 'chev', type: 'button', 'aria-label': 'Visa eller dölj sektionen', 'aria-expanded': 'true' }, '▾'); h2.prepend(b);
+      head.addEventListener('click', e => { if (e.target.closest('button:not(.chev), input, select, a, label')) return; setCollapsed(sec, 's:' + sec.id, !sec.classList.contains('collapsed')); });
+      const sparat = COL['s:' + sec.id];
+      if (sparat != null ? sparat : FORSTA_BESOKET) setCollapsed(sec, 's:' + sec.id, true);
+    });
+    const allaStangda = [...document.querySelectorAll('main > section.panel:not([hidden])')].every(x => x.classList.contains('collapsed'));
+    $('#toggle-all').textContent = allaStangda ? 'Öppna alla' : 'Fäll ihop alla';
+    $('#toggle-all').addEventListener('click', () => { const secs = [...document.querySelectorAll('main > section.panel:not([hidden])')]; const anyOpen = secs.some(x => !x.classList.contains('collapsed')); secs.forEach(x => setCollapsed(x, 's:' + x.id, anyOpen)); $('#toggle-all').textContent = anyOpen ? 'Öppna alla' : 'Fäll ihop alla'; });
+  }
+
+  // ---------- Beräkningar ----------
+  function pensionPct() { return S.pension / 100 * (1 + S.loneskatt / 100); }
+  // Påslag på ett lönebelopp: semesterersättning, sociala avgifter och pension med löneskatt
+  function paslag(belopp) { return belopp * (1 + S.semester / 100) * (1 + S.ag / 100 + pensionPct()); }
+  function payroll(brutto, veckotid) {
+    const semester = brutto * S.semester / 100;
+    const under = brutto + semester;
+    const ag = under * S.ag / 100;
+    const pension = under * pensionPct();
+    const friskvard = S.friskvard / 12 * Math.min(veckotid, 40) / 40;
+    const utbildning = S.utbildning;
+    return { semester, ag, pension, friskvard, utbildning, total: brutto + semester + ag + pension + friskvard + utbildning };
+  }
+  // Omsättning personen måste dra in för att täcka sin egen lönekostnad, material och kortavgifter
+  function breakEvenFor(total) { const a = 1 - S.material / 100 - S.kort / 100 - S.buffert / 100; return a > 0 ? total / a : Infinity; }
+  const uppdragSum = f => (f.uppdrag || []).reduce((s, u) => s + (u.belopp || 0), 0);
+
+  function calcFrisor(f) {
+    const t = T[S.period]; const tab = t[f.typ] || t.beh;
+    const share = f.veckotid / 40;
+    const hours = f.veckotid * S.veckor;
+    const behandling = f.tjanster || 0;
+    const bb = tab.bb40 * share;
+    const arbProv = behandling * tab.prov / 100;
+    let gl = tab.gl40 * share; if (f.prov) gl = gl * t.provanst;
+    const modell = bb + arbProv;
+    const garantiSlar = modell < gl;
+    let grund = Math.max(modell, gl);
+    let fastAnv = false;
+    if (f.fast > 0) { grund = Math.max(f.fast, gl); fastAnv = true; }
+    const salesProv = fastAnv ? 0 : f.produkt * t.salesProv / 100;
+    const bv1 = (!fastAnv && f.bv1) ? tab.bv1 * share : 0;
+    const bv2 = (!fastAnv && f.bv2 && f.bv1) ? tab.bv2 * share : 0;
+    const tt = (!fastAnv && f.tt) ? tab.tt * share : 0;
+    const uppdrag = uppdragSum(f);
+    const brutto = grund + salesProv + bv1 + bv2 + tt + uppdrag;
+    const p = payroll(brutto, f.veckotid);
+    // Extra uppdrag är overhead: lönen för uppdraget med påslag flyttas från stoltiden till driftkostnaderna
+    const uppdragKost = paslag(uppdrag);
+    const stolKost = Math.max(0, p.total - uppdragKost);
+    const intakt = behandling + f.produkt;
+    const rorlig = behandling * S.material / 100 + f.produkt * S.produktInkop / 100 + intakt * S.kort / 100;
+    return { hours, behandling, bb, arbProv, gl, modell, garantiSlar, grund, fastAnv, salesProv, bv1, bv2, tt, uppdrag, brutto, ...p, uppdragKost, stolKost, intakt, rorlig, bidrag: intakt - rorlig - stolKost, tab };
+  }
+
+  function calcOwner() {
+    const o = S.owner;
+    const hours = o.stolTimmar * S.veckor;
+    const behandling = o.tjanster || 0;
+    const semester = o.lon * S.semester / 100;
+    const soc = (o.lon + semester) * o.soc / 100;
+    const pension = (o.lon + semester) * pensionPct();
+    const total = o.lon + semester + soc + pension + S.friskvard / 12 + S.utbildning;
+    const intakt = behandling + o.produkt;
+    const rorlig = behandling * S.material / 100 + o.produkt * S.produktInkop / 100 + intakt * S.kort / 100;
+    const totHours = (o.stolTimmar + o.adminTimmar) * S.veckor;
+    const adminShare = (o.stolTimmar + o.adminTimmar) > 0 ? o.adminTimmar / (o.stolTimmar + o.adminTimmar) : 0;
+    const adminAuto = total * adminShare;
+    const adminKost = (o.adminBelopp != null && o.adminBelopp > 0) ? o.adminBelopp : adminAuto;
+    const stolKost = Math.max(0, total - adminKost);
+    return { hours, behandling, semester, soc, pension, total, intakt, rorlig, bidrag: intakt - rorlig - stolKost, totHours, adminShare, adminAuto, adminKost, stolKost };
+  }
+
+  function calcAll() {
+    const fr = S.frisorer.map(f => calcFrisor(f));
+    const ow = calcOwner();
+    const behandling = fr.reduce((a, r) => a + r.behandling, 0) + ow.behandling;
+    const produkt = S.frisorer.reduce((a, f) => a + (f.produkt || 0), 0) + (S.owner.produkt || 0);
+    const oms = behandling + produkt;
+    const material = behandling * S.material / 100;
+    const inkop = produkt * S.produktInkop / 100;
+    const kort = oms * S.kort / 100;
+    const rorlig = material + inkop + kort;
+    const lonFr = fr.reduce((a, r) => a + r.stolKost, 0);
+    const lonOw = ow.stolKost;
+    const personal = lonFr + lonOw;
+    const uppdragKost = fr.reduce((a, r) => a + r.uppdragKost, 0);
+    const fastaLista = S.kostnader.reduce((a, k) => a + (k.belopp || 0), 0);
+    const fasta = fastaLista + ow.adminKost + uppdragKost;
+    const resultat = oms - rorlig - personal - fasta;
+    const schemaHours = fr.reduce((a, r) => a + r.hours, 0) + ow.hours;
+    const rorligAndel = oms > 0 ? rorlig / oms : 0;
+    const breakEven = rorligAndel < 1 ? (personal + fasta) / (1 - rorligAndel) : Infinity;
+    return { fr, ow, behandling, produkt, oms, material, inkop, kort, rorlig, lonFr, lonOw, personal, uppdragKost, fastaLista, fasta, resultat, schemaHours, breakEven };
+  }
+  // Driftkostnaderna delas per heltidstjänst, slagna ut på de månader salongen är igång
+  function fastaPerArbetadManad(a) { return a.fasta * 12 / (S.arbMan || 12); }
+  function teamFte() { return (S.owner.stolTimmar / 40 + S.frisorer.reduce((s, f) => s + f.veckotid / 40, 0)) || 1; }
+
+  // ---------- Byggare ----------
+  function buildSettings() {
+    document.querySelectorAll('[data-s]').forEach(i => {
+      const k = i.dataset.s; i.value = S[k];
+      i.addEventListener('input', () => { S[k] = parseFloat(i.value) || 0; if (k === 'produktMarginal') S.produktInkop = 100 - S.produktMarginal; if (k === 'moms') { buildOwner(); buildFrisorer(); syncStatic(); } recalc(); });
+    });
+    $('#period').value = S.period;
+    $('#period').addEventListener('change', e => { S.period = e.target.value; recalc(); });
+    $('#reset').addEventListener('click', () => {
+      if (confirm('Återställ alla siffror till exempelvärdena?')) { const namn = S.salongNamn; S = ensureIds(defaultState()); S.salongNamn = namn; rebuildAll(); saveLocal(); pushRemote(); }
+    });
+    $('#salong-namn').value = S.salongNamn;
+    $('#salong-namn').addEventListener('input', e => { S.salongNamn = e.target.value; save(); });
+    function showLink(label, url) {
+      const box = $('#top-msg'); box.innerHTML = '';
+      box.appendChild(el('span', null, label + ' '));
+      const i = el('input', { type: 'text', readonly: '', style: 'width:min(100%,520px);font-size:12px' }); i.value = url; i.addEventListener('focus', () => i.select()); box.appendChild(i);
+    }
+    function copyLink(url, label) {
+      const ok = () => showLink(label + ' Kopierad till urklipp:', url);
+      const manual = () => showLink(label + ' Markera och kopiera:', url);
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok, manual); else manual();
+    }
+    $('#salong-link').addEventListener('click', () => {
+      const namn = ($('#ny-salong').value || '').trim();
+      if (!namn) { $('#top-msg').textContent = 'Skriv namnet på den nya salongen först.'; $('#ny-salong').focus(); return; }
+      copyLink(location.href.split('#')[0] + '#salong=' + encodeURIComponent(namn), 'Tom länk för ' + namn + '.');
+    });
+    window.addEventListener('hashchange', () => location.reload());
+    $('#team-link').addEventListener('click', async () => {
+      const a = calcAll();
+      const antal = 1 + S.frisorer.length;
+      const poster = S.kostnader.map(k => ({ kat: k.kat, namn: k.namn, belopp: k.belopp || 0 }));
+      a.fr.forEach((r, i) => { if (r.uppdragKost > 0) poster.push({ kat: 'Fasta kostnader', namn: S.frisorer[i].namn + ': extra uppdrag (' + (S.frisorer[i].uppdrag || []).map(u => u.namn).filter(Boolean).join(', ') + ')', belopp: Math.round(r.uppdragKost) }); });
+      const payload = { namn: S.salongNamn || SALONG, datum: new Date().toISOString().slice(0, 10), poster,
+        admin: { kat: S.owner.adminKat || 'Fasta kostnader', namn: S.owner.namn + ': lön för timmarna utanför salongsgolvet (' + S.owner.adminTimmar + ' h/vecka)', belopp: Math.round(a.ow.adminKost) },
+        total: Math.round(a.fasta), perArbetadManad: Math.round(fastaPerArbetadManad(a)), arbMan: S.arbMan, antal, fte: Math.round(teamFte() * 10) / 10, material: S.material, marginal: S.produktMarginal, period: S.period };
+      const data = await encodeShare(payload);
+      copyLink('https://salongskalkylen.vercel.app/frisor/#kost=' + data, 'Länk till Frisörkalkylen med ' + S.salongNamn + 's fasta kostnader (' + kr(a.fasta) + ', ' + antal + ' personer). Skicka till medarbetarna.');
+    });
+    $('#share-link').addEventListener('click', async () => {
+      const data = await encodeShare({ s: S });
+      const url = location.href.split('#')[0] + '#salong=' + encodeURIComponent(SALONG) + '&data=' + data;
+      copyLink(url, 'Länk med alla siffror. Den som öppnar den får en egen kopia att leka med.');
+    });
+    document.querySelectorAll('.summary .toggle button').forEach(b => b.addEventListener('click', () => {
+      S.view = b.dataset.view;
+      document.querySelectorAll('.summary .toggle button').forEach(x => x.classList.toggle('on', x === b));
+      recalc();
+    }));
+    document.querySelectorAll('.summary .toggle button').forEach(x => x.classList.toggle('on', x.dataset.view === S.view));
+    let open = true; try { open = localStorage.getItem('salongskalkyl-start-panel') !== 'closed'; } catch (e) {}
+    const setPanel = o => { document.body.classList.toggle('panel-open', o); const b = $('#panel-toggle'); b.setAttribute('aria-expanded', o); b.textContent = o ? 'Dölj resultat' : 'Resultat'; try { localStorage.setItem('salongskalkyl-start-panel', o ? 'open' : 'closed'); } catch (e) {} };
+    setPanel(open);
+    $('#panel-toggle').addEventListener('click', () => setPanel(!document.body.classList.contains('panel-open')));
+  }
+
+  function buildOwner() {
+    const o = S.owner; const root = $('#owner-body'); root.innerHTML = '';
+    const card = el('div', { class: 'person' });
+    const head = el('div', { class: 'p-head' });
+    head.appendChild(nameField(o));
+    head.appendChild(el('span', { class: 'pill steel' }, 'Ägare'));
+    card.appendChild(head);
+    const body = el('div', { class: 'p-body' });
+    const inputs = el('div', { class: 'p-inputs' });
+    const g1 = el('div', { class: 'fields' });
+    g1.appendChild(numberField('Egen månadslön (brutto)', o, 'lon', 'kr', { step: 500 }));
+    g1.appendChild(numberField('Sociala avgifter på ägarlön', o, 'soc', '%', { step: 0.01 }));
+    g1.appendChild(inklField('Drar in i tjänster per månad', o, 'tjanster', { step: 1000 }));
+    g1.appendChild(inklField('Produktförsäljning per månad', o, 'produkt'));
+    inputs.appendChild(g1);
+    const g2 = el('div', { class: 'fields' });
+    g2.appendChild(rangeField('Timmar i stolen per vecka', o, 'stolTimmar', 0, 45, 1, ' h'));
+    g2.appendChild(rangeField('Timmar admin, ledning & handledning per vecka', o, 'adminTimmar', 0, 40, 1, ' h'));
+    inputs.appendChild(g2);
+    body.appendChild(inputs);
+    body.appendChild(el('div', { class: 'slip', id: 'owner-slip' }));
+    card.appendChild(body); root.appendChild(card);
+    head.appendChild(el('span', { class: 'spacer' })); personToggle(card, 'owner', 'ow-sum');
+  }
+
+  // Extra uppdrag per frisör: namn och belopp per månad, betalas ovanpå lönen
+  function uppdragBlock(f) {
+    const g = el('div', { class: 'group' });
+    g.appendChild(el('span', { class: 'eyebrow' }, 'Extra uppdrag med betalning'));
+    const list = el('div', { style: 'display:grid;gap:8px' });
+    const rita = () => {
+      list.innerHTML = '';
+      if (!f.uppdrag.length) list.appendChild(el('span', { class: 'small muted' }, 'Inga extra uppdrag. Lägg till om hon får betalt för till exempel ledning eller sociala medier.'));
+      f.uppdrag.forEach((u, i) => {
+        const row = el('div', { class: 'uppdrag-rad' });
+        const n = el('input', { type: 'text', placeholder: 'Uppdrag, t.ex. Ledningsuppdrag', list: 'uppdrag-forslag', 'aria-label': 'Uppdragets namn' }); n.value = u.namn || '';
+        n.addEventListener('input', () => { u.namn = n.value; save(); buildCosts(); recalc(); });
+        const amt = el('label', { class: 'field' }); const unit = el('div', { class: 'unit' }); const b = el('input', { type: 'number', step: 100, min: 0, 'aria-label': 'Belopp per månad' }); b.value = u.belopp == null ? 0 : u.belopp;
+        b.addEventListener('input', () => { u.belopp = parseFloat(b.value) || 0; recalc(); });
+        unit.appendChild(b); unit.appendChild(el('em', null, 'kr/mån')); amt.appendChild(unit);
+        const x = el('button', { class: 'x', type: 'button', 'aria-label': 'Ta bort uppdraget' }, '×');
+        x.addEventListener('click', () => { f.uppdrag.splice(i, 1); rita(); buildCosts(); recalc(); });
+        row.appendChild(n); row.appendChild(amt); row.appendChild(x); list.appendChild(row);
+      });
+    };
+    rita();
+    g.appendChild(list);
+    const add = el('button', { class: 'btn ghost', type: 'button', style: 'justify-self:start' }, '+ Lägg till uppdrag');
+    add.addEventListener('click', () => { f.uppdrag.push({ namn: '', belopp: 1000 }); rita(); buildCosts(); recalc(); const inp = list.querySelector('div:last-child input[type="text"]'); if (inp) inp.focus(); });
+    g.appendChild(add);
+    g.appendChild(el('span', { class: 'small muted' }, 'Beloppet läggs på bruttolönen. Kostnaden med sociala avgifter, semester och pension bokförs som overhead bland driftkostnaderna, så att stoltiden bedöms rättvist.'));
+    return g;
+  }
+
+  function buildFrisorer() {
+    const root = $('#frisor-list'); root.innerHTML = '';
+    if (!S.frisorer.length) root.appendChild(el('p', { class: 'muted' }, 'Ingen anställd frisör. Lägg till en för att räkna på lönen.'));
+    S.frisorer.forEach((f, idx) => {
+      const card = el('div', { class: 'person' });
+      const head = el('div', { class: 'p-head' });
+      head.appendChild(nameField(f));
+      const sel = el('select');
+      sel.innerHTML = '<option value="beh">Behörig frisör (gesällbrev)</option><option value="obeh">Obehörig frisör</option>';
+      sel.value = f.typ; sel.addEventListener('change', () => { f.typ = sel.value; recalc(); });
+      head.appendChild(sel);
+      head.appendChild(el('span', { class: 'pill', id: 'fr-pill-' + idx }, ''));
+      head.appendChild(el('span', { class: 'spacer' }));
+      const del = el('button', { class: 'btn ghost danger', type: 'button' }, 'Ta bort');
+      del.addEventListener('click', () => { S.frisorer.splice(idx, 1); buildFrisorer(); buildCosts(); recalc(); });
+      head.appendChild(del);
+      card.appendChild(head);
+
+      const body = el('div', { class: 'p-body' });
+      const inputs = el('div', { class: 'p-inputs' });
+      const g1 = el('div', { class: 'fields' });
+      const vt = rangeField('Veckoarbetstid', f, 'veckotid', 10, 40, 1, ' h');
+      g1.appendChild(gradField(f, 25, () => ({ input: vt.querySelector('input'), out: vt.querySelector('output') })));
+      g1.appendChild(vt);
+      g1.appendChild(inklField('Drar in i tjänster per månad', f, 'tjanster', { step: 1000 }));
+      g1.appendChild(inklField('Egen produktförsäljning per månad', f, 'produkt'));
+      g1.appendChild(numberField('Fast månadslön i stället (0 = provisionsmodell)', f, 'fast', 'kr', { step: 500 }));
+      inputs.appendChild(g1);
+      inputs.appendChild(uppdragBlock(f));
+      const g3 = el('div', { class: 'group' });
+      g3.appendChild(el('span', { class: 'eyebrow' }, 'Tillägg enligt avtalet'));
+      const checks = el('div', { class: 'fields' });
+      checks.appendChild(checkField('Provanställning (garantilön 87 %)', f, 'prov'));
+      checks.appendChild(checkField('Branschvana 1 (5 000 h efter gesällprov)', f, 'bv1'));
+      checks.appendChild(checkField('Branschvana 2 (ytterligare 3 000 h + mästarbrev)', f, 'bv2'));
+      checks.appendChild(checkField('Tjänstetidstillägg (över 5 år hos samma arbetsgivare)', f, 'tt'));
+      g3.appendChild(checks);
+      inputs.appendChild(g3);
+      body.appendChild(inputs);
+      body.appendChild(el('div', { class: 'slip', id: 'fr-slip-' + idx }));
+      card.appendChild(body);
+      root.appendChild(card);
+      personToggle(card, f.id, 'fr-sum-' + idx);
+    });
+  }
+
+  function buildCosts() {
+    const root = $('#cost-body'); root.innerHTML = '';
+    const table = el('table', { class: 'costs' });
+    table.innerHTML = '<thead><tr><th>Kostnad</th><th>Kategori</th><th style="text-align:right">kr / månad exkl. moms</th><th></th></tr></thead>';
+    const tb = el('tbody');
+    CATS.forEach(cat => {
+      const rows = S.kostnader.map((k, i) => ({ k, i })).filter(x => x.k.kat === cat);
+      const adminHere = (S.owner.adminKat || 'Fasta kostnader') === cat;
+      const uppdragHere = cat === 'Fasta kostnader' && S.frisorer.some(f => uppdragSum(f) > 0);
+      if (!rows.length && !adminHere && !uppdragHere) return;
+      const gr = el('tr', { class: 'group-row' });
+      gr.innerHTML = '<td colspan="2">' + cat + '</td><td id="cat-sum-' + CATS.indexOf(cat) + '"></td><td></td>';
+      tb.appendChild(gr);
+      if (adminHere) {
+        const tr = el('tr', { class: 'admin-row' });
+        const tdN = el('td'); tdN.innerHTML = '<b>' + S.owner.namn + ': lön för timmarna utanför salongsgolvet</b><br><span class="small muted" id="cost-admin-note"></span>';
+        const tdC = el('td', { class: 'cat' }); const sel = el('select'); sel.innerHTML = CATS.map(c => '<option>' + c + '</option>').join(''); sel.value = S.owner.adminKat || 'Fasta kostnader'; sel.addEventListener('change', () => { S.owner.adminKat = sel.value; buildCosts(); recalc(); }); tdC.appendChild(sel);
+        const tdA = el('td', { class: 'amt' }); const a = el('input', { type: 'number', step: 500, min: 0, placeholder: 'räknas fram' }); a.value = S.owner.adminBelopp == null ? '' : S.owner.adminBelopp; a.addEventListener('input', () => { S.owner.adminBelopp = a.value === '' ? null : (parseFloat(a.value) || 0); recalc(); }); tdA.appendChild(a);
+        const tdD = el('td', { class: 'del' }); const x = el('button', { class: 'x', type: 'button', title: 'Återgå till framräknat belopp', 'aria-label': 'Återgå till framräknat belopp' }, '↺'); x.addEventListener('click', () => { S.owner.adminBelopp = null; a.value = ''; recalc(); }); tdD.appendChild(x);
+        tr.appendChild(tdN); tr.appendChild(tdC); tr.appendChild(tdA); tr.appendChild(tdD);
+        tb.appendChild(tr);
+      }
+      if (uppdragHere) S.frisorer.forEach((f, i) => {
+        if (uppdragSum(f) <= 0) return;
+        const tr = el('tr', { class: 'admin-row' });
+        const namn = (f.uppdrag || []).filter(u => (u.belopp || 0) > 0).map(u => u.namn || 'uppdrag').join(', ');
+        const tdN = el('td'); tdN.innerHTML = '<b>' + f.namn + ': extra uppdrag</b><br><span class="small muted">' + namn + '. ' + kr(uppdragSum(f)) + ' på lönen, här med sociala avgifter, semester och pension. Ändras på frisörens kort.</span>';
+        const tdC = el('td', { class: 'cat' }, 'Fasta kostnader');
+        const tdA = el('td', { class: 'amt', id: 'cost-uppdrag-' + i, style: 'text-align:right;font-weight:600' });
+        tr.appendChild(tdN); tr.appendChild(tdC); tr.appendChild(tdA); tr.appendChild(el('td', { class: 'del' }));
+        tb.appendChild(tr);
+      });
+      rows.forEach(({ k, i }) => {
+        const tr = el('tr');
+        const tdN = el('td'); const n = el('input', { type: 'text' }); n.value = k.namn; n.addEventListener('input', () => { k.namn = n.value; save(); }); tdN.appendChild(n);
+        const tdC = el('td', { class: 'cat' }); const sel = el('select'); sel.innerHTML = CATS.map(c => '<option>' + c + '</option>').join(''); sel.value = k.kat; sel.addEventListener('change', () => { k.kat = sel.value; buildCosts(); recalc(); }); tdC.appendChild(sel);
+        const tdA = el('td', { class: 'amt' }); const a = el('input', { type: 'number', step: 100, min: 0 }); a.value = k.belopp; a.addEventListener('input', () => { k.belopp = parseFloat(a.value) || 0; recalc(); }); tdA.appendChild(a);
+        const tdD = el('td', { class: 'del' }); const x = el('button', { class: 'x', type: 'button', 'aria-label': 'Ta bort ' + k.namn }, '×'); x.addEventListener('click', () => { S.kostnader.splice(i, 1); buildCosts(); recalc(); }); tdD.appendChild(x);
+        tr.appendChild(tdN); tr.appendChild(tdC); tr.appendChild(tdA); tr.appendChild(tdD);
+        tb.appendChild(tr);
+      });
+    });
+    const foot = el('tr', { class: 'foot' });
+    foot.innerHTML = '<td colspan="2">Summa driftkostnader exkl. moms</td><td id="cost-total"></td><td></td>';
+    tb.appendChild(foot);
+    table.appendChild(tb); root.appendChild(table);
+  }
+
+  // ---------- Utskrift ----------
+  function slipRows(rows) {
+    return '<table>' + rows.map(r => '<tr class="' + (r.cls || '') + '"><td>' + r.l + '</td><td>' + r.v + '</td></tr>').join('') + '</table>';
+  }
+  function kvarRows(r, fte, a, namn) {
+    const andel = fastaPerArbetadManad(a) * fte / teamFte(); const kvar = r.bidrag - andel;
+    return { andel, kvar, rows: [
+      { l: 'Material, produktinköp och kortavgifter', v: '−' + kr(r.rorlig), cls: 'sub' },
+      { l: 'Kan bidra till salongens driftkostnader (före sin andel)', v: (r.bidrag < 0 ? '−' : '') + kr(Math.abs(r.bidrag)), cls: 'line' },
+      { l: 'Andel av driftkostnaderna (' + Math.round(fte * 100) + ' % tjänst)', v: '−' + kr(andel), cls: 'sub' },
+      { l: 'Kvar hos salongen på ' + namn, v: (kvar < 0 ? '−' : '') + kr(Math.abs(kvar)), cls: 'total' } ] };
+  }
+  function setSum(id, txt) { const e = $('#' + id); if (e) e.textContent = txt; }
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  function renderFrisor(f, r, idx, a) {
+    const pill = $('#fr-pill-' + idx);
+    if (r.fastAnv) { pill.className = 'pill steel'; pill.textContent = 'Fast lön'; }
+    else if (r.garantiSlar) { pill.className = 'pill warn'; pill.textContent = 'Garantilönen slår in'; }
+    else { pill.className = 'pill good'; pill.textContent = 'Provisionen bär lönen'; }
+    const typLabel = f.typ === 'obeh' ? 'Obehörig' : 'Behörig';
+    const rows = [
+      { l: 'Schemalagda timmar per månad', v: num(r.hours) + ' h', cls: 'sub' },
+      { l: 'Drar in i tjänster exkl. moms', v: kr(r.behandling) },
+    ];
+    if (r.fastAnv) {
+      rows.push({ l: 'Överenskommen fast månadslön', v: kr(r.grund) });
+      if (f.fast < r.gl) rows.push({ l: 'Höjd till garantilön', v: kr(r.gl), cls: 'sub' });
+    } else {
+      rows.push({ l: 'Basbelopp (' + f.veckotid + ' h)', v: kr(r.bb) });
+      rows.push({ l: 'Arbetsprovision ' + pct(r.tab.prov), v: kr(r.arbProv) });
+      rows.push({ l: 'Garantilön' + (f.prov ? ' (provanställning 87 %)' : ''), v: kr(r.gl), cls: 'sub' });
+      rows.push({ l: r.garantiSlar ? 'Lön: garantilönen gäller' : 'Lön: basbelopp + provision', v: kr(r.grund), cls: 'line' });
+      if (r.salesProv) rows.push({ l: 'Försäljningsprovision 7 %', v: kr(r.salesProv) });
+      if (r.bv1) rows.push({ l: 'Branschvana 1', v: kr(r.bv1) });
+      if (r.bv2) rows.push({ l: 'Branschvana 2', v: kr(r.bv2) });
+      if (r.tt) rows.push({ l: 'Tjänstetidstillägg', v: kr(r.tt) });
+    }
+    (f.uppdrag || []).forEach(u => { if ((u.belopp || 0) > 0) rows.push({ l: 'Extra uppdrag: ' + esc(u.namn || 'uppdrag'), v: kr(u.belopp) }); });
+    rows.push({ l: 'Bruttolön, det som betalas ut före skatt', v: kr(r.brutto), cls: 'sum' });
+    rows.push({ l: 'Sociala avgifter ' + pct(S.ag), v: kr(r.ag), cls: 'sub' });
+    rows.push({ l: 'Semesterersättning ' + pct(S.semester) + ' + sociala avg.', v: kr(r.semester), cls: 'sub' });
+    rows.push({ l: 'Pension ' + pct(S.pension) + ' + särskild löneskatt', v: kr(r.pension), cls: 'sub' });
+    rows.push({ l: 'Friskvård (' + num(S.friskvard) + ' kr/år)', v: kr(r.friskvard), cls: 'sub' });
+    rows.push({ l: 'Utbildning', v: kr(r.utbildning), cls: 'sub' });
+    rows.push({ l: 'Total lönekostnad för salongen', v: kr(r.total), cls: 'line' });
+    if (r.uppdragKost > 0) {
+      rows.push({ l: 'varav extra uppdrag med påslag, ligger i driftkostnaderna', v: kr(r.uppdragKost), cls: 'sub' });
+      rows.push({ l: 'varav tiden i stolen', v: kr(r.stolKost), cls: 'sub' });
+    }
+    const bidragOk = r.bidrag >= 0;
+    const kv = kvarRows(r, f.veckotid / 40, a, f.namn); rows.push({ l: 'Hon drar in exkl. moms, tjänster och produkter', v: kr(r.intakt) }, ...kv.rows);
+    setSum('fr-sum-' + idx, 'Bruttolön ' + kr(r.brutto) + ' · kvar hos salongen ' + (kv.kvar < 0 ? '−' : '') + kr(Math.abs(kv.kvar)));
+    $('#fr-slip-' + idx).innerHTML = '<div class="eyebrow">Lönespecifikation · ' + typLabel + ' · ' + T[S.period].label + '</div>' + slipRows(rows) +
+      '<div class="kpi"><div><b>' + kr(r.hours > 0 ? r.total / r.hours : 0) + '</b><span>kostnad per schemalagd timme</span></div>' +
+      '<div><b>' + (r.behandling > 0 ? pct(r.stolKost / r.behandling * 100) : '–') + '</b><span>lönekostnad för stoltiden av det hon drar in i tjänster</span></div>' +
+      '<div><b style="color:var(--' + (bidragOk ? 'good' : 'bad') + ')">' + kr(r.bidrag) + '</b><span>kan bidra till driftkostnaderna, efter egen lönekostnad och material</span></div>' +
+      '<div><b>' + kr(kv.andel) + '</b><span>hennes andel av salongens driftkostnader</span></div>' +
+      '<div><b style="color:var(--' + (kv.kvar >= 0 ? 'good' : 'bad') + ')">' + (kv.kvar < 0 ? '−' : '') + kr(Math.abs(kv.kvar)) + '</b><span>kvar hos salongen när andelen är betald</span></div>' +
+      '<div><b>' + kr(breakEvenFor(r.stolKost)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div></div>';
+  }
+
+  function renderOwner(r, a) {
+    const o = S.owner;
+    const rows = [
+      { l: 'Timmar i stolen per månad', v: num(r.hours) + ' h', cls: 'sub' },
+      { l: 'Drar in i tjänster exkl. moms', v: kr(r.behandling) },
+      { l: 'Egen bruttolön, det som betalas ut före skatt', v: kr(o.lon), cls: 'sum' },
+      { l: 'Sociala avgifter ' + pct(o.soc), v: kr(r.soc), cls: 'sub' },
+      { l: 'Semesterersättning ' + pct(S.semester) + ' + sociala avg.', v: kr(r.semester), cls: 'sub' },
+      { l: 'Pension ' + pct(S.pension) + ' + särskild löneskatt', v: kr(r.pension), cls: 'sub' },
+      { l: 'Friskvård (' + num(S.friskvard) + ' kr/år)', v: kr(S.friskvard / 12), cls: 'sub' },
+      { l: 'Utbildning', v: kr(S.utbildning), cls: 'sub' },
+      { l: 'Total kostnad för ägaren', v: kr(r.total), cls: 'line' },
+      { l: 'varav tiden i stolen (' + Math.round((1 - r.adminShare) * 100) + ' %), räknas som frisör', v: kr(r.stolKost), cls: 'sub' },
+      { l: 'varav timmarna utanför salongsgolvet (' + Math.round(r.adminShare * 100) + ' %), ligger i driftkostnaderna', v: kr(r.adminKost), cls: 'sub' },
+    ];
+    const bidragOk = r.bidrag >= 0;
+    const kvO = kvarRows(r, S.owner.stolTimmar / 40, a, 'ägarens tid i stolen'); rows.push({ l: 'Ägaren drar in exkl. moms, tjänster och produkter', v: kr(r.intakt) }, ...kvO.rows);
+    setSum('ow-sum', 'Egen lön ' + kr(S.owner.lon) + ' · kvar på stoltiden ' + (kvO.kvar < 0 ? '−' : '') + kr(Math.abs(kvO.kvar)));
+    $('#owner-slip').innerHTML = '<div class="eyebrow">Ägarens kostnad och intäkt</div>' + slipRows(rows) +
+      '<div class="kpi"><div><b>' + kr(r.adminKost) + '</b><span>overhead till driftkostnaderna: lön för att driva salongen</span></div>' +
+      '<div><b>' + kr(r.totHours > 0 ? r.total / r.totHours : 0) + '</b><span>kostnad per arbetad ägartimme</span></div>' +
+      '<div><b style="color:var(--' + (bidragOk ? 'good' : 'bad') + ')">' + kr(r.bidrag) + '</b><span>kan bidra till driftkostnaderna, efter kostnaden för stoltiden och material</span></div>' +
+      '<div><b>' + kr(kvO.andel) + '</b><span>stoltidens andel av salongens driftkostnader</span></div>' +
+      '<div><b style="color:var(--' + (kvO.kvar >= 0 ? 'good' : 'bad') + ')">' + (kvO.kvar < 0 ? '−' : '') + kr(Math.abs(kvO.kvar)) + '</b><span>kvar hos salongen när andelen är betald</span></div>' +
+      '<div><b>' + kr(breakEvenFor(r.stolKost)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div></div>';
+  }
+
+  function renderOms(a) {
+    const m = S.view === 'ar' ? 12 : 1; const per = S.view === 'ar' ? 'per år' : 'per månad';
+    $('#oms-kpis').innerHTML =
+      '<div><b>' + kr(a.behandling * m) + '</b><span>tjänster exkl. moms, ' + per + '</span></div>' +
+      '<div><b>' + kr(a.produkt * m) + '</b><span>produktförsäljning exkl. moms, ' + per + '</span></div>' +
+      '<div><b>' + kr(a.oms * m) + '</b><span>omsättning exkl. moms, ' + per + '</span></div>' +
+      '<div><b>' + kr(a.oms * MK() * m) + '</b><span>kunderna betalar inkl. moms, ' + per + '</span></div>' +
+      '<div><b>' + kr(a.schemaHours > 0 ? a.oms / a.schemaHours : 0) + '</b><span>omsättning per schemalagd timme</span></div>';
+    const n = 1 + S.frisorer.length;
+    $('#oms-note').textContent = n + (n === 1 ? ' person' : ' personer') + ' i stolarna: ägaren' + (S.frisorer.length ? ' och ' + S.frisorer.map(f => f.namn).join(', ') : '') + '. Ändra beloppen på personkorten nedanför så räknas omsättningen om.';
+  }
+
+  function renderSummary(a) {
+    const m = S.view === 'ar' ? 12 : 1;
+    const K = n => kr(n * m);
+    const per = S.view === 'ar' ? 'per år' : 'per månad';
+    const rows = [
+      { l: 'Behandlingsintäkter', v: K(a.behandling), cls: '' },
+      { l: 'Produktförsäljning', v: K(a.produkt), cls: '' },
+      { l: 'Omsättning exkl. moms', v: K(a.oms), cls: 'line' },
+      { l: 'kunderna betalar inkl. moms', v: K(a.oms * MK()), cls: 'sub' },
+      { l: 'Förbrukningsmaterial', v: '−' + K(a.material), cls: 'sub' },
+      { l: 'Inköp sålda produkter (' + pct(100 - S.produktMarginal) + ')', v: '−' + K(a.inkop), cls: 'sub' },
+      { l: 'Kortavgifter', v: '−' + K(a.kort), cls: 'sub' },
+      { l: 'Bruttovinst', v: K(a.oms - a.rorlig), cls: 'line' },
+      { l: 'Frisörer, tiden i stolen', v: '−' + K(a.lonFr), cls: 'sub' },
+      { l: 'Ägare, tiden i stolen', v: '−' + K(a.lonOw), cls: 'sub' },
+      { l: 'Personalkostnader', v: '−' + K(a.personal), cls: 'line' },
+      { l: 'Salongens driftkostnader', v: '−' + K(a.fasta), cls: 'line' },
+      { l: 'varav ägarens lön för att driva salongen', v: '−' + K(a.ow.adminKost), cls: 'sub' },
+      ...(a.uppdragKost ? [{ l: 'varav frisörernas extra uppdrag, med påslag', v: '−' + K(a.uppdragKost), cls: 'sub' }] : []),
+    ];
+    const pos = a.resultat >= 0;
+    const tot = a.rorlig + a.personal + a.fasta;
+    const seg = (v, c) => '<div style="width:' + (tot > 0 ? v / tot * 100 : 0) + '%;background:var(--' + c + ')"></div>';
+    $('#summary').innerHTML = rows.map(r => '<div class="row ' + r.cls + '"><span>' + r.l + '</span><b>' + r.v + '</b></div>').join('') +
+      '<div class="result ' + (pos ? 'pos' : 'neg') + '"><span class="eyebrow">Salongens vinst före bolagsskatt (vinstskatt), ' + per + '</span><span class="big ' + (pos ? 'pos' : 'neg') + '">' + (pos ? '' : '−') + K(Math.abs(a.resultat)) + '</span><span class="small muted">Marginal ' + (a.oms > 0 ? pct(a.resultat / a.oms * 100) : '–') + ' av omsättningen</span>' +
+      '<div class="res-rows"><div><span>Bolagsskatt, skatten på bolagets vinst: ' + pct(S.bolagsskatt) + '</span><b>' + (pos ? '−' + K(a.resultat * S.bolagsskatt / 100) : '0 kr') + '</b></div><div class="after"><span>Kvar i bolaget efter bolagsskatt</span><b>' + (pos ? K(a.resultat * (1 - S.bolagsskatt / 100)) : '−' + K(Math.abs(a.resultat))) + '</b></div>' + (pos ? '<div style="color:var(--muted)"><span>Om det delas ut till ägaren: skatt på utdelning ' + pct(S.utdelningsskatt) + '</span><b style="font-weight:600">−' + K(a.resultat * (1 - S.bolagsskatt / 100) * S.utdelningsskatt / 100) + '</b></div><div style="color:var(--muted)"><span>Kvar till ägaren privat efter båda skatterna</span><b style="font-weight:600">' + K(a.resultat * (1 - S.bolagsskatt / 100) * (1 - S.utdelningsskatt / 100)) + '</b></div>' : '') + '</div>' +
+      '<span class="small muted">Det här är vad som blir kvar i bolaget när alla löner, ägarens egen lön inräknad, material och driftkostnader är betalda. ' + (pos ? 'Det som blir kvar kan stanna i bolaget som buffert, gå till investeringar eller delas ut. Vid utdelning betalar ägaren privat normalt 20 % skatt inom gränsbeloppet, stäm av med din revisor.' : 'Salongen går med förlust och betalar då ingen bolagsskatt.') + '</span></div>' +
+      '<div class="eyebrow" style="margin-top:14px">Så fördelas kostnaderna</div>' +
+      '<div class="bar">' + seg(a.lonFr, 'accent') + seg(a.lonOw, 'steel') + seg(a.fasta, 'ink') + seg(a.rorlig, 'line-strong') + '</div>' +
+      '<div class="legend"><span style="--c:var(--accent)">Frisörer ' + pct(tot ? a.lonFr / tot * 100 : 0) + '</span><span style="--c:var(--steel)">Ägare ' + pct(tot ? a.lonOw / tot * 100 : 0) + '</span><span style="--c:var(--ink)">Drift ' + pct(tot ? a.fasta / tot * 100 : 0) + '</span><span style="--c:var(--line-strong)">Rörliga ' + pct(tot ? a.rorlig / tot * 100 : 0) + '</span></div>';
+
+    $('#kpis').innerHTML =
+      '<div><b>' + pct(a.oms ? a.personal / a.oms * 100 : 0) + '</b><span>personalkostnad av omsättning</span></div>' +
+      '<div><b>' + pct(a.oms ? a.fasta / a.oms * 100 : 0) + '</b><span>driftkostnader av omsättning</span></div>' +
+      '<div><b>' + kr((a.personal + a.material) * m) + '</b><span>lönekostnad + material ' + per + '</span></div>' +
+      '<div><b>' + (isFinite(a.breakEven) ? kr(a.breakEven * m) : '–') + '</b><span>nollpunkt, omsättning ' + per + '</span></div>' +
+      '<div><b>' + kr(a.schemaHours > 0 ? a.fasta / a.schemaHours : 0) + '</b><span>driftkostnader per schemalagd timme</span></div>' +
+      '<div><b>' + num(a.schemaHours) + ' h</b><span>schemalagda timmar i stolarna per månad</span></div>';
+  }
+
+  function syncStatic() {
+    document.querySelectorAll('[data-s]').forEach(i => { i.value = S[i.dataset.s]; });
+    $('#period').value = S.period;
+    document.querySelectorAll('.summary .toggle button').forEach(x => x.classList.toggle('on', x.dataset.view === S.view));
+    $('#salong-namn').value = S.salongNamn || '';
+  }
+  function rebuildAll() { syncStatic(); buildOwner(); buildFrisorer(); buildCosts(); recalc(); }
+
+  // ---------- Molnlagring via Claude, när sidan visas på claude.ai ----------
+  const useCap = n => (window.claude && typeof window.claude.use === 'function') ? window.claude.use(n).catch(() => null) : Promise.resolve(null);
+  async function initStore() {
+    const pill = $('#sync-status');
+    let denied = false;
+    try {
+      const perms = await useCap('permissions');
+      if (perms) { const st = await perms.request(['db']); denied = st && st.db === 'denied'; }
+    } catch (e) {}
+    try { db = await useCap('db'); } catch (e) { db = null; }
+    const importPending = sessionStorage.getItem(IMPORT_KEY) === SALONG;
+    if (importPending) sessionStorage.removeItem(IMPORT_KEY);
+    if (!db) {
+      pill.textContent = denied ? 'Molnlagring avböjd: ladda om sidan och godkänn för att dela med salongsledarna' : 'Sparas i den här webbläsaren. Dela med knappen "Kopiera länk med mina siffror".';
+      pill.className = 'pill ' + (denied ? 'warn' : 'steel');
+      return;
+    }
+    let kanSkriva = true;
+    try { const probe = db.doc('salonger/' + SALONG + '/klienter/' + CLIENT); await probe.set({ t: new Date().toISOString() }); probe.delete().catch(() => {}); } catch (e) { kanSkriva = false; }
+    if (!kanSkriva) {
+      db = null;
+      pill.textContent = 'Molnet tillhör en annan Claude-organisation, så dina siffror sparas i den här webbläsaren. Dela med knappen "Kopiera länk med mina siffror".';
+      pill.className = 'pill warn';
+      return;
+    }
+    salongRef = db.doc('salonger/' + SALONG + '/start/kalkyl');
+    let first = true;
+    salongRef.onSnapshot(snap => {
+      if (!snap.exists) { if (first) { first = false; pushRemote(); } return; }
+      const d = snap.data();
+      if (d.client === CLIENT && !first) return;
+      if (first && importPending) { first = false; pushRemote(); return; }
+      first = false;
+      if (d.state) { S = ensureIds(withDefaults(JSON.parse(JSON.stringify(d.state)))); saveLocal(); rebuildAll(); }
+    }, () => { pill.textContent = 'Molnlagringen svarar inte just nu'; pill.className = 'pill warn'; });
+    pill.textContent = 'Sparas i molnet (Claude) · ' + (S.salongNamn || SALONG); pill.className = 'pill good';
+  }
+
+  function recalc() {
+    const a = calcAll();
+    renderOwner(a.ow, a);
+    a.fr.forEach((r, i) => renderFrisor(S.frisorer[i], r, i, a));
+    a.fr.forEach((r, i) => { const c = $('#cost-uppdrag-' + i); if (c) c.textContent = kr(r.uppdragKost); });
+    CATS.forEach((c, i) => { const cell = $('#cat-sum-' + i); if (cell) cell.textContent = kr(S.kostnader.filter(k => k.kat === c).reduce((s, k) => s + (k.belopp || 0), 0) + ((S.owner.adminKat || 'Fasta kostnader') === c ? a.ow.adminKost : 0) + (c === 'Fasta kostnader' ? a.uppdragKost : 0)); });
+    $('#cost-total').textContent = kr(a.fasta);
+    const an = $('#cost-admin-note'); if (an) an.textContent = S.owner.adminTimmar + ' h/vecka admin, ledning och handledning = ' + Math.round(a.ow.adminShare * 100) + ' % av lönekostnaden. Framräknat: ' + kr(a.ow.adminAuto) + (a.ow.adminKost !== a.ow.adminAuto ? '. Eget belopp används: ' + kr(a.ow.adminKost) : '') + '.';
+    const ai = document.querySelector('.admin-row input[type="number"]'); if (ai && S.owner.adminBelopp == null) ai.placeholder = num(a.ow.adminAuto);
+    renderOms(a);
+    renderSummary(a);
+    save();
+  }
+
+  // ---------- Händelser ----------
+  $('#add-frisor').addEventListener('click', () => {
+    S.frisorer.push({ id: uid(), namn: 'Frisör ' + (S.frisorer.length + 1), typ: 'beh', veckotid: 32, tjanster: 60000, produkt: 3000, prov: false, bv1: false, bv2: false, tt: false, fast: 0, uppdrag: [] });
+    buildFrisorer(); buildCosts(); recalc();
+  });
+  $('#add-cost').addEventListener('click', () => {
+    S.kostnader.push({ kat: 'Fasta kostnader', namn: 'Ny kostnad', belopp: 0 });
+    buildCosts(); recalc();
+    const inputs = document.querySelectorAll('#cost-body input[type="text"]');
+    const last = inputs[inputs.length - 1]; if (last) { last.focus(); last.select(); }
+  });
+  const dl = el('datalist', { id: 'uppdrag-forslag' }); dl.innerHTML = UPPDRAG_FORSLAG.map(u => '<option value="' + u + '">').join(''); document.body.appendChild(dl);
+
+  initPanels(); buildSettings(); rebuildAll(); initStore();
+})();
+</script>
+</html>
