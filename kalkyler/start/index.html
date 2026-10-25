@@ -334,6 +334,13 @@
   .kassa-grid textarea { width: 100%; min-height: 120px; font: inherit; font-size: 12px; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 6px; padding: 8px 10px; resize: vertical; }
   .kassa-grid textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   /* Startversionen */
+  .summary .result { padding: 18px 16px; border: 2px solid var(--line-strong); }
+  .summary .result.pos { border-color: var(--good); }
+  .summary .result.neg { border-color: var(--bad); }
+  .summary .result .big { font-size: 40px; }
+  .summary .result .eyebrow { font-size: 12px; }
+  .summary .result .res-rows div { font-size: 14px; }
+  .summary .result .res-rows .after { font-size: 16px; }
   /* Utbetalt och täckningsanalys */
   .slip tr.netto td { font-weight: 700; color: var(--good); }
   .slip .analys { margin-top: 10px; padding: 10px 12px; border-left: 3px solid var(--good); background: var(--surface); border-radius: 6px; font-size: 12px; line-height: 1.5; }
@@ -1248,12 +1255,12 @@
       '<div><b>' + num(h) + ' h</b><span>schemalagda timmar i stolarna per månad</span></div>';
     // Behovet per debiterad timme: vid 100 % beläggning är varje schemalagd timme debiterad, vid 80 och 50 % måste färre timmar bära samma belopp
     const bel = [100, 80, 50];
-    const cell = v => isFinite(v) ? '<b>' + kr(v) + '</b><br><span class="small muted">' + kr(v * MK()) + ' inkl.</span>' : '–';
+    const cell = v => isFinite(v) ? '<b>' + kr(v * MK()) + '</b><br><span class="small muted">' + kr(v) + ' exkl.</span>' : '–';
     const radT = (namn, m) => '<tr><td>' + namn + '</td>' + bel.map(b => '<td class="num">' + cell(behovPerTimme(m) * 100 / b) + '</td>').join('') + '</tr>';
-    $('#kpi-tabell').innerHTML = '<div class="eyebrow" style="margin:14px 0 6px">Behöver dras in per debiterad timme, exkl. moms</div>' +
+    $('#kpi-tabell').innerHTML = '<div class="eyebrow" style="margin:14px 0 6px">Pris ut till kund per debiterad timme, inkl. moms</div>' +
       '<div class="table-scroll"><table class="costs"><thead><tr><th>För vinst på</th>' + bel.map(b => '<th class="num" style="text-align:right">' + b + ' % beläggning</th>').join('') + '</tr></thead><tbody>' +
       radT('dagens ' + pct(marginal), marginal) + radT('5 %', 5) + radT('10 %', 10) + '</tbody></table></div>' +
-      '<p class="small muted" style="margin-top:6px">100 % beläggning betyder att varje schemalagd timme är debiterad. Vid 80 % står stolen tom en femtedel av tiden, så de debiterade timmarna måste ta mer betalt för att ge samma resultat.</p>';
+      '<p class="small muted" style="margin-top:6px">Det kunden betalar per timme i stolen. 100 % beläggning betyder att varje schemalagd timme är debiterad. Vid 80 % står stolen tom en femtedel av tiden, så de debiterade timmarna måste ta mer betalt för att ge samma resultat.</p>';
   }
 
   function syncStatic() {
