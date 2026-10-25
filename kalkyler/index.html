@@ -805,7 +805,7 @@
     return {
       period: '2026',
       ag: 31.42, semester: 13, pension: 4.5, loneskatt: 24.26, friskvard: 2600, utbildning: 1000, veckor: 4.325,
-      material: 10, produktInkop: 70, produktMarginal: 30, kort: 1.5, handledarTillagg: 0, skatt: 23, moms: 25, arbMan: 10.5, buffert: 5, bolagsskatt: 20.6, utdelningsskatt: 20,
+      material: 10, produktInkop: 70, produktMarginal: 30, kort: 1.5, handledarTillagg: 0, skatt: 30, moms: 25, arbMan: 10.5, buffert: 5, bolagsskatt: 20.6, utdelningsskatt: 20,
       bel: { person: 'fr0', pris: 1000, grad: 80, produkt: 5000, skatt: 25, malBel: 85, produktPris: 300, extraDag: 200 },
       view: 'man',
       fte: { nyFasta: null },
@@ -900,6 +900,7 @@
     if (saved.material == null || saved.material === 8) out.material = 10;
     if (saved.produktMarginal == null) out.produktMarginal = 30;
     out.produktInkop = 100 - out.produktMarginal;
+    if (saved.skatt == null || saved.skatt === 23) out.skatt = 30;
     if (saved.ls && saved.ls.marginal == null) out.ls.marginal = 30;
     return out;
   }

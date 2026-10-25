@@ -399,7 +399,6 @@
           <label class="field"><span>Bolagsskatt, även kallad vinstskatt (aktiebolag)</span><div class="unit"><input type="number" step="0.1" data-s="bolagsskatt"><em>% av vinsten</em></div></label>
           <label class="field"><span>Skatt på utdelning till ägaren</span><div class="unit"><input type="number" step="0.1" data-s="utdelningsskatt"><em>%</em></div></label>
           <label class="field"><span>Skatteavdrag på lönen, ungefär enligt skattetabell</span><div class="unit"><input type="number" step="0.5" data-s="skatt"><em>% av bruttolön</em></div></label>
-          <label class="field"><span>Handledartillägg per elev</span><div class="unit"><input type="number" step="100" data-s="handledarTillagg"><em>kr/mån</em></div></label>
         </div>
       </div>
     </section>
@@ -413,7 +412,7 @@
     <!-- Frisörer -->
     <section class="panel" id="sec-frisor">
       <div class="head">
-        <div><h2>Anställda frisörer</h2><p>Avtalets provisionsmodell: basbelopp + arbetsprovision, aldrig under garantilönen. Skriv in vad varje frisör drar in per månad och hur många OB-timmar hon jobbar. Får frisören betalt för ett extra uppdrag, till exempel ledning eller sociala medier, lägger du till det på kortet: det läggs ovanpå lönen och bokförs som overhead bland driftkostnaderna, inte på stoltiden.</p></div>
+        <div><h2>Anställda frisörer</h2><p>Avtalets provisionsmodell: basbelopp + arbetsprovision, aldrig under garantilönen. Skriv in vad varje frisör drar in per månad och hur många OB-timmar hon jobbar. Får frisören betalt för ett extra uppdrag, till exempel ledning, sociala medier eller handledning av elev, lägger du till det på kortet: det läggs ovanpå lönen och bokförs som overhead bland driftkostnaderna, inte på stoltiden.</p></div>
         <button class="btn" type="button" id="add-frisor">+ Lägg till frisör</button>
       </div>
       <div class="body" id="frisor-list"></div>
@@ -422,7 +421,7 @@
     <!-- Elever -->
     <section class="panel" id="sec-elev">
       <div class="head">
-        <div><h2>Elever i färdigutbildning (nivå 2)</h2><p>Enligt elevavtalet: fast månadslön ur elevtabellen i proportion till veckoarbetstiden, lägst 20 timmar i veckan. Efter 1 000 utförda timmar i nivå 2 tillkommer 10 % arbetsprovision på det eleven drar in. Avtalet kräver en behörig handledare per elev, och ett eventuellt handledartillägg skriver du in under Grundsiffror.</p></div>
+        <div><h2>Elever i färdigutbildning (nivå 2)</h2><p>Enligt elevavtalet: fast månadslön ur elevtabellen i proportion till veckoarbetstiden, lägst 20 timmar i veckan. Efter 1 000 utförda timmar i nivå 2 tillkommer 10 % arbetsprovision på det eleven drar in. Avtalet kräver en behörig handledare per elev. Får handledaren ett tillägg lägger du det som extra uppdrag på hennes kort.</p></div>
         <button class="btn" type="button" id="add-elev">+ Lägg till elev</button>
       </div>
       <div class="body">
@@ -483,9 +482,9 @@
   };
 
   const CATS = ['Fasta kostnader', 'Rörliga driftkostnader'];
-  const UPPDRAG_FORSLAG = ['Salongsledare', 'Sociala medier', 'Utbildningsansvar', 'Lageransvar', 'Handledning av elev'];
+  const UPPDRAG_FORSLAG = ['Salongsledare', 'Sociala medier', 'Handledare för elev', 'Utbildningsansvar', 'Lageransvar'];
   // Två uppdrag ligger alltid med på varje frisörkort, med tomt belopp tills salongsägaren fyller i
-  const STANDARD_UPPDRAG = ['Salongsledare', 'Sociala medier'];
+  const STANDARD_UPPDRAG = ['Salongsledare', 'Sociala medier', 'Handledare för elev'];
   const nyaUppdrag = () => STANDARD_UPPDRAG.map(n => ({ namn: n, belopp: null }));
 
   // Startversionen: ägare och anställda frisörer, driftkostnader och resultat. Beloppen per person skrivs in
@@ -494,7 +493,7 @@
     return {
       period: '2026',
       ag: 31.42, semester: 13, pension: 4.5, loneskatt: 24.26, friskvard: 2600, utbildning: 1000, veckor: 4.325,
-      material: 10, produktInkop: 70, produktMarginal: 30, kort: 1.5, handledarTillagg: 0, skatt: 23, moms: 25, arbMan: 10.5, buffert: 5, bolagsskatt: 20.6, utdelningsskatt: 20,
+      material: 10, produktInkop: 70, produktMarginal: 30, kort: 1.5, skatt: 30, moms: 25, arbMan: 10.5, buffert: 0, bolagsskatt: 20.6, utdelningsskatt: 20,
       view: 'man',
       owner: { namn: 'Salongsägaren', lon: 38000, soc: 31.42, stolTimmar: 30, adminTimmar: 10, tjanster: 84000, produkt: 6000, adminKat: 'Fasta kostnader', adminBelopp: null },
       frisorer: [
@@ -565,7 +564,7 @@
   const CLIENT = Math.random().toString(36).slice(2);
   const uid = () => 'p' + Math.random().toString(36).slice(2, 8);
   function ensureIds(st) {
-    (st.frisorer || []).forEach(f => { if (!f.id) f.id = uid(); if (!Array.isArray(f.uppdrag)) f.uppdrag = []; if (!f.uppdragInit) { STANDARD_UPPDRAG.forEach((n, i) => { if (!f.uppdrag.some(u => u.namn === n)) f.uppdrag.splice(i, 0, { namn: n, belopp: null }); }); f.uppdragInit = true; } });
+    (st.frisorer || []).forEach(f => { if (!f.id) f.id = uid(); if (!Array.isArray(f.uppdrag)) f.uppdrag = []; if (f.uppdragInit !== 2) { STANDARD_UPPDRAG.forEach((n, i) => { if (!f.uppdrag.some(u => u.namn === n)) f.uppdrag.splice(i, 0, { namn: n, belopp: null }); }); f.uppdragInit = 2; } });
     st.elever = Array.isArray(st.elever) ? st.elever : []; st.elever.forEach(e => { if (!e.id) e.id = uid(); });
     if (!st.salongNamn) st.salongNamn = SALONG.charAt(0).toUpperCase() + SALONG.slice(1).replace(/-/g, ' ');
     return st;
@@ -579,6 +578,9 @@
     out.elever = Array.isArray(saved.elever) ? saved.elever : d.elever;
     out.kostnader = Array.isArray(saved.kostnader) ? saved.kostnader : d.kostnader;
     out.produktInkop = 100 - out.produktMarginal;
+    if (saved.skatt == null || saved.skatt === 23) out.skatt = 30;
+    if (saved.buffert === 5) out.buffert = 0;
+    delete out.handledarTillagg;
     return out;
   }
   let S;
@@ -741,13 +743,12 @@
     const ob = ((e.ob50 || 0) * 0.5 + (e.ob70 || 0) * 0.7 + (e.ob100 || 0) * 1.0) * obBas;
     const brutto = manadslon + prov + ob;
     const p = payroll(brutto, e.veckotid);
-    const handledarKost = paslag(S.handledarTillagg || 0);
-    const total = p.total + handledarKost;
+    const total = p.total;
     const intakt = behandling;
     const rorlig = behandling * S.material / 100 + intakt * S.kort / 100;
     const kvar = Math.max(0, 2000 - e.timmar);
     const manaderKvar = hours > 0 ? kvar / hours : 0;
-    return { hours, behandling, manadslon, harProv, prov, obBas, ob, brutto, ...p, handledarKost, total, intakt, rorlig, bidrag: intakt - rorlig - total, kvar, manaderKvar };
+    return { hours, behandling, manadslon, harProv, prov, obBas, ob, brutto, ...p, total, intakt, rorlig, bidrag: intakt - rorlig - total, kvar, manaderKvar };
   }
 
   function calcOwner() {
@@ -1143,7 +1144,6 @@
       { l: 'Friskvård (' + num(S.friskvard) + ' kr/år)', v: kr(r.friskvard), cls: 'sub' },
       { l: 'Utbildning', v: kr(r.utbildning), cls: 'sub' },
     ];
-    if (r.handledarKost) rows.push({ l: 'Handledartillägg inkl. avgifter', v: kr(r.handledarKost), cls: 'sub' });
     rows.push({ l: 'Total lönekostnad för salongen', v: kr(r.total), cls: 'line' });
     const bidragOk = r.bidrag >= 0;
     const kvarTxt = r.kvar > 0 ? num(r.kvar) + ' h kvar till gesällprov, ca ' + r.manaderKvar.toLocaleString('sv-SE', { maximumFractionDigits: 1 }) + ' mån' : 'Klar för gesällprov';
