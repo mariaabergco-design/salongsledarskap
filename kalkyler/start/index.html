@@ -1245,10 +1245,9 @@
     const marginal = a.oms > 0 ? a.resultat / a.oms * 100 : 0;
     const behovPerTimme = m => { const n = 1 - rorligAndel - m / 100; return (n > 0 && h > 0) ? (a.personal + a.fasta) / n / h : Infinity; };
     const perTimme = v => isFinite(v) ? kr(v) : '–';
-    const inkl = v => isFinite(v) ? ' (' + kr(v * MK()) + ' inkl. moms)' : '';
     $('#kpis').innerHTML =
       '<div><b>' + perTimme(h > 0 ? a.personal / h : Infinity) + '</b><span>lönekostnad per schemalagd timme i stolen, snitt per anställd med dagens team</span></div>' +
-      '<div><b>' + perTimme(h > 0 ? a.oms / h : Infinity) + '</b><span>dras in per schemalagd timme i dag' + inkl(h > 0 ? a.oms / h : Infinity) + ', ger ' + pct(marginal) + ' vinst</span></div>' +
+      '<div><b>' + perTimme(h > 0 ? a.oms / h * MK() : Infinity) + '</b><span>tas ut per schemalagd timme i dag, inkl. moms (' + perTimme(h > 0 ? a.oms / h : Infinity) + ' exkl.), ger ' + pct(marginal) + ' vinst</span></div>' +
       '<div><b>' + pct(a.oms ? a.personal / a.oms * 100 : 0) + '</b><span>personalkostnad av omsättning</span></div>' +
       '<div><b>' + pct(a.oms ? a.fasta / a.oms * 100 : 0) + '</b><span>driftkostnader av omsättning</span></div>' +
       '<div><b>' + (isFinite(a.breakEven) ? kr(a.breakEven * m) : '–') + '</b><span>nollpunkt, omsättning ' + per + '</span></div>' +
