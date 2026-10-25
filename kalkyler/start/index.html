@@ -385,14 +385,12 @@
         <div class="fields">
           <label class="field"><span>Arbetsgivaravgift</span><div class="unit"><input type="number" step="0.01" data-s="ag"><em>%</em></div></label>
           <label class="field"><span>Semesterersättning (sociala avgifter läggs på)</span><div class="unit"><input type="number" step="0.1" data-s="semester"><em>%</em></div></label>
-          <label class="field"><span>Avtalspension SAF-LO</span><div class="unit"><input type="number" step="0.1" data-s="pension"><em>%</em></div></label>
-          <label class="field"><span>Särskild löneskatt på pensionen</span><div class="unit"><input type="number" step="0.01" data-s="loneskatt"><em>%</em></div></label>
+          <label class="field"><span>Avtalspension SAF-LO (särskild löneskatt 24,26 % läggs på)</span><div class="unit"><input type="number" step="0.1" data-s="pension"><em>%</em></div></label>
           <label class="field"><span>Friskvård per anställd</span><div class="unit"><input type="number" step="100" data-s="friskvard"><em>kr/år</em></div></label>
           <label class="field"><span>Utbildning per anställd</span><div class="unit"><input type="number" step="100" data-s="utbildning"><em>kr/mån</em></div></label>
           <label class="field"><span>Veckor per månad (avtalets divisor)</span><div class="unit"><input type="number" step="0.001" data-s="veckor"><em>v/mån</em></div></label>
           <label class="field"><span>Materialschablon på tjänster (färg, schampo m.m., branschstandard 10 %)</span><div class="unit"><input type="number" step="0.1" data-s="material"><em>% av tjänster</em></div></label>
           <label class="field"><span>Marginal på sålda produkter (branschstandard 30 %)</span><div class="unit"><input type="number" step="0.1" data-s="produktMarginal"><em>% av försäljn.</em></div></label>
-          <label class="field"><span>Kortavgifter</span><div class="unit"><input type="number" step="0.1" data-s="kort"><em>% av omsättn.</em></div></label>
           <label class="field"><span>Moms på tjänster</span><div class="unit"><input type="number" step="0.1" data-s="moms"><em>%</em></div></label>
           <label class="field"><span>Arbetade månader per år (semester &amp; röda dagar)</span><div class="unit"><input type="number" step="0.5" data-s="arbMan"><em>mån</em></div></label>
           <label class="field"><span>Buffert/vinst som ska bli kvar</span><div class="unit"><input type="number" step="0.1" data-s="buffert"><em>% av omsättn.</em></div></label>
@@ -493,7 +491,7 @@
     return {
       period: '2026',
       ag: 31.42, semester: 13, pension: 4.5, loneskatt: 24.26, friskvard: 2600, utbildning: 1000, veckor: 4.325,
-      material: 10, produktInkop: 70, produktMarginal: 30, kort: 1.5, skatt: 30, moms: 25, arbMan: 10.5, buffert: 0, bolagsskatt: 20.6, utdelningsskatt: 20,
+      material: 10, produktInkop: 70, produktMarginal: 30, kort: 0, skatt: 30, moms: 25, arbMan: 10.5, buffert: 0, bolagsskatt: 20.6, utdelningsskatt: 20,
       view: 'man',
       owner: { namn: 'Salongsägaren', lon: 38000, soc: 31.42, stolTimmar: 30, adminTimmar: 10, tjanster: 84000, produkt: 6000, adminKat: 'Fasta kostnader', adminBelopp: null },
       frisorer: [
@@ -580,6 +578,8 @@
     out.produktInkop = 100 - out.produktMarginal;
     if (saved.skatt == null || saved.skatt === 23) out.skatt = 30;
     if (saved.buffert === 5) out.buffert = 0;
+    out.kort = 0; // kortavgifterna ligger bland driftkostnaderna i Start
+    out.loneskatt = d.loneskatt; // särskild löneskatt på pensionen följer lagen, inget eget fält i Start
     delete out.handledarTillagg;
     return out;
   }
@@ -697,7 +697,7 @@
     const utbildning = S.utbildning;
     return { semester, ag, pension, friskvard, utbildning, total: brutto + semester + ag + pension + friskvard + utbildning };
   }
-  // Omsättning personen måste dra in för att täcka sin egen lönekostnad, material och kortavgifter
+  // Omsättning personen måste dra in för att täcka sin egen lönekostnad och material
   function breakEvenFor(total) { const a = 1 - S.material / 100 - S.kort / 100 - S.buffert / 100; return a > 0 ? total / a : Infinity; }
   const uppdragSum = f => (f.uppdrag || []).reduce((s, u) => s + (u.belopp || 0), 0);
 
@@ -1052,7 +1052,7 @@
   function kvarRows(r, fte, a, namn) {
     const andel = fastaPerArbetadManad(a) * fte / teamFte(); const kvar = r.bidrag - andel;
     return { andel, kvar, rows: [
-      { l: 'Material, produktinköp och kortavgifter', v: '−' + kr(r.rorlig), cls: 'sub' },
+      { l: 'Material och produktinköp', v: '−' + kr(r.rorlig), cls: 'sub' },
       { l: 'Kan bidra till salongens driftkostnader (före sin andel)', v: (r.bidrag < 0 ? '−' : '') + kr(Math.abs(r.bidrag)), cls: 'line' },
       { l: 'Andel av driftkostnaderna (' + Math.round(fte * 100) + ' % tjänst)', v: '−' + kr(andel), cls: 'sub' },
       { l: 'Kvar hos salongen på ' + namn, v: (kvar < 0 ? '−' : '') + kr(Math.abs(kvar)), cls: 'total' } ] };
@@ -1064,7 +1064,7 @@
     const efter = r.intakt - r.rorlig;
     const rad = (ok, txt) => ({ ok, txt });
     const rader = [];
-    rader.push(r.intakt >= r.rorlig ? rad(true, H + ' täcker sitt material, sina produktinköp och kortavgifter, ' + kr(r.rorlig) + '.') : rad(false, 'Det saknas ' + kr(r.rorlig - r.intakt) + ' för att ' + hon + ' ska täcka sitt material, sina produktinköp och kortavgifter, ' + kr(r.rorlig) + '.'));
+    rader.push(r.intakt >= r.rorlig ? rad(true, H + ' täcker sitt material och sina produktinköp, ' + kr(r.rorlig) + '.') : rad(false, 'Det saknas ' + kr(r.rorlig - r.intakt) + ' för att ' + hon + ' ska täcka sitt material och sina produktinköp, ' + kr(r.rorlig) + '.'));
     const lonOk = efter >= lonKost;
     rader.push(lonOk ? rad(true, H + ' täcker sin lön med alla påslag, ' + kr(lonKost) + '.') : rad(false, 'Det saknas ' + kr(lonKost - efter) + ' för att ' + hon + ' ska täcka sin lön med alla påslag, ' + kr(lonKost) + '.'));
     if (!lonOk) rader.push(rad(false, H + ' bidrar inte till bolagets fasta kostnader. ' + H.replace(/^Ä/, 'Ä').replace(/^(Hon|Eleven|Ägaren)$/, m => m === 'Hon' ? 'Hennes' : m + 's') + ' del är ' + kr(kv.andel) + '.'));
@@ -1211,7 +1211,7 @@
       { l: 'kunderna betalar inkl. moms', v: K(a.oms * MK()), cls: 'sub' },
       { l: 'Förbrukningsmaterial', v: '−' + K(a.material), cls: 'sub' },
       { l: 'Inköp sålda produkter (' + pct(100 - S.produktMarginal) + ')', v: '−' + K(a.inkop), cls: 'sub' },
-      { l: 'Kortavgifter', v: '−' + K(a.kort), cls: 'sub' },
+      ...(a.kort ? [{ l: 'Kortavgifter', v: '−' + K(a.kort), cls: 'sub' }] : []),
       { l: 'Bruttovinst', v: K(a.oms - a.rorlig), cls: 'line' },
       { l: 'Frisörer, tiden i stolen', v: '−' + K(a.lonFr), cls: 'sub' },
       ...(a.ev.length ? [{ l: 'Elever', v: '−' + K(a.lonEv), cls: 'sub' }] : []),
@@ -1233,7 +1233,7 @@
       '<div class="legend"><span style="--c:var(--accent)">Frisörer ' + pct(tot ? a.lonFr / tot * 100 : 0) + '</span>' + (a.ev.length ? '<span style="--c:var(--warn)">Elever ' + pct(tot ? a.lonEv / tot * 100 : 0) + '</span>' : '') + '<span style="--c:var(--steel)">Ägare ' + pct(tot ? a.lonOw / tot * 100 : 0) + '</span><span style="--c:var(--ink)">Drift ' + pct(tot ? a.fasta / tot * 100 : 0) + '</span><span style="--c:var(--line-strong)">Rörliga ' + pct(tot ? a.rorlig / tot * 100 : 0) + '</span></div>';
 
     // Per schemalagd timme i stolen: vad teamet kostar, vad som dras in i dag, och vad som behövs för en given vinstmarginal.
-    // Material, produktinköp och kortavgifter antas följa omsättningen i samma andel som nu.
+    // Material och produktinköp antas följa omsättningen i samma andel som nu.
     const h = a.schemaHours, rorligAndel = a.oms > 0 ? a.rorlig / a.oms : 0;
     const marginal = a.oms > 0 ? a.resultat / a.oms * 100 : 0;
     const behovPerTimme = m => { const n = 1 - rorligAndel - m / 100; return (n > 0 && h > 0) ? (a.personal + a.fasta) / n / h : Infinity; };
