@@ -450,7 +450,7 @@
     </section>
     <section class="panel">
       <div class="head"><h2>Nyckeltal</h2></div>
-      <div class="body kpis" id="kpis"></div>
+      <div class="body"><div class="kpis" id="kpis"></div><div id="kpi-tabell"></div></div>
     </section>
   </aside>
 </div>
@@ -1242,12 +1242,18 @@
     $('#kpis').innerHTML =
       '<div><b>' + perTimme(h > 0 ? a.personal / h : Infinity) + '</b><span>lönekostnad per schemalagd timme i stolen, snitt per anställd med dagens team</span></div>' +
       '<div><b>' + perTimme(h > 0 ? a.oms / h : Infinity) + '</b><span>dras in per schemalagd timme i dag' + inkl(h > 0 ? a.oms / h : Infinity) + ', ger ' + pct(marginal) + ' vinst</span></div>' +
-      '<div><b>' + perTimme(behovPerTimme(5)) + '</b><span>behöver dras in per timme för 5 % vinst' + inkl(behovPerTimme(5)) + '</span></div>' +
-      '<div><b>' + perTimme(behovPerTimme(10)) + '</b><span>behöver dras in per timme för 10 % vinst' + inkl(behovPerTimme(10)) + '</span></div>' +
       '<div><b>' + pct(a.oms ? a.personal / a.oms * 100 : 0) + '</b><span>personalkostnad av omsättning</span></div>' +
       '<div><b>' + pct(a.oms ? a.fasta / a.oms * 100 : 0) + '</b><span>driftkostnader av omsättning</span></div>' +
       '<div><b>' + (isFinite(a.breakEven) ? kr(a.breakEven * m) : '–') + '</b><span>nollpunkt, omsättning ' + per + '</span></div>' +
       '<div><b>' + num(h) + ' h</b><span>schemalagda timmar i stolarna per månad</span></div>';
+    // Behovet per debiterad timme: vid 100 % beläggning är varje schemalagd timme debiterad, vid 80 och 50 % måste färre timmar bära samma belopp
+    const bel = [100, 80, 50];
+    const cell = v => isFinite(v) ? '<b>' + kr(v) + '</b><br><span class="small muted">' + kr(v * MK()) + ' inkl.</span>' : '–';
+    const radT = (namn, m) => '<tr><td>' + namn + '</td>' + bel.map(b => '<td class="num">' + cell(behovPerTimme(m) * 100 / b) + '</td>').join('') + '</tr>';
+    $('#kpi-tabell').innerHTML = '<div class="eyebrow" style="margin:14px 0 6px">Behöver dras in per debiterad timme, exkl. moms</div>' +
+      '<div class="table-scroll"><table class="costs"><thead><tr><th>För vinst på</th>' + bel.map(b => '<th class="num" style="text-align:right">' + b + ' % beläggning</th>').join('') + '</tr></thead><tbody>' +
+      radT('dagens ' + pct(marginal), marginal) + radT('5 %', 5) + radT('10 %', 10) + '</tbody></table></div>' +
+      '<p class="small muted" style="margin-top:6px">100 % beläggning betyder att varje schemalagd timme är debiterad. Vid 80 % står stolen tom en femtedel av tiden, så de debiterade timmarna måste ta mer betalt för att ge samma resultat.</p>';
   }
 
   function syncStatic() {
