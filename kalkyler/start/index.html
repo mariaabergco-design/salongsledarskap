@@ -334,6 +334,22 @@
   .kassa-grid textarea { width: 100%; min-height: 120px; font: inherit; font-size: 12px; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 6px; padding: 8px 10px; resize: vertical; }
   .kassa-grid textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   /* Startversionen */
+  /* Bredare resultatpanel på datorskärm, så att vinsten syns */
+  :root { --panel-w: 380px; }
+  @media (min-width: 1200px) { :root { --panel-w: 540px; } }
+  @media (min-width: 1600px) { :root { --panel-w: 640px; } }
+  aside { width: var(--panel-w); padding: 20px; }
+  body.panel-open { padding-right: var(--panel-w); }
+  body.panel-open #panel-toggle { right: var(--panel-w); }
+  @media (min-width: 1200px) and (min-width: 961px) {
+    aside .summary .row { font-size: 15px; padding: 6px 0; }
+    aside .summary .row.sub { font-size: 13px; }
+    aside .summary .result .big { font-size: 48px; }
+    aside .summary .result .res-rows div { font-size: 15px; }
+    aside .kpis b { font-size: 22px; }
+    aside .kpis span { font-size: 12px; }
+    aside .panel .head h2 { font-size: 22px; }
+  }
   .summary .result { padding: 18px 16px; border: 2px solid var(--line-strong); }
   .summary .result.pos { border-color: var(--good); }
   .summary .result.neg { border-color: var(--bad); }
