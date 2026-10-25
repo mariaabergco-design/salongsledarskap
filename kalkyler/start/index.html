@@ -334,6 +334,19 @@
   .kassa-grid textarea { width: 100%; min-height: 120px; font: inherit; font-size: 12px; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 6px; padding: 8px 10px; resize: vertical; }
   .kassa-grid textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   /* Startversionen */
+  /* Nyckeltalsrutor och analys under inmatningen, så att kortet fylls jämnt */
+  .p-extra { display: grid; gap: 10px; margin-top: 4px; }
+  .p-extra .kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+  .p-extra .kpi div { background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }
+  .p-extra .kpi b { display: block; font-family: var(--display); font-size: 17px; }
+  .p-extra .kpi span { font-size: 11px; color: var(--muted); }
+  .p-extra .analys { padding: 10px 12px; border-left: 3px solid var(--good); background: var(--surface-2); border-radius: 6px; font-size: 12px; line-height: 1.5; }
+  .p-extra .analys.warn { border-color: var(--warn); }
+  .p-extra .analys.bad { border-color: var(--bad); }
+  .p-extra .analys .rad { display: flex; gap: 6px; margin-top: 5px; }
+  .p-extra .analys .m { font-weight: 700; flex: 0 0 auto; }
+  .p-extra .analys .m.ok { color: var(--good); }
+  .p-extra .analys .m.nej { color: var(--bad); }
   /* Bredare resultatpanel på datorskärm, så att vinsten syns */
   :root { --panel-w: 380px; }
   @media (min-width: 1200px) { :root { --panel-w: 540px; } }
@@ -896,6 +909,7 @@
     g2.appendChild(rangeField('Timmar i stolen per vecka', o, 'stolTimmar', 0, 45, 1, ' h'));
     g2.appendChild(rangeField('Timmar admin, ledning & handledning per vecka', o, 'adminTimmar', 0, 40, 1, ' h'));
     inputs.appendChild(g2);
+    inputs.appendChild(el('div', { class: 'p-extra', id: 'owner-extra' }));
     body.appendChild(inputs);
     body.appendChild(el('div', { class: 'slip', id: 'owner-slip' }));
     card.appendChild(body); root.appendChild(card);
@@ -981,6 +995,7 @@
       checks.appendChild(checkField('Tjänstetidstillägg (över 5 år hos samma arbetsgivare)', f, 'tt'));
       g3.appendChild(checks);
       inputs.appendChild(g3);
+      inputs.appendChild(el('div', { class: 'p-extra', id: 'fr-extra-' + idx }));
       body.appendChild(inputs);
       body.appendChild(el('div', { class: 'slip', id: 'fr-slip-' + idx }));
       card.appendChild(body);
@@ -1012,6 +1027,7 @@
       g1.appendChild(inklField('Drar in i tjänster per månad', e, 'tjanster', { step: 1000 }));
       inputs.appendChild(g1);
       inputs.appendChild(obBlock(e));
+      inputs.appendChild(el('div', { class: 'p-extra', id: 'ev-extra-' + idx }));
       body.appendChild(inputs);
       body.appendChild(el('div', { class: 'slip', id: 'ev-slip-' + idx }));
       card.appendChild(body);
@@ -1139,8 +1155,8 @@
     const bidragOk = r.bidrag >= 0;
     const kv = kvarRows(r, f.veckotid / 40, a, f.namn); rows.push({ l: 'Hon drar in exkl. moms, tjänster och produkter', v: kr(r.intakt) }, ...kv.rows);
     setSum('fr-sum-' + idx, 'Bruttolön ' + kr(r.brutto) + ' · på kontot ' + kr(netto(r.brutto)) + ' · kvar hos salongen ' + (kv.kvar < 0 ? '−' : '') + kr(Math.abs(kv.kvar)));
-    $('#fr-slip-' + idx).innerHTML = '<div class="eyebrow">Lönespecifikation · ' + typLabel + ' · ' + T[S.period].label + '</div>' + slipRows(rows) +
-      '<div class="kpi"><div><b>' + kr(r.hours > 0 ? r.total / r.hours : 0) + '</b><span>kostnad per schemalagd timme</span></div>' +
+    $('#fr-slip-' + idx).innerHTML = '<div class="eyebrow">Lönespecifikation · ' + typLabel + ' · ' + T[S.period].label + '</div>' + slipRows(rows);
+    $('#fr-extra-' + idx).innerHTML = '<div class="kpi"><div><b>' + kr(r.hours > 0 ? r.total / r.hours : 0) + '</b><span>kostnad per schemalagd timme</span></div>' +
       '<div><b>' + (r.behandling > 0 ? pct(r.stolKost / r.behandling * 100) : '–') + '</b><span>lönekostnad för stoltiden av det hon drar in i tjänster</span></div>' +
       '<div><b style="color:var(--' + (bidragOk ? 'good' : 'bad') + ')">' + kr(r.bidrag) + '</b><span>kan bidra till driftkostnaderna, efter egen lönekostnad och material</span></div>' +
       '<div><b>' + kr(kv.andel) + '</b><span>hennes andel av salongens driftkostnader</span></div>' +
@@ -1172,8 +1188,8 @@
     const kvarTxt = r.kvar > 0 ? num(r.kvar) + ' h kvar till gesällprov, ca ' + r.manaderKvar.toLocaleString('sv-SE', { maximumFractionDigits: 1 }) + ' mån' : 'Klar för gesällprov';
     const kvE = kvarRows(r, e.veckotid / 40, a, e.namn); rows.push({ l: 'Eleven drar in exkl. moms', v: kr(r.intakt) }, ...kvE.rows);
     setSum('ev-sum-' + idx, 'Bruttolön ' + kr(r.brutto) + ' · på kontot ' + kr(netto(r.brutto)) + ' · kvar hos salongen ' + (kvE.kvar < 0 ? '−' : '') + kr(Math.abs(kvE.kvar)));
-    $('#ev-slip-' + idx).innerHTML = '<div class="eyebrow">Lönespecifikation · Elev nivå 2 · ' + T[S.period].label + '</div>' + slipRows(rows) +
-      '<div class="kpi"><div><b>' + kr(r.hours > 0 ? r.total / r.hours : 0) + '</b><span>kostnad per schemalagd timme</span></div>' +
+    $('#ev-slip-' + idx).innerHTML = '<div class="eyebrow">Lönespecifikation · Elev nivå 2 · ' + T[S.period].label + '</div>' + slipRows(rows);
+    $('#ev-extra-' + idx).innerHTML = '<div class="kpi"><div><b>' + kr(r.hours > 0 ? r.total / r.hours : 0) + '</b><span>kostnad per schemalagd timme</span></div>' +
       '<div><b>' + (r.behandling > 0 ? pct(r.total / r.behandling * 100) : '–') + '</b><span>lönekostnad av det hon drar in i tjänster</span></div>' +
       '<div><b style="color:var(--' + (bidragOk ? 'good' : 'bad') + ')">' + kr(r.bidrag) + '</b><span>kan bidra till driftkostnaderna, efter egen lönekostnad och material</span></div>' +
       '<div><b>' + kr(kvE.andel) + '</b><span>hennes andel av salongens driftkostnader</span></div>' +
@@ -1213,8 +1229,8 @@
     const bidragOk = r.bidrag >= 0;
     const kvO = kvarRows(r, S.owner.stolTimmar / 40, a, 'ägarens tid i stolen'); rows.push({ l: 'Ägaren drar in exkl. moms, tjänster och produkter', v: kr(r.intakt) }, ...kvO.rows);
     setSum('ow-sum', 'Egen lön ' + kr(S.owner.lon) + ' · på kontot ' + kr(netto(S.owner.lon)) + ' · kvar på stoltiden ' + (kvO.kvar < 0 ? '−' : '') + kr(Math.abs(kvO.kvar)));
-    $('#owner-slip').innerHTML = '<div class="eyebrow">Ägarens kostnad och intäkt</div>' + slipRows(rows) +
-      '<div class="kpi"><div><b>' + kr(r.adminKost) + '</b><span>overhead till driftkostnaderna: lön för att driva salongen</span></div>' +
+    $('#owner-slip').innerHTML = '<div class="eyebrow">Ägarens kostnad och intäkt</div>' + slipRows(rows);
+    $('#owner-extra').innerHTML = '<div class="kpi"><div><b>' + kr(r.adminKost) + '</b><span>overhead till driftkostnaderna: lön för att driva salongen</span></div>' +
       '<div><b>' + kr(r.totHours > 0 ? r.total / r.totHours : 0) + '</b><span>kostnad per arbetad ägartimme</span></div>' +
       '<div><b style="color:var(--' + (bidragOk ? 'good' : 'bad') + ')">' + kr(r.bidrag) + '</b><span>kan bidra till driftkostnaderna, efter kostnaden för stoltiden och material</span></div>' +
       '<div><b>' + kr(kvO.andel) + '</b><span>stoltidens andel av salongens driftkostnader</span></div>' +
