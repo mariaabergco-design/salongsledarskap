@@ -1258,7 +1258,7 @@
     const radT = (namn, m) => '<tr><td>' + namn + '</td>' + bel.map(b => '<td class="num">' + cell(behovPerTimme(m) * 100 / b) + '</td>').join('') + '</tr>';
     $('#kpi-tabell').innerHTML = '<div class="eyebrow" style="margin:14px 0 6px">Pris ut till kund per debiterad timme, inkl. moms</div>' +
       '<div class="table-scroll"><table class="costs"><thead><tr><th>För vinst på</th>' + bel.map(b => '<th class="num" style="text-align:right">' + b + ' % beläggning</th>').join('') + '</tr></thead><tbody>' +
-      radT('dagens ' + pct(marginal), marginal) + radT('5 %', 5) + radT('10 %', 10) + '</tbody></table></div>' +
+      radT('dagens ' + pct(marginal), marginal) + radT('5 %', 5) + radT('10 %', 10) + radT('15 %', 15) + '</tbody></table></div>' +
       '<p class="small muted" style="margin-top:6px">Det kunden betalar per timme i stolen. 100 % beläggning betyder att varje schemalagd timme är debiterad. Vid 80 % står stolen tom en femtedel av tiden, så de debiterade timmarna måste ta mer betalt för att ge samma resultat.</p>';
   }
 
