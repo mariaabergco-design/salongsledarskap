@@ -814,8 +814,8 @@
   // Lönegrupp 1–5 efter branschvana och utbildning. Två modeller: månadslön + 7 % provision på inarbetat belopp och
   // försäljning (grupp 2–5), eller högre månadslön utan provision.
   const HUD = {
-    '2025': { heltid: 38.25, divisor: 166, prov: 7, anst: 331.10, med: [24447, 24746, 25604, 27063, 27443], utan: [24447, 26460, 27931, 29943, 31207] },
-    '2026': { heltid: 38.25, divisor: 166, prov: 7, anst: 361.10, med: [24888, 25108, 25966, 27678, 28058], utan: [24888, 26901, 28372, 30693, 31957] }
+    '2025': { heltid: 38.25, divisor: 166, prov: 7, anst: 331.10, med: [24447, 24746, 25604, 27063, 27443], utan: [24447, 26460, 27931, 29943, 31207], semDag: [1607, 1727, 1727, 1727, 1772] },
+    '2026': { heltid: 38.25, divisor: 166, prov: 7, anst: 361.10, med: [24888, 25108, 25966, 27678, 28058], utan: [24888, 26901, 28372, 30693, 31957], semDag: [1655, 1779, 1779, 1779, 1825] }
   };
   const HUD_GRUPP = ['1: nyanställd utan utbildning', '2: ett års branschvana, eller nyanställd med kortare utbildning än ett år', '3: två års branschvana, eller ett år inkl. utbildningstid', '4: tre års branschvana, eller två år inkl. utbildningstid', '5: fyra års branschvana, eller tre år inkl. utbildningstid'];
 
@@ -1150,10 +1150,20 @@
     const obBas = share > 0 ? utgaende / share / t.divisor : 0;
     const ob = ((h.ob50 || 0) * 0.5 + (h.ob70 || 0) * 0.7 + (h.ob100 || 0) * 1.0) * obBas;
     const brutto = utgaende + ob;
-    const p = payroll(brutto, h.veckotid, T[S.period]);
+    let p = payroll(brutto, h.veckotid, T[S.period]);
+    // Semesterlönen är 13 % men lägst avtalets garantibelopp per betald semesterdag, 25 dagar om året, i proportion till tjänsten
+    const semDag = t.semDag[grupp - 1];
+    const semGaranti = semDag * 25 / 12 * share;
+    let garantiSlar = false;
+    if (p.semester < semGaranti) {
+      garantiSlar = true;
+      const under = brutto + semGaranti;
+      const ag = under * S.ag / 100, pension = under * pensionPct();
+      p = Object.assign({}, p, { semester: semGaranti, ag, pension, total: brutto + semGaranti + ag + pension + p.friskvard + p.utbildning });
+    }
     const intakt = behandling + produkt;
     const rorlig = behandling * S.material / 100 + produkt * S.produktInkop / 100 + intakt * S.kort / 100;
-    return { hours, debHours, behandling, produkt, grupp, medProv, provRatt, tabell, lonHeltid, egenLon: (h.lon || 0) > tabell, grund, prov, anst, utgaende, obBas, ob, brutto, ...p, intakt, rorlig, bidrag: intakt - rorlig - p.total, share };
+    return { hours, debHours, behandling, produkt, grupp, medProv, provRatt, tabell, lonHeltid, egenLon: (h.lon || 0) > tabell, grund, prov, anst, utgaende, obBas, ob, brutto, ...p, semDag, semGaranti, garantiSlar, intakt, rorlig, bidrag: intakt - rorlig - p.total, share };
   }
 
   function calcKonsult(k, ov) {
@@ -1464,7 +1474,7 @@
       '<p><b>Tillägg</b><br>Försäljningsprovision 7 % på egen försäljning exkl. moms (ej förbrukningsvaror). Branschvana 1: ' + kr(b.bv1) + ', branschvana 2: ' + kr(b.bv2) + ', tjänstetidstillägg: ' + kr(b.tt) + ' per månad vid heltid.</p>',
       '<p><b>Obehörig frisör</b><br>Arbetsprovision ' + pct(t.obeh.prov) + ', garantilön ' + kr(t.obeh.gl40) + '/mån (70 % av behörig).</p>',
       '<p><b>OB-tillägg</b><br>Vardagar efter 18: 50 %. Lördag 12–13: 70 %. Lördag efter 13 samt sön- och helgdag: 100 %. Beräkningsgrund för behörig frisör ' + b.obBas.toLocaleString('sv-SE') + ' kr/h (87 % av garantilönen per timme).</p>',
-      '<p><b>Hudterapeut (skönhetsvårdsavtalet, Handels)</b><br>Heltid 38,25 h/vecka, timlön = månadslön/166. Lönegrupp 1–5 efter branschvana och utbildning. Med provision: lägstalön ' + kr(HUD[S.period].med[0]) + ' (grupp 1) till ' + kr(HUD[S.period].med[4]) + ' (grupp 5) plus 7 % arbets- och försäljningsprovision på inarbetat belopp och försäljning exkl. moms från grupp 2. Utan provision: ' + kr(HUD[S.period].utan[0]) + ' till ' + kr(HUD[S.period].utan[4]) + '. OB: mån–fre 18.15–20 50 %, efter 20 70 %, lördag efter 12 samt sön- och helgdag 100 %, på utgående lön/166. Anställningstidstillägg efter fem år ' + HUD[S.period].anst.toLocaleString('sv-SE') + ' kr/mån. Semesterlön 13 %. Kompetensutveckling 1,75 kr per arbetad timme.</p>',
+      '<p><b>Hudterapeut (skönhetsvårdsavtalet, Handels)</b><br>Heltid 38,25 h/vecka, timlön = månadslön/166. Lönegrupp 1–5 efter branschvana och utbildning. Med provision: lägstalön ' + kr(HUD[S.period].med[0]) + ' (grupp 1) till ' + kr(HUD[S.period].med[4]) + ' (grupp 5) plus 7 % arbets- och försäljningsprovision på inarbetat belopp och försäljning exkl. moms från grupp 2. Utan provision: ' + kr(HUD[S.period].utan[0]) + ' till ' + kr(HUD[S.period].utan[4]) + '. OB: mån–fre 18.15–20 50 %, efter 20 70 %, lördag efter 12 samt sön- och helgdag 100 %, på utgående lön/166. Anställningstidstillägg efter fem år ' + HUD[S.period].anst.toLocaleString('sv-SE') + ' kr/mån. Semesterlön 13 %, dock lägst ' + num(HUD[S.period].semDag[0]) + '–' + num(HUD[S.period].semDag[4]) + ' kr per betald semesterdag beroende på lönegrupp. Kompetensutveckling 1,75 kr per arbetad timme.</p>',
       '<p><b>Elev nivå 2 (färdigutbildning, 2 000 h)</b><br>Månadslön ' + kr(t.elevN2) + ' vid 40 h/vecka, proportionellt vid deltid, lägst 20 h/vecka. Efter 1 000 timmar tillkommer 10 % arbetsprovision på inarbetat belopp. OB-ersättning under de sista 1 000 timmarna: ' + t.elevOb.toLocaleString('sv-SE') + ' kr/h.</p>',
       '<p><b>Elev nivå 1 & feriearbete</b><br>Nivå 1: ' + kr(t.elevN1) + '/mån vid heltid. Feriearbete: ' + t.ferie.toLocaleString('sv-SE') + ' kr/h. Elev får tillgodoräkna max 300 ferietimmar i nivå 2.</p>',
       '<p><b>Handledning</b><br>En handledare per elev. Handledaren bör vara schemalagd samtidigt som eleven minst 75 % av tiden under de första 1 000 timmarna och 50 % under de sista 1 000. Personligt handledartillägg avtalas lokalt (§ 6a Mom 6).</p>',
@@ -1569,7 +1579,7 @@
     rows.push({ l: 'Bruttolön, det som betalas ut före skatt', v: kr(r.brutto), cls: 'sum' });
     rows.push({ l: 'På kontot den 25:e, efter ' + pct(S.skatt) + ' skatt', v: kr(netto(r.brutto)), cls: 'netto' });
     rows.push({ l: 'Sociala avgifter ' + pct(S.ag), v: kr(r.ag), cls: 'sub' });
-    rows.push({ l: 'Semesterersättning ' + pct(S.semester) + ' + sociala avg.', v: kr(r.semester), cls: 'sub' });
+    rows.push({ l: r.garantiSlar ? 'Semesterlön, avtalets garanti ' + num(r.semDag) + ' kr/dag × 25 dagar (mer än ' + pct(S.semester) + ') + sociala avg.' : 'Semesterersättning ' + pct(S.semester) + ' + sociala avg.', v: kr(r.semester), cls: 'sub' });
     rows.push({ l: 'Pension ' + pct(S.pension) + ' + särskild löneskatt', v: kr(r.pension), cls: 'sub' });
     rows.push({ l: 'Friskvård (' + num(S.friskvard) + ' kr/år)', v: kr(r.friskvard), cls: 'sub' });
     rows.push({ l: 'Utbildning', v: kr(r.utbildning), cls: 'sub' });
