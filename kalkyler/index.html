@@ -311,6 +311,7 @@
   .slip .analys .m { font-weight: 700; flex: 0 0 auto; }
   .slip .analys .m.ok { color: var(--good); }
   .slip .analys .m.nej { color: var(--bad); }
+  :root { --hud: #5B8C5A; }
   /* Fakturasorteraren */
   .drop { border: 2px dashed var(--line-strong); border-radius: 8px; padding: 22px 18px; text-align: center; background: var(--surface-2); display: grid; gap: 8px; justify-items: center; transition: border-color .15s ease, background .15s ease; }
   .drop.over { border-color: var(--accent); background: var(--tint); }
@@ -512,6 +513,15 @@
         <button class="btn" type="button" id="add-frisor">+ Lägg till frisör</button>
       </div>
       <div class="body" id="frisor-list"></div>
+    </section>
+
+    <!-- Hudterapeuter -->
+    <section class="panel" id="sec-hud">
+      <div class="head">
+        <div><h2>Hudterapeuter</h2><p>Enligt skönhetsvårdsavtalet mellan Handels och arbetsgivarna, 2025–2027. Heltid är 38,25 timmar i veckan och timlönen räknas som månadslönen delad med 166. Lönegruppen bestäms av branschvana och utbildning. Välj modell: månadslön med 7 % arbets- och försäljningsprovision på det hon drar in och säljer exklusive moms, där lönegrupp 1 ännu inte har provision, eller en högre månadslön utan provision. Har ni avtalat en högre lön än avtalets lägstalön skriver du in den.</p></div>
+        <button class="btn" type="button" id="add-hud">+ Lägg till hudterapeut</button>
+      </div>
+      <div class="body" id="hud-list"></div>
     </section>
 
     <!-- Elever -->
@@ -799,6 +809,15 @@
     }
   };
 
+  // Skönhetsvård, kollektivavtal Handels 2025–2027: hudterapeuter. Heltid 38,25 h/vecka, timlön = månadslön/166.
+  // Lönegrupp 1–5 efter branschvana och utbildning. Två modeller: månadslön + 7 % provision på inarbetat belopp och
+  // försäljning (grupp 2–5), eller högre månadslön utan provision.
+  const HUD = {
+    '2025': { heltid: 38.25, divisor: 166, prov: 7, anst: 331.10, med: [24447, 24746, 25604, 27063, 27443], utan: [24447, 26460, 27931, 29943, 31207] },
+    '2026': { heltid: 38.25, divisor: 166, prov: 7, anst: 361.10, med: [24888, 25108, 25966, 27678, 28058], utan: [24888, 26901, 28372, 30693, 31957] }
+  };
+  const HUD_GRUPP = ['1: nyanställd utan utbildning', '2: ett års branschvana, eller nyanställd med kortare utbildning än ett år', '3: två års branschvana, eller ett år inkl. utbildningstid', '4: tre års branschvana, eller två år inkl. utbildningstid', '5: fyra års branschvana, eller tre år inkl. utbildningstid'];
+
   const CATS = ['Fasta kostnader', 'Rörliga driftkostnader'];
 
   function defaultState() {
@@ -822,6 +841,7 @@
       ],
       konsulter: [],
       hyrstolar: [],
+      hudterapeuter: [],
       elever: [
         { namn: 'Elev 1', veckotid: 40, timmar: 1000, timpris: 560, belaggning: 50, ob50: 6, ob70: 2, ob100: 6 },
         { namn: 'Elev 2', veckotid: 40, timmar: 1500, timpris: 560, belaggning: 55, ob50: 6, ob70: 2, ob100: 6 },
@@ -890,7 +910,7 @@
   const MKEY = KEY + ':manader';
   const CLIENT = Math.random().toString(36).slice(2);
   const uid = () => 'p' + Math.random().toString(36).slice(2, 8);
-  function ensureIds(st) { (st.frisorer || []).forEach(f => { if (!f.id) f.id = uid(); }); (st.elever || []).forEach(e => { if (!e.id) e.id = uid(); }); st.konsulter = st.konsulter || []; st.hyrstolar = st.hyrstolar || []; st.konsulter.forEach(k => { if (!k.id) k.id = uid(); }); st.hyrstolar.forEach(h => { if (!h.id) h.id = uid(); }); if (!st.salongNamn) st.salongNamn = SALONG.charAt(0).toUpperCase() + SALONG.slice(1); return st; }
+  function ensureIds(st) { (st.frisorer || []).forEach(f => { if (!f.id) f.id = uid(); }); (st.elever || []).forEach(e => { if (!e.id) e.id = uid(); }); st.konsulter = st.konsulter || []; st.hyrstolar = st.hyrstolar || []; st.hudterapeuter = st.hudterapeuter || []; st.hudterapeuter.forEach(h => { if (!h.id) h.id = uid(); }); st.konsulter.forEach(k => { if (!k.id) k.id = uid(); }); st.hyrstolar.forEach(h => { if (!h.id) h.id = uid(); }); if (!st.salongNamn) st.salongNamn = SALONG.charAt(0).toUpperCase() + SALONG.slice(1); return st; }
   // Fyll på sparade inställningar med nya fält som tillkommit i senare versioner
   function withDefaults(saved) {
     const d = defaultState(); if (!saved || typeof saved !== 'object') return d;
@@ -965,8 +985,9 @@
     const r = el('div', { class: 'range-row' });
     const i = el('input', { type: 'range', min, max, step });
     i.value = obj[key];
-    const o = el('output', null, obj[key] + (unit || ''));
-    i.addEventListener('input', () => { obj[key] = parseFloat(i.value); o.textContent = obj[key] + (unit || ''); recalc(); });
+    const fmt = v => String(v).replace('.', ',');
+    const o = el('output', null, fmt(obj[key]) + (unit || ''));
+    i.addEventListener('input', () => { obj[key] = parseFloat(i.value); o.textContent = fmt(obj[key]) + (unit || ''); recalc(); });
     r.appendChild(i); r.appendChild(o); f.appendChild(r);
     return f;
   }
@@ -1108,6 +1129,32 @@
     return { hours, debHours, behandling, angiven, semester, soc, pension, total, intakt, rorlig, bidrag: intakt - rorlig - stolKost, totHours, adminShare, adminAuto, adminKost, stolKost };
   }
 
+  function calcHud(h, ov) {
+    const t = HUD[S.period];
+    const share = Math.min(h.veckotid, t.heltid) / t.heltid;
+    const hours = h.veckotid * S.veckor;
+    let debHours = hours * h.belaggning / 100;
+    let behandling = debHours * h.timpris;
+    let produkt = h.produkt || 0;
+    if (ov) { behandling = ov.behandling; if (ov.produkt != null) produkt = ov.produkt; debHours = h.timpris > 0 ? behandling / h.timpris : 0; }
+    const grupp = Math.min(5, Math.max(1, Math.round(h.grupp || 1)));
+    const medProv = h.modell !== 'utan';
+    const tabell = (medProv ? t.med : t.utan)[grupp - 1];
+    const lonHeltid = Math.max(tabell, h.lon || 0);
+    const grund = lonHeltid * share;
+    const provRatt = medProv && grupp >= 2;
+    const prov = provRatt ? (behandling + produkt) * t.prov / 100 : 0;
+    const anst = h.femAr ? t.anst * share : 0;
+    const utgaende = grund + prov + anst;
+    const obBas = share > 0 ? utgaende / share / t.divisor : 0;
+    const ob = ((h.ob50 || 0) * 0.5 + (h.ob70 || 0) * 0.7 + (h.ob100 || 0) * 1.0) * obBas;
+    const brutto = utgaende + ob;
+    const p = payroll(brutto, h.veckotid, T[S.period]);
+    const intakt = behandling + produkt;
+    const rorlig = behandling * S.material / 100 + produkt * S.produktInkop / 100 + intakt * S.kort / 100;
+    return { hours, debHours, behandling, produkt, grupp, medProv, provRatt, tabell, lonHeltid, egenLon: (h.lon || 0) > tabell, grund, prov, anst, utgaende, obBas, ob, brutto, ...p, intakt, rorlig, bidrag: intakt - rorlig - p.total, share };
+  }
+
   function calcKonsult(k, ov) {
     const hours = k.veckotid * S.veckor; let debHours = hours * k.belaggning / 100; let behandling = debHours * k.timpris; let produkt = k.produkt || 0;
     const angiven = k.tjanster > 0; if (angiven) { behandling = k.tjanster; debHours = k.timpris > 0 ? behandling / k.timpris : 0; }
@@ -1128,10 +1175,11 @@
     const ow = calcOwner();
     const ko = (S.konsulter || []).map(k => calcKonsult(k));
     const hy = (S.hyrstolar || []).map(h => calcHyrstol(h));
-    const behAnst = fr.reduce((a, r) => a + r.behandling, 0) + ev.reduce((a, r) => a + r.behandling, 0) + ow.behandling;
+    const hu = (S.hudterapeuter || []).map(h => calcHud(h));
+    const behAnst = fr.reduce((a, r) => a + r.behandling, 0) + ev.reduce((a, r) => a + r.behandling, 0) + hu.reduce((a, r) => a + r.behandling, 0) + ow.behandling;
     const behKons = ko.reduce((a, r) => a + r.behandling, 0);
     const behandling = behAnst + behKons;
-    const produkt = S.frisorer.reduce((a, f) => a + f.produkt, 0) + S.owner.produkt + ko.reduce((a, r) => a + r.produkt, 0) + hy.reduce((a, r) => a + r.produkt, 0);
+    const produkt = S.frisorer.reduce((a, f) => a + f.produkt, 0) + S.owner.produkt + ko.reduce((a, r) => a + r.produkt, 0) + hy.reduce((a, r) => a + r.produkt, 0) + hu.reduce((a, r) => a + r.produkt, 0);
     const hyror = hy.reduce((a, r) => a + r.hyra, 0);
     const oms = behandling + produkt + hyror;
     const material = behAnst * S.material / 100 + ko.reduce((a, r) => a + r.material, 0);
@@ -1140,25 +1188,26 @@
     const rorlig = material + inkop + kort;
     const lonFr = fr.reduce((a, r) => a + r.total, 0);
     const lonEv = ev.reduce((a, r) => a + r.total, 0);
+    const lonHu = hu.reduce((a, r) => a + r.total, 0);
     const lonOw = ow.stolKost;
     const lonKons = ko.reduce((a, r) => a + r.faktura, 0);
     const kickHyr = hy.reduce((a, r) => a + r.kick, 0);
-    const personal = lonFr + lonEv + lonOw + lonKons + kickHyr;
+    const personal = lonFr + lonEv + lonHu + lonOw + lonKons + kickHyr;
     const fastaLista = S.kostnader.reduce((a, k) => a + (k.belopp || 0), 0);
     const fasta = fastaLista + ow.adminKost;
     const resultat = oms - rorlig - personal - fasta;
-    const debHours = fr.reduce((a, r) => a + r.debHours, 0) + ev.reduce((a, r) => a + r.debHours, 0) + ow.debHours + ko.reduce((a, r) => a + r.debHours, 0);
-    const schemaHours = fr.reduce((a, r) => a + r.hours, 0) + ev.reduce((a, r) => a + r.hours, 0) + ow.hours + ko.reduce((a, r) => a + r.hours, 0);
+    const debHours = fr.reduce((a, r) => a + r.debHours, 0) + ev.reduce((a, r) => a + r.debHours, 0) + hu.reduce((a, r) => a + r.debHours, 0) + ow.debHours + ko.reduce((a, r) => a + r.debHours, 0);
+    const schemaHours = fr.reduce((a, r) => a + r.hours, 0) + ev.reduce((a, r) => a + r.hours, 0) + hu.reduce((a, r) => a + r.hours, 0) + ow.hours + ko.reduce((a, r) => a + r.hours, 0);
     const rorligAndel = oms > 0 ? rorlig / oms : 0;
     const breakEven = rorligAndel < 1 ? (personal + fasta) / (1 - rorligAndel) : Infinity;
-    return { fr, ev, ow, ko, hy, behandling, produkt, hyror, oms, material, inkop, kort, rorlig, lonFr, lonEv, lonOw, lonKons, kickHyr, personal, fastaLista, fasta, resultat, debHours, schemaHours, breakEven };
+    return { fr, ev, hu, ow, ko, hy, behandling, produkt, hyror, oms, material, inkop, kort, rorlig, lonFr, lonEv, lonHu, lonOw, lonKons, kickHyr, personal, fastaLista, fasta, resultat, debHours, schemaHours, breakEven };
   }
 
   // ---------- Byggare ----------
   function buildSettings() {
     document.querySelectorAll('[data-s]').forEach(i => {
       const k = i.dataset.s; i.value = S[k];
-      i.addEventListener('input', () => { S[k] = parseFloat(i.value) || 0; if (k === 'produktMarginal') S.produktInkop = 100 - S.produktMarginal; if (k === 'moms') { buildOwner(); buildFrisorer(); buildElever(); buildKonsulter(); buildHyrstolar(); syncStatic(); renderLogTable(); } recalc(); });
+      i.addEventListener('input', () => { S[k] = parseFloat(i.value) || 0; if (k === 'produktMarginal') S.produktInkop = 100 - S.produktMarginal; if (k === 'moms') { buildOwner(); buildFrisorer(); buildHud(); buildElever(); buildKonsulter(); buildHyrstolar(); syncStatic(); renderLogTable(); } recalc(); });
     });
     $('#period').value = S.period;
     $('#period').addEventListener('change', e => { S.period = e.target.value; recalc(); buildRules(); });
@@ -1185,7 +1234,7 @@
     window.addEventListener('hashchange', () => { if (!/data=/.test(location.hash)) location.reload(); else location.reload(); });
     $('#team-link').addEventListener('click', async () => {
       const a = calcAll();
-      const antal = 1 + S.frisorer.length + S.elever.length + (S.konsulter || []).length + (S.hyrstolar || []).length;
+      const antal = 1 + S.frisorer.length + S.elever.length + (S.hudterapeuter || []).length + (S.konsulter || []).length + (S.hyrstolar || []).length;
       const payload = { namn: S.salongNamn || SALONG, datum: new Date().toISOString().slice(0, 10), poster: S.kostnader.map(k => ({ kat: k.kat, namn: k.namn, belopp: k.belopp || 0 })),
         admin: { kat: S.owner.adminKat || 'Fasta kostnader', namn: S.owner.namn + ': lön för timmarna utanför salongsgolvet (' + S.owner.adminTimmar + ' h/vecka)', belopp: Math.round(a.ow.adminKost) },
         total: Math.round(a.fasta), perArbetadManad: Math.round(fastaPerArbetadManad(a)), arbMan: S.arbMan, antal, fte: Math.round(teamFte() * 10) / 10, material: S.material, marginal: S.produktMarginal, period: S.period };
@@ -1286,6 +1335,52 @@
     });
   }
 
+  function buildHud() {
+    const root = $('#hud-list'); root.innerHTML = '';
+    if (!(S.hudterapeuter || []).length) root.appendChild(el('p', { class: 'muted' }, 'Ingen hudterapeut. Lägg till en för att räkna på lönen enligt skönhetsvårdsavtalet.'));
+    S.hudterapeuter.forEach((h, idx) => {
+      const card = el('div', { class: 'person' });
+      const head = el('div', { class: 'p-head' });
+      head.appendChild(nameField(h));
+      const sel = el('select');
+      sel.innerHTML = '<option value="med">Månadslön + 7 % provision</option><option value="utan">Månadslön utan provision</option>';
+      sel.value = h.modell === 'utan' ? 'utan' : 'med'; sel.addEventListener('change', () => { h.modell = sel.value; buildHud(); recalc(); });
+      head.appendChild(sel);
+      head.appendChild(el('span', { class: 'pill', id: 'hu-pill-' + idx }, ''));
+      head.appendChild(el('span', { class: 'spacer' }));
+      const del = el('button', { class: 'btn ghost danger', type: 'button' }, 'Ta bort');
+      del.addEventListener('click', () => { S.hudterapeuter.splice(idx, 1); buildHud(); renderLogTable(); recalc(); });
+      head.appendChild(del);
+      card.appendChild(head);
+
+      const body = el('div', { class: 'p-body' });
+      const inputs = el('div', { class: 'p-inputs' });
+      const g1 = el('div', { class: 'fields' });
+      const gr = el('label', { class: 'field' }); gr.appendChild(el('span', null, 'Lönegrupp enligt avtalet'));
+      const gsel = el('select'); gsel.innerHTML = HUD_GRUPP.map((g, i) => '<option value="' + (i + 1) + '">' + g + '</option>').join(''); gsel.value = String(Math.min(5, Math.max(1, h.grupp || 1)));
+      gsel.addEventListener('change', () => { h.grupp = parseInt(gsel.value, 10); recalc(); }); gr.appendChild(gsel); g1.appendChild(gr);
+      const lf = el('label', { class: 'field' }); lf.appendChild(el('span', null, 'Överenskommen månadslön vid heltid (tomt = avtalets lägstalön)'));
+      const lu = el('div', { class: 'unit' }); const li = el('input', { type: 'number', step: 500, min: 0, id: 'hu-lon-' + idx }); li.value = h.lon ? h.lon : '';
+      li.addEventListener('input', () => { h.lon = parseFloat(li.value) || 0; recalc(); }); lu.appendChild(li); lu.appendChild(el('em', null, 'kr')); lf.appendChild(lu); g1.appendChild(lf);
+      g1.appendChild(rangeField('Veckoarbetstid (heltid 38,25 h)', h, 'veckotid', 10, 38.25, 0.25, ' h'));
+      g1.appendChild(rangeField('Beläggning', h, 'belaggning', 0, 100, 5, ' %'));
+      g1.appendChild(prisInklField(h));
+      g1.appendChild(inklField('Egen produktförsäljning per månad', h, 'produkt'));
+      inputs.appendChild(g1);
+      const g2 = el('div', { class: 'fields' });
+      g2.appendChild(numberField('OB-timmar mån–fre 18.15–20 (50 %)', h, 'ob50', 'h/mån'));
+      g2.appendChild(numberField('OB-timmar mån–fre efter 20 (70 %)', h, 'ob70', 'h/mån'));
+      g2.appendChild(numberField('OB-timmar lördag efter 12, sön- och helgdag (100 %)', h, 'ob100', 'h/mån'));
+      g2.appendChild(checkField('Fem års anställning i företaget (anställningstidstillägg)', h, 'femAr'));
+      inputs.appendChild(g2);
+      body.appendChild(inputs);
+      body.appendChild(el('div', { class: 'slip', id: 'hu-slip-' + idx }));
+      card.appendChild(body);
+      root.appendChild(card);
+      personToggle(card, h.id, 'hu-sum-' + idx);
+    });
+  }
+
   function buildElever() {
     const root = $('#elev-list'); root.innerHTML = '';
     if (!S.elever.length) root.appendChild(el('p', { class: 'muted' }, 'Inga elever. Lägg till en för att räkna på elevlön och provision.'));
@@ -1368,6 +1463,7 @@
       '<p><b>Tillägg</b><br>Försäljningsprovision 7 % på egen försäljning exkl. moms (ej förbrukningsvaror). Branschvana 1: ' + kr(b.bv1) + ', branschvana 2: ' + kr(b.bv2) + ', tjänstetidstillägg: ' + kr(b.tt) + ' per månad vid heltid.</p>',
       '<p><b>Obehörig frisör</b><br>Arbetsprovision ' + pct(t.obeh.prov) + ', garantilön ' + kr(t.obeh.gl40) + '/mån (70 % av behörig).</p>',
       '<p><b>OB-tillägg</b><br>Vardagar efter 18: 50 %. Lördag 12–13: 70 %. Lördag efter 13 samt sön- och helgdag: 100 %. Beräkningsgrund för behörig frisör ' + b.obBas.toLocaleString('sv-SE') + ' kr/h (87 % av garantilönen per timme).</p>',
+      '<p><b>Hudterapeut (skönhetsvårdsavtalet, Handels)</b><br>Heltid 38,25 h/vecka, timlön = månadslön/166. Lönegrupp 1–5 efter branschvana och utbildning. Med provision: lägstalön ' + kr(HUD[S.period].med[0]) + ' (grupp 1) till ' + kr(HUD[S.period].med[4]) + ' (grupp 5) plus 7 % arbets- och försäljningsprovision på inarbetat belopp och försäljning exkl. moms från grupp 2. Utan provision: ' + kr(HUD[S.period].utan[0]) + ' till ' + kr(HUD[S.period].utan[4]) + '. OB: mån–fre 18.15–20 50 %, efter 20 70 %, lördag efter 12 samt sön- och helgdag 100 %, på utgående lön/166. Anställningstidstillägg efter fem år ' + HUD[S.period].anst.toLocaleString('sv-SE') + ' kr/mån. Semesterlön 13 %. Kompetensutveckling 1,75 kr per arbetad timme.</p>',
       '<p><b>Elev nivå 2 (färdigutbildning, 2 000 h)</b><br>Månadslön ' + kr(t.elevN2) + ' vid 40 h/vecka, proportionellt vid deltid, lägst 20 h/vecka. Efter 1 000 timmar tillkommer 10 % arbetsprovision på inarbetat belopp. OB-ersättning under de sista 1 000 timmarna: ' + t.elevOb.toLocaleString('sv-SE') + ' kr/h.</p>',
       '<p><b>Elev nivå 1 & feriearbete</b><br>Nivå 1: ' + kr(t.elevN1) + '/mån vid heltid. Feriearbete: ' + t.ferie.toLocaleString('sv-SE') + ' kr/h. Elev får tillgodoräkna max 300 ferietimmar i nivå 2.</p>',
       '<p><b>Handledning</b><br>En handledare per elev. Handledaren bör vara schemalagd samtidigt som eleven minst 75 % av tiden under de första 1 000 timmarna och 50 % under de sista 1 000. Personligt handledartillägg avtalas lokalt (§ 6a Mom 6).</p>',
@@ -1451,6 +1547,43 @@
       '<div><b style="color:var(--' + (kv.kvar >= 0 ? 'good' : 'bad') + ')">' + (kv.kvar < 0 ? '−' : '') + kr(Math.abs(kv.kvar)) + '</b><span>kvar hos salongen när andelen är betald</span></div>' +
       '<div><b>' + kr(breakEvenFor(r.total)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div></div>' +
       analysHtml('Så bidrar hon', tackningText('hon', r, r.total, kv));
+  }
+
+  function renderHud(h, r, idx, a) {
+    const pill = $('#hu-pill-' + idx);
+    if (!r.medProv) { pill.className = 'pill steel'; pill.textContent = 'Lönegrupp ' + r.grupp + ' · utan provision'; }
+    else if (!r.provRatt) { pill.className = 'pill warn'; pill.textContent = 'Lönegrupp 1 · ingen provision ännu'; }
+    else { pill.className = 'pill good'; pill.textContent = 'Lönegrupp ' + r.grupp + ' · 7 % provision'; }
+    const li = $('#hu-lon-' + idx); if (li) li.placeholder = num(r.tabell);
+    const rows = [
+      { l: 'Schemalagda timmar', v: num(r.hours) + ' h', cls: 'sub' },
+      { l: 'Debiterade timmar (' + h.belaggning + ' %)', v: num(r.debHours) + ' h', cls: 'sub' },
+      { l: 'Timpris ' + kr(h.timpris * (1 + S.moms / 100)) + ' inkl. moms = ' + kr(h.timpris) + ' exkl.', v: '', cls: 'sub' },
+      { l: 'Inarbetat belopp exkl. moms', v: kr(r.behandling) },
+      { l: (r.egenLon ? 'Överenskommen månadslön' : 'Avtalets lägstalön, grupp ' + r.grupp) + ' (' + String(h.veckotid).replace('.', ',') + ' h)', v: kr(r.grund) },
+    ];
+    if (r.medProv) rows.push({ l: r.provRatt ? 'Arbets- och försäljningsprovision 7 %' : 'Provision (från lönegrupp 2)', v: kr(r.prov) });
+    if (r.anst) rows.push({ l: 'Anställningstidstillägg, fem år', v: kr(r.anst) });
+    if (r.ob) rows.push({ l: 'OB-ersättning (' + r.obBas.toLocaleString('sv-SE', { maximumFractionDigits: 2 }) + ' kr/h)', v: kr(r.ob) });
+    rows.push({ l: 'Bruttolön, det som betalas ut före skatt', v: kr(r.brutto), cls: 'sum' });
+    rows.push({ l: 'På kontot den 25:e, efter ' + pct(S.skatt) + ' skatt', v: kr(netto(r.brutto)), cls: 'netto' });
+    rows.push({ l: 'Sociala avgifter ' + pct(S.ag), v: kr(r.ag), cls: 'sub' });
+    rows.push({ l: 'Semesterersättning ' + pct(S.semester) + ' + sociala avg.', v: kr(r.semester), cls: 'sub' });
+    rows.push({ l: 'Pension ' + pct(S.pension) + ' + särskild löneskatt', v: kr(r.pension), cls: 'sub' });
+    rows.push({ l: 'Friskvård (' + num(S.friskvard) + ' kr/år)', v: kr(r.friskvard), cls: 'sub' });
+    rows.push({ l: 'Utbildning', v: kr(r.utbildning), cls: 'sub' });
+    rows.push({ l: 'Total lönekostnad för salongen', v: kr(r.total), cls: 'line' });
+    const bidragOk = r.bidrag >= 0;
+    const kvH = kvarRows(r, h.veckotid / HUD[S.period].heltid, a, h.namn); rows.push({ l: 'Hon drar in exkl. moms, behandlingar och produkter', v: kr(r.intakt) }, ...kvH.rows);
+    setSum('hu-sum-' + idx, 'Bruttolön ' + kr(r.brutto) + ' · på kontot ' + kr(netto(r.brutto)) + ' · kvar hos salongen ' + (kvH.kvar < 0 ? '−' : '') + kr(Math.abs(kvH.kvar)));
+    $('#hu-slip-' + idx).innerHTML = '<div class="eyebrow">Lönespecifikation · Hudterapeut · Skönhetsvård ' + T[S.period].label + '</div>' + slipRows(rows) +
+      '<div class="kpi"><div><b>' + kr(r.hours > 0 ? r.total / r.hours : 0) + '</b><span>kostnad per schemalagd timme</span></div>' +
+      '<div><b>' + (r.behandling > 0 ? pct(r.total / r.behandling * 100) : '–') + '</b><span>lönekostnad av inarbetat belopp</span></div>' +
+      '<div><b style="color:var(--' + (bidragOk ? 'good' : 'bad') + ')">' + kr(r.bidrag) + '</b><span>kan bidra till driftkostnaderna, efter egen lönekostnad och material</span></div>' +
+      '<div><b>' + kr(kvH.andel) + '</b><span>hennes andel av salongens driftkostnader</span></div>' +
+      '<div><b style="color:var(--' + (kvH.kvar >= 0 ? 'good' : 'bad') + ')">' + (kvH.kvar < 0 ? '−' : '') + kr(Math.abs(kvH.kvar)) + '</b><span>kvar hos salongen när andelen är betald</span></div>' +
+      '<div><b>' + kr(breakEvenFor(r.total)) + '</b><span>måste dra in per månad för egen lönekostnad, material och ' + pct(S.buffert) + ' buffert</span></div></div>' +
+      analysHtml('Så bidrar hon', tackningText('hon', r, r.total, kvH));
   }
 
   function renderElev(e, r, idx, a) {
@@ -1635,6 +1768,7 @@
       { l: 'Bruttovinst', v: K(a.oms - a.rorlig), cls: 'line' },
       { l: 'Frisörer', v: '−' + K(a.lonFr), cls: 'sub' },
       { l: 'Elever', v: '−' + K(a.lonEv), cls: 'sub' },
+      ...(a.hu.length ? [{ l: 'Hudterapeuter', v: '−' + K(a.lonHu), cls: 'sub' }] : []),
       { l: 'Ägare, tiden i stolen', v: '−' + K(a.lonOw), cls: 'sub' },
       ...(a.ko.length ? [{ l: 'Konsulter, fakturor', v: '−' + K(a.lonKons), cls: 'sub' }] : []),
       ...(a.kickHyr ? [{ l: 'Hyrstolar, bonus på försäljning', v: '−' + K(a.kickHyr), cls: 'sub' }] : []),
@@ -1650,8 +1784,8 @@
       '<div class="res-rows"><div><span>Bolagsskatt, skatten på bolagets vinst: ' + pct(S.bolagsskatt) + '</span><b>' + (pos ? '−' + K(a.resultat * S.bolagsskatt / 100) : '0 kr') + '</b></div><div class="after"><span>Kvar i bolaget efter bolagsskatt</span><b>' + (pos ? K(a.resultat * (1 - S.bolagsskatt / 100)) : '−' + K(Math.abs(a.resultat))) + '</b></div>' + (pos ? '<div style="color:var(--muted)"><span>Om det delas ut till ägaren: skatt på utdelning ' + pct(S.utdelningsskatt) + '</span><b style="font-weight:600">−' + K(a.resultat * (1 - S.bolagsskatt / 100) * S.utdelningsskatt / 100) + '</b></div><div style="color:var(--muted)"><span>Kvar till ägaren privat efter båda skatterna</span><b style="font-weight:600">' + K(a.resultat * (1 - S.bolagsskatt / 100) * (1 - S.utdelningsskatt / 100)) + '</b></div>' : '') + '</div>' +
       '<span class="small muted">Det här är vad som blir kvar i bolaget när alla löner, ägarens egen lön inräknad, material och driftkostnader är betalda. Det är bolagets vinst, inte de anställdas skatt: den dras från deras löner. ' + (pos ? 'Bolagsskatt och vinstskatt är samma sak: skatten som bolaget betalar på sin vinst. Det som blir kvar kan stanna i bolaget som buffert, gå till investeringar eller delas ut. Vid utdelning betalar ägaren privat normalt 20 % skatt inom gränsbeloppet, stäm av med din revisor.' : 'Salongen går med förlust och betalar då ingen bolagsskatt.') + '</span></div>' +
       '<div class="eyebrow" style="margin-top:14px">Så fördelas kostnaderna</div>' +
-      '<div class="bar">' + seg(a.lonFr, 'accent') + seg(a.lonEv, 'warn') + seg(a.lonOw, 'steel') + seg(a.lonKons + a.kickHyr, 'brand-yellow') + seg(a.fasta, 'ink') + seg(a.rorlig, 'line-strong') + '</div>' +
-      '<div class="legend"><span style="--c:var(--accent)">Frisörer ' + pct(tot ? a.lonFr / tot * 100 : 0) + '</span><span style="--c:var(--warn)">Elever ' + pct(tot ? a.lonEv / tot * 100 : 0) + '</span><span style="--c:var(--steel)">Ägare ' + pct(tot ? a.lonOw / tot * 100 : 0) + '</span>' + ((a.lonKons + a.kickHyr) ? '<span style="--c:var(--brand-yellow)">Konsulter & hyrstolar ' + pct(tot ? (a.lonKons + a.kickHyr) / tot * 100 : 0) + '</span>' : '') + '<span style="--c:var(--ink)">Drift ' + pct(tot ? a.fasta / tot * 100 : 0) + '</span><span style="--c:var(--line-strong)">Rörliga ' + pct(tot ? a.rorlig / tot * 100 : 0) + '</span></div>';
+      '<div class="bar">' + seg(a.lonFr, 'accent') + seg(a.lonEv, 'warn') + seg(a.lonHu, 'hud') + seg(a.lonOw, 'steel') + seg(a.lonKons + a.kickHyr, 'brand-yellow') + seg(a.fasta, 'ink') + seg(a.rorlig, 'line-strong') + '</div>' +
+      '<div class="legend"><span style="--c:var(--accent)">Frisörer ' + pct(tot ? a.lonFr / tot * 100 : 0) + '</span><span style="--c:var(--warn)">Elever ' + pct(tot ? a.lonEv / tot * 100 : 0) + '</span>' + (a.hu.length ? '<span style="--c:var(--hud)">Hudterapeuter ' + pct(tot ? a.lonHu / tot * 100 : 0) + '</span>' : '') + '<span style="--c:var(--steel)">Ägare ' + pct(tot ? a.lonOw / tot * 100 : 0) + '</span>' + ((a.lonKons + a.kickHyr) ? '<span style="--c:var(--brand-yellow)">Konsulter & hyrstolar ' + pct(tot ? (a.lonKons + a.kickHyr) / tot * 100 : 0) + '</span>' : '') + '<span style="--c:var(--ink)">Drift ' + pct(tot ? a.fasta / tot * 100 : 0) + '</span><span style="--c:var(--line-strong)">Rörliga ' + pct(tot ? a.rorlig / tot * 100 : 0) + '</span></div>';
 
     const fastaPerDeb = a.debHours > 0 ? a.fasta / a.debHours : 0;
     const breakEvenBel = a.schemaHours > 0 && a.oms > 0 ? Math.min(999, a.breakEven / a.oms * (a.debHours / a.schemaHours) * 100) : 0;
@@ -1671,6 +1805,7 @@
       { namn: S.owner.namn, typ: 'Ägare, tiden i stolen', fte: S.owner.stolTimmar / 40, hours: S.owner.stolTimmar * S.veckor, produkt: S.owner.produkt, idag: calcOwner().behandling, calc: beh => { const r = calcOwner(); const intakt = beh + S.owner.produkt; const rorlig = beh * S.material / 100 + S.owner.produkt * S.produktInkop / 100 + intakt * S.kort / 100; return intakt - rorlig - r.stolKost; } },
       ...S.frisorer.map(f => ({ namn: f.namn, typ: f.typ === 'obeh' ? 'Obehörig frisör' : 'Behörig frisör', fte: f.veckotid / 40, hours: f.veckotid * S.veckor, produkt: f.produkt, idag: calcFrisor(f).behandling, calc: beh => calcFrisor(f, { behandling: beh, produkt: f.produkt }).bidrag })),
       ...S.elever.map(e => ({ namn: e.namn, typ: 'Elev nivå 2', fte: e.veckotid / 40, hours: e.veckotid * S.veckor, produkt: 0, idag: calcElev(e).behandling, calc: beh => calcElev(e, { behandling: beh }).bidrag })),
+      ...(S.hudterapeuter || []).map(h => ({ namn: h.namn, typ: 'Hudterapeut', fte: h.veckotid / HUD[S.period].heltid, hours: h.veckotid * S.veckor, produkt: h.produkt || 0, idag: calcHud(h).behandling, calc: beh => calcHud(h, { behandling: beh, produkt: h.produkt || 0 }).bidrag })),
       ...(S.konsulter || []).map(k => ({ namn: k.namn, typ: 'Konsult, fakturerar ' + k.proc + ' %', fte: k.veckotid / 40, hours: k.veckotid * S.veckor, produkt: k.produkt || 0, idag: calcKonsult(k).behandling, calc: beh => calcKonsult(k, { behandling: beh, produkt: k.produkt || 0 }).bidrag })),
       ...(S.hyrstolar || []).map(h => ({ namn: h.namn, typ: 'Hyrstol', hyr: true, andelPct: hyrAndel(h), paslag: (h.paslag == null ? 15 : h.paslag), fte: 0, hours: 0, produkt: h.produkt || 0, idag: 0, bidrag: calcHyrstol(h).bidrag, hyra: h.hyra || 0, calc: () => calcHyrstol(h).bidrag }))
     ];
@@ -1823,6 +1958,7 @@
     const o = calcOwner(); const list = [{ id: 'owner', label: S.owner.namn + ' (ägare, tiden i stolen)', hours: o.hours, debH: o.debHours, beh: o.behandling, pris: S.owner.timpris, prov: 0 }];
     S.frisorer.forEach((f, i) => { const r = calcFrisor(f); list.push({ id: 'fr' + i, label: f.namn, hours: r.hours, debH: r.debHours, beh: r.behandling, pris: f.timpris, prov: r.tab.prov }); });
     S.elever.forEach((e, i) => { const r = calcElev(e); list.push({ id: 'ev' + i, label: e.namn + ' (elev)', hours: r.hours, debH: r.debHours, beh: r.behandling, pris: e.timpris, prov: r.harProv ? T[S.period].elevProv : 0 }); });
+    (S.hudterapeuter || []).forEach((h, i) => { const r = calcHud(h); list.push({ id: 'hu' + i, label: h.namn + ' (hudterapeut)', hours: r.hours, debH: r.debHours, beh: r.behandling, pris: h.timpris, prov: r.provRatt ? HUD[S.period].prov : 0 }); });
     (S.konsulter || []).forEach((k, i) => { const r = calcKonsult(k); list.push({ id: 'ko' + i, label: k.namn + ' (konsult)', hours: r.hours, debH: r.debHours, beh: r.behandling, pris: k.timpris, prov: 0 }); });
     return list;
   }
@@ -1868,7 +2004,7 @@
     return list;
   }
   // Hyrstolar bär en vald andel av driftkostnaderna (förvalt lika del per person i stolen). Resten delar teamet på per heltidstjänst.
-  function stolAntal() { return (S.owner.stolTimmar > 0 ? 1 : 0) + S.frisorer.length + S.elever.length + (S.konsulter || []).length + (S.hyrstolar || []).length; }
+  function stolAntal() { return (S.owner.stolTimmar > 0 ? 1 : 0) + S.frisorer.length + S.elever.length + (S.hudterapeuter || []).length + (S.konsulter || []).length + (S.hyrstolar || []).length; }
   function hyrAndel(h) { return (h.andel == null ? 100 / Math.max(1, stolAntal()) : h.andel) / 100; }
   function hyrShare() { return Math.min(0.95, (S.hyrstolar || []).reduce((s, h) => s + hyrAndel(h), 0)); }
   function fastaPerArbetadManad(a) { return a.fasta * (1 - hyrShare()) * 12 / (S.arbMan || 12); }
@@ -1970,6 +2106,7 @@
     const list = [{ id: 'owner', label: S.owner.namn + ' (ägare/salongsledare, tiden i stolen)', calc: () => { const r = calcOwner(); const k = 1 - r.adminShare; return { brutto: S.owner.lon * k, total: r.stolKost, ag: r.soc * k, semester: r.semester * k, pension: r.pension * k, friskvard: S.friskvard / 12 * k, utbildning: S.utbildning * k }; } }];
     S.frisorer.forEach((f, i) => list.push({ id: 'fr' + i, label: f.namn + ' (' + (f.typ === 'obeh' ? 'obehörig' : 'behörig') + ', ' + f.veckotid + ' h/v)', calc: ov => calcFrisor(f, ov) }));
     S.elever.forEach((e, i) => list.push({ id: 'ev' + i, label: e.namn + ' (elev nivå 2, ' + e.timmar + ' h)', calc: ov => calcElev(e, ov) }));
+    (S.hudterapeuter || []).forEach((h, i) => list.push({ id: 'hu' + i, label: h.namn + ' (hudterapeut, ' + String(h.veckotid).replace('.', ',') + ' h/v)', calc: ov => calcHud(h, ov) }));
     return list;
   }
   function calcLs(pers, tj, fs) {
@@ -2026,7 +2163,7 @@
     const x = S.ls; const persons = lsPersons(); const sel = $('#ls-person');
     sel.innerHTML = persons.map(p => '<option value="' + p.id + '">' + p.label + '</option>').join('');
     sel.value = x.person; if (sel.value !== x.person) { x.person = persons.length ? persons[0].id : ''; sel.value = x.person; }
-    const antal = 1 + S.frisorer.length + S.elever.length + (S.konsulter || []).length + (S.hyrstolar || []).length;
+    const antal = 1 + S.frisorer.length + S.elever.length + (S.hudterapeuter || []).length + (S.konsulter || []).length + (S.hyrstolar || []).length;
     const fastaLika = a.fasta / antal;
     if (x.fasta == null) { x.fasta = Math.round(fastaLika); $('[data-ls="fasta"]').value = x.fasta; }
     $('#ls-hint').textContent = 'Driftkostnaderna nedan är ' + kr(a.fasta) + ' per månad. Delat lika på ' + antal + ' personer inklusive ägaren blir det ' + kr(fastaLika) + ' per person. Ändra beloppet om ni fördelar på annat sätt.';
@@ -2132,7 +2269,7 @@
     document.querySelectorAll('[data-ex]').forEach(i => { if (i.type === 'checkbox') i.checked = !!S.ex[i.dataset.ex]; else i.value = S.ex[i.dataset.ex]; });
     $('#salong-namn').value = S.salongNamn || '';
   }
-  function rebuildAll() { syncStatic(); buildOwner(); buildFrisorer(); buildElever(); buildKonsulter(); buildHyrstolar(); buildCosts(); buildRules(); renderLogTable(); recalc(); }
+  function rebuildAll() { syncStatic(); buildOwner(); buildFrisorer(); buildHud(); buildElever(); buildKonsulter(); buildHyrstolar(); buildCosts(); buildRules(); renderLogTable(); recalc(); }
 
   // ---------- Fakturasorteraren ----------
   // Fakturorna sparas en per dokument (salonger/<salong>/fakturor/<id>). Artikelregistret är ett dokument
@@ -2635,6 +2772,7 @@
       { id: 'owner', namn: S.owner.namn, typ: 'Ägare, tiden i stolen', calc: () => { const r = calcOwner(); return { brutto: S.owner.lon * (1 - r.adminShare), total: r.stolKost }; } },
       ...S.frisorer.map(f => ({ id: f.id, namn: f.namn, typ: f.typ === 'obeh' ? 'Obehörig frisör' : 'Behörig frisör', calc: (tj, fs) => { const r = calcFrisor(f, { behandling: tj, produkt: fs }); return { brutto: r.brutto, total: r.total }; } })),
       ...S.elever.map(e => ({ id: e.id, namn: e.namn, typ: 'Elev nivå 2', calc: (tj) => { const r = calcElev(e, { behandling: tj }); return { brutto: r.brutto, total: r.total }; } })),
+      ...(S.hudterapeuter || []).map(h => ({ id: h.id, namn: h.namn, typ: 'Hudterapeut', calc: (tj, fs) => { const r = calcHud(h, { behandling: tj, produkt: fs }); return { brutto: r.brutto, total: r.total }; } })),
       ...(S.konsulter || []).map(k => ({ id: k.id, namn: k.namn, typ: 'Konsult, fakturerar ' + k.proc + ' %', custom: (tj, fs) => { const r = calcKonsult(k, { behandling: tj, produkt: fs }); return { brutto: r.faktura, lonekostnad: r.faktura, material: r.material, inkop: r.inkop, hyra: 0, oms: tj + fs, totalkostnad: r.faktura + r.material + r.inkop, bidrag: tj + fs - r.material - r.inkop - r.faktura }; } })),
       ...(S.hyrstolar || []).map(h => ({ id: h.id, namn: h.namn, typ: 'Hyrstol, hyra ' + kr(h.hyra || 0), noTj: true, custom: (tj, fs) => { const r = calcHyrstol(h, { produkt: fs }); return { brutto: r.kick, lonekostnad: r.kick, material: 0, inkop: r.inkop, hyra: r.hyra, oms: r.hyra + fs, totalkostnad: r.kick + r.inkop, bidrag: r.hyra + fs - r.inkop - r.kick }; } }))
     ];
@@ -2829,6 +2967,7 @@
     renderOwner(a.ow, a);
     a.fr.forEach((r, i) => renderFrisor(S.frisorer[i], r, i, a));
     a.ev.forEach((r, i) => renderElev(S.elever[i], r, i, a));
+    a.hu.forEach((r, i) => renderHud(S.hudterapeuter[i], r, i, a));
     a.ko.forEach((r, i) => renderKonsult(S.konsulter[i], r, i, a));
     a.hy.forEach((r, i) => renderHyrstol(S.hyrstolar[i], r, i, a));
     renderHandledarNote();
@@ -2861,6 +3000,10 @@
   $('#add-hyr').addEventListener('click', () => {
     S.hyrstolar.push({ id: uid(), namn: 'Hyrstol ' + (S.hyrstolar.length + 1), hyra: 9000, andel: null, paslag: 15, produkt: 0, kick: 10 });
     buildHyrstolar(); renderLogTable(); recalc();
+  });
+  $('#add-hud').addEventListener('click', () => {
+    S.hudterapeuter.push({ id: uid(), namn: 'Hudterapeut ' + (S.hudterapeuter.length + 1), modell: 'med', grupp: 3, lon: 0, veckotid: 38.25, timpris: 720, belaggning: 65, produkt: 6000, ob50: 4, ob70: 0, ob100: 4, femAr: false });
+    buildHud(); renderLogTable(); recalc();
   });
   $('#add-elev').addEventListener('click', () => {
     S.elever.push({ id: uid(), namn: 'Elev ' + (S.elever.length + 1), veckotid: 40, timmar: 0, timpris: 560, belaggning: 40, ob50: 4, ob70: 2, ob100: 4 });
