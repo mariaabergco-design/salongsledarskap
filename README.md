@@ -11,7 +11,7 @@ Kunskapssajt för salongsägare med fyra anställda eller fler. Innehållet ägs
 | `kundcase/` | Fyra kundcase |
 | `verktyg/` | Fyra interaktiva verktyg i html, plus Flaskhalstestets text |
 | `kalkyler/` | Salongskalkylen, Frisörkalkylen, Veckoschemat och Hushållskalkylen, färdiga html-sidor som Vercel publicerar på salongskalkylen.vercel.app. Ingår inte i sajtbygget |
-| `mastermind/` | Master Mind våren 2027, programsidan för Mastermind-gruppen. Eget Vercel-projekt med `mastermind` som rotmapp. Ingår inte i sajtbygget |
+| `mastermind/` | Mastermind våren 2027, programsidan för Mastermind-gruppen. Eget Vercel-projekt med `mastermind` som rotmapp. Ingår inte i sajtbygget |
 | `site/` | Den färdiga sajten, genererad. Redigera aldrig här, ändringar skrivs över |
 | `scripts/` | Byggskript och stilmall |
 | `typsnitt/` | Montserrat och Playfair Display som filer, med licenser |
