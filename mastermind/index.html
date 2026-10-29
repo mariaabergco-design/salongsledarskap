@@ -126,6 +126,15 @@
   .bootcamp h3 { font-size: 24px; margin-top: 10px; }
   .bootcamp ul { margin: 12px 0 0; padding-left: 18px; }
   .bootcamp li { margin-top: 4px; }
+  .program { margin-top: 18px; border-top: 1px solid var(--line); }
+  .program > div { display: grid; grid-template-columns: 170px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .program dt { font-weight: 700; }
+  .program dt span { display: block; font-weight: 500; font-size: 13px; color: var(--muted); }
+  .program dd { margin: 0; }
+  .bootcamp .sign { margin-top: 18px; font-family: var(--display); font-size: 18px; font-style: italic; }
+  .autumn { margin-top: 14px; padding: 16px 20px; border-radius: var(--radius); background: var(--tint); }
+  .autumn strong { font-family: var(--display); font-size: 18px; font-weight: 600; display: block; }
+  @media (max-width: 640px) { .program > div { grid-template-columns: 1fr; gap: 4px; } }
 
   footer { border-top: 1px solid var(--line); padding: 24px 0 40px; font-size: 13px; color: var(--muted); }
 
@@ -195,8 +204,8 @@
       </a>
       <a class="card soon" href="#bootcamp">
         <div class="k">Boot Camp</div>
-        <div class="v">1 mars</div>
-        <div class="s">Sankt Jörgen, Göteborg. För er som är ägare och har anställda salongsledare.</div>
+        <div class="v">28 feb – 1 mars</div>
+        <div class="s">Sankt Jörgen, Göteborg. För dig som äger en salong och har anställda.</div>
       </a>
     </div>
   </section>
@@ -289,17 +298,20 @@
     <h2>Boot Camp</h2>
     <div class="bootcamp">
       <div>
-        <span class="badge">Måndag 1 mars 2027 · Sankt Jörgen, Göteborg</span>
-        <h3>Boot Camp för ägare och anställd salongsledare</h3>
-        <p>Vårens Boot Camp får en ny form. Den här gången är den för er som är ägare och har anställda salongsledare. Ni kommer tillsammans för att utvecklas i samma rum och åka hem med ett gemensamt sätt att leda salongen.</p>
-        <ul>
-          <li>För dig som är ägare och har anställda salongsledare</li>
-          <li>Ni deltar tillsammans och arbetar med er egen salong</li>
-          <li>Gemensam middag på kvällen den 1 mars</li>
-          <li>Separat inbjudan med anmälan skickas ut</li>
-        </ul>
+        <span class="badge">28 februari – 1 mars 2027 · Sankt Jörgen, Göteborg</span>
+        <h3>Välkommen till vårens Boot Camp</h3>
+        <p>Vårens Boot Camp är för dig som äger en salong och har anställda eller en anställd salongsledare. Vi börjar på söndagskvällen och ägnar hela måndagen åt ditt ledarskap och din salong, tillsammans med andra som står i samma situation som du.</p>
+        <dl class="program">
+          <div><dt>Söndag<span>28 februari</span></dt><dd>Vi samlas på kvällen och äter en enklare middag, för dig som hinner och vill sova över.</dd></div>
+          <div><dt>Måndag<span>1 mars</span></dt><dd>Konferens hela dagen, som leds av mig och Anders Landgren. På kvällen äter vi middag tillsammans med ledare som jag har jobbat med i några år.</dd></div>
+          <div><dt>Boende</dt><dd>Du kan sova över en eller två nätter.</dd></div>
+          <div><dt>Pris</dt><dd>Exakt pris kommer så fort vi har landat offerten.</dd></div>
+        </dl>
+        <p>Vill du vara med? Hör av dig till mig, så skickar jag pris och anmälan så snart de är klara.</p>
+        <p class="sign">Varmt välkommen! / Maria</p>
       </div>
     </div>
+    <div class="autumn"><strong>Höstens Boot Camp återkommer</strong>I september eller oktober 2027 kör vi Boot Camp igen, den gången under tre dagar. Datum kommer.</div>
   </section>
 
 </main>
