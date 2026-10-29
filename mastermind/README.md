@@ -11,4 +11,10 @@ inte i sajtbygget för salongsledarskap.se och inte i Salongskalkylen.
 
 Byt datum och teman i tabellerna i `index.html`. Sidan markerar själv nästa
 tillfälle, gråar ut passerade datum och bygger kalenderfilerna från tabellerna,
-så inget annat behöver ändras.
+så inget annat behöver ändras på sidan.
+
+Kör sedan `python3 scripts/bygg-mastermind-kalender.py`. Det bygger om
+kalenderfilerna i `kalender/`, som deltagarna prenumererar på via knapparna
+"Lägg i kalendern" (Google Kalender, iPhone och Outlook). När filerna är
+pushade uppdateras datumen i deltagarnas kalendrar av sig själva, oftast inom
+några timmar.
