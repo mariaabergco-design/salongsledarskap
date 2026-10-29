@@ -191,12 +191,12 @@
       <a class="card" href="#gruppcoaching">
         <div class="k">Gruppcoaching</div>
         <div class="v">10 tillfällen</div>
-        <div class="s">Fredagar kl. 09.00–10.30. Anmälan till varje tillfälle. Start 15 jan.</div>
+        <div class="s">Fredagar kl. 09.00–10.30. Samma Zoom-länk varje gång, ingen anmälan. Start 15 jan.</div>
       </a>
       <a class="card soon" href="#bootcamp">
         <div class="k">Boot Camp</div>
         <div class="v">1 mars</div>
-        <div class="s">Sankt Jörgen, Göteborg. För ägare tillsammans med sin anställda salongsledare.</div>
+        <div class="s">Sankt Jörgen, Göteborg. För er som är ägare och har anställda salongsledare.</div>
       </a>
     </div>
   </section>
@@ -258,8 +258,12 @@
       <h2>Gruppcoaching</h2>
       <button class="btn ghost" data-ics="Gruppcoaching" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Lägg i kalendern</button>
     </div>
-    <p>Gruppcoachingen bygger på våra digitala utbildningar. Du har tittat på utbildningen i förväg, och här för vi dialog kring temat, allt för att stärka hur du använder kunskapen i vardagen. Alla tillfällen ligger på fredagar kl. 09.00–10.30.</p>
-    <div class="callout"><strong>Anmälan krävs till varje tillfälle.</strong> Boka din plats på <a href="https://calendly.com/abergcocoach" target="_blank" rel="noopener">calendly.com/abergcocoach</a>.</div>
+    <p>Gruppcoachingen bygger på våra digitala utbildningar. Du har tittat på utbildningen i förväg, och här för vi dialog kring temat, allt för att stärka hur du använder kunskapen i vardagen. Alla tillfällen ligger på fredagar kl. 09.00–10.30. Du använder samma Zoom-länk varje gång och behöver inte anmäla dig i förväg.</p>
+    <div class="zoom">
+      <div><div class="k">Zoom</div><div class="v"><a href="https://us06web.zoom.us/j/81692710516?pwd=aybzZj8gfAaZnpQbWRzLHGXFOjhMxj.1" target="_blank" rel="noopener">Gå med i mötet</a></div></div>
+      <div><div class="k">Mötes-ID</div><div class="v"><code>816 9271 0516</code></div></div>
+      <div><div class="k">Lösenkod</div><div class="v"><code>mastermind</code></div></div>
+    </div>
     <div class="table">
       <table>
         <thead><tr><th>Datum</th><th>Dag</th><th>Tid</th><th>Tema</th></tr></thead>
@@ -285,9 +289,9 @@
       <div>
         <span class="badge">Måndag 1 mars 2027 · Sankt Jörgen, Göteborg</span>
         <h3>Boot Camp för ägare och anställd salongsledare</h3>
-        <p>Vårens Boot Camp får en ny form. Den här gången kommer du som är ägare tillsammans med din anställda salongsledare, för att utvecklas i samma rum och åka hem med ett gemensamt sätt att leda salongen.</p>
+        <p>Vårens Boot Camp får en ny form. Den här gången är den för er som är ägare och har anställda salongsledare. Ni kommer tillsammans för att utvecklas i samma rum och åka hem med ett gemensamt sätt att leda salongen.</p>
         <ul>
-          <li>För dig som är ägare och har en anställd salongsledare</li>
+          <li>För dig som är ägare och har anställda salongsledare</li>
           <li>Ni deltar tillsammans och arbetar med er egen salong</li>
           <li>Gemensam middag på kvällen den 1 mars</li>
           <li>Separat inbjudan med anmälan skickas ut</li>
@@ -307,7 +311,7 @@
   var MAN = ["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"];
   var MANL = ["januari","februari","mars","april","maj","juni","juli","augusti","september","oktober","november","december"];
   var DAG = ["söndag","måndag","tisdag","onsdag","torsdag","fredag","lördag"];
-  var LINKS = { "Master Mind": "https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2Vg.1", "Rådgivningstimme": "https://us06web.zoom.us/j/88920499498?pwd=fQ2zdkBXHtbTIaUR1Sx2vOZOQlcpeu.1", "Gruppcoaching": "https://calendly.com/abergcocoach" };
+  var LINKS = { "Master Mind": "https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2Vg.1", "Rådgivningstimme": "https://us06web.zoom.us/j/88920499498?pwd=fQ2zdkBXHtbTIaUR1Sx2vOZOQlcpeu.1", "Gruppcoaching": "https://us06web.zoom.us/j/81692710516?pwd=aybzZj8gfAaZnpQbWRzLHGXFOjhMxj.1" };
   var IDS = { "Master Mind": "mastermind", "Rådgivningstimme": "radgivningstimme", "Gruppcoaching": "gruppcoaching" };
 
   function parse(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
@@ -349,9 +353,7 @@
       var L = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Åberg & Co//Master Mind våren 2027//SV","CALSCALE:GREGORIAN","METHOD:PUBLISH"].concat(TZ);
       rows.filter(function (r) { return r.dataset.typ === typ; }).forEach(function (r) {
         var link = LINKS[typ];
-        var desc = typ === "Gruppcoaching"
-          ? "Anmälan krävs till varje tillfälle: " + link
-          : "Zoom: " + link + "\nLösenkod: mastermind";
+        var desc = "Zoom: " + link + "\nLösenkod: mastermind";
         L.push("BEGIN:VEVENT",
           "UID:" + typ.replace(/\s/g, "").toLowerCase() + "-" + r.dataset.date + "@abergco-mastermind",
           "DTSTAMP:" + now,
@@ -359,7 +361,7 @@
           "DTEND;TZID=Europe/Stockholm:" + stamp(r.dataset.date, r.dataset.slut),
           "SUMMARY:" + esc(r.dataset.titel + " · Åberg & Co"),
           "DESCRIPTION:" + esc(desc),
-          "LOCATION:" + esc(typ === "Gruppcoaching" ? "Zoom (länk efter anmälan)" : link),
+          "LOCATION:" + esc(link),
           "END:VEVENT");
       });
       L.push("END:VCALENDAR");
