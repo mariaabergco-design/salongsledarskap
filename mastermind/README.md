@@ -1,6 +1,6 @@
 # Master Mind
 
-Programsidan för Mastermind-gruppen: Master Mind, Office Hours,
+Programsidan för Mastermind-gruppen: Master Mind, Rådgivningstimme,
 Gruppcoaching och Boot Camp. En fristående html-sida, `index.html`.
 
 Mappen publiceras av ett eget Vercel-projekt med `mastermind` som rotmapp.
