@@ -9,7 +9,6 @@ Den här mappen publiceras av Vercel på salongskalkylen.vercel.app.
 | `frisor/index.html` | Frisörkalkylen, för anställda frisörer |
 | `veckoschema/index.html` | Veckoschemat, där salongsledaren bygger sin vecka från 06 till 23 med färdiga och egna block och ser timmarna per vecka och månad |
 | `hushallskalkyl/index.html` | Hushållskalkylen, privatekonomi för salongsledaren: läser in kontoutdrag från skärmdump, pdf eller inklistrad text, räknar månadens verkliga över- eller underskott, håller utläggsrapporten till bolaget och en hushållsbudget med lönen salongen måste bära |
-| `mastermind/index.html` | Master Mind våren 2027, programsidan för Mastermind-gruppen med Master Mind, Office Hours, Gruppcoaching och Boot Camp |
 | `api/las.js` | Serverfunktion som läser fakturor och kassalistor med Claude |
 
 Sidorna redigeras som artefakter på claude.ai. Den färdiga html-filen läggs
