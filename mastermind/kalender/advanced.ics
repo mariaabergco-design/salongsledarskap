@@ -28,7 +28,7 @@ BEGIN:VEVENT
 UID:advanced-2027-01-07@mastermind-varen27
 DTSTAMP:20261029T120000Z
 DTSTART;TZID=Europe/Stockholm:20270107T120000
-DTEND;TZID=Europe/Stockholm:20270107T140000
+DTEND;TZID=Europe/Stockholm:20270107T150000
 SUMMARY:Mastermind Advanced · Åberg & Co
 DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
  1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
@@ -42,7 +42,7 @@ BEGIN:VEVENT
 UID:advanced-2027-02-04@mastermind-varen27
 DTSTAMP:20261029T120000Z
 DTSTART;TZID=Europe/Stockholm:20270204T120000
-DTEND;TZID=Europe/Stockholm:20270204T140000
+DTEND;TZID=Europe/Stockholm:20270204T150000
 SUMMARY:Mastermind Advanced · Åberg & Co
 DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
  1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
@@ -56,7 +56,7 @@ BEGIN:VEVENT
 UID:advanced-2027-03-04@mastermind-varen27
 DTSTAMP:20261029T120000Z
 DTSTART;TZID=Europe/Stockholm:20270304T120000
-DTEND;TZID=Europe/Stockholm:20270304T140000
+DTEND;TZID=Europe/Stockholm:20270304T150000
 SUMMARY:Mastermind Advanced · Åberg & Co
 DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
  1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
@@ -70,7 +70,7 @@ BEGIN:VEVENT
 UID:advanced-2027-04-01@mastermind-varen27
 DTSTAMP:20261029T120000Z
 DTSTART;TZID=Europe/Stockholm:20270401T120000
-DTEND;TZID=Europe/Stockholm:20270401T140000
+DTEND;TZID=Europe/Stockholm:20270401T150000
 SUMMARY:Mastermind Advanced · Åberg & Co
 DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
  1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
@@ -84,7 +84,7 @@ BEGIN:VEVENT
 UID:advanced-2027-05-05@mastermind-varen27
 DTSTAMP:20261029T120000Z
 DTSTART;TZID=Europe/Stockholm:20270505T120000
-DTEND;TZID=Europe/Stockholm:20270505T140000
+DTEND;TZID=Europe/Stockholm:20270505T150000
 SUMMARY:Mastermind Advanced · Åberg & Co
 DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
  1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
@@ -98,7 +98,7 @@ BEGIN:VEVENT
 UID:advanced-2027-06-03@mastermind-varen27
 DTSTAMP:20261029T120000Z
 DTSTART;TZID=Europe/Stockholm:20270603T120000
-DTEND;TZID=Europe/Stockholm:20270603T140000
+DTEND;TZID=Europe/Stockholm:20270603T150000
 SUMMARY:Mastermind Advanced · Åberg & Co
 DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
  1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
