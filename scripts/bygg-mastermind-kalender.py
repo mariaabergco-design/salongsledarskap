@@ -22,6 +22,7 @@ STAMP = "20261029T120000Z"
 
 PROGRAM = {
     "Mastermind": ("mastermind", "Mastermind våren 2027"),
+    "Mastermind Advanced": ("advanced", "Mastermind Advanced våren 2027"),
     "Rådgivningstimme": ("radgivningstimme", "Rådgivningstimme våren 2027"),
     "Gruppcoaching": ("gruppcoaching", "Gruppcoaching våren 2027"),
 }
@@ -72,7 +73,7 @@ def fold(line):
 
 def las_sidan():
     s = open(SIDA, encoding="utf-8").read()
-    zoom = dict(re.findall(r'"(Mastermind|Rådgivningstimme|Gruppcoaching)": "(https://[^"]+)"', s))
+    zoom = dict(re.findall(r'"(Mastermind Advanced|Mastermind|Rådgivningstimme|Gruppcoaching)": "(https://[^"]+)"', s))
     rader = []
     for m in re.finditer(r"<tr ([^>]*data-date[^>]*)>", s):
         a = dict(re.findall(r'data-(\w+)="([^"]*)"', m.group(1)))
@@ -92,20 +93,27 @@ def kalender(namn, handelser):
     return "\r\n".join(fold(x) for x in L) + "\r\n"
 
 
+# Program som inte ingår i "Lägg hela våren i kalendern"
+EGNA = {"Mastermind Advanced"}
+
+
 def handelse(r, zoom):
     slug = PROGRAM[r["typ"]][0]
     dag = r["date"].replace("-", "")
-    link = zoom[r["typ"]]
+    link = zoom.get(r["typ"])
+    if link:
+        text = f"Zoom: {link}\nLösenkod: mastermind\nProgrammet: {ADRESS}"
+        plats = [("LOCATION:" + esc(link)), "URL:" + link]
+    else:
+        text = f"Zoom-länken skickas till dig som är med.\nProgrammet: {ADRESS}/#{slug}"
+        plats = ["LOCATION:Zoom"]
     return ["BEGIN:VEVENT",
             f"UID:{slug}-{r['date']}@mastermind-varen27",
             f"DTSTAMP:{STAMP}",
             f"DTSTART;TZID=Europe/Stockholm:{dag}T{r['start'].replace(':', '')}00",
             f"DTEND;TZID=Europe/Stockholm:{dag}T{r['slut'].replace(':', '')}00",
             "SUMMARY:" + esc(r["titel"] + " · Åberg & Co"),
-            "DESCRIPTION:" + esc(f"Zoom: {link}\nLösenkod: mastermind\nProgrammet: {ADRESS}"),
-            "LOCATION:" + esc(link),
-            "URL:" + link,
-            "END:VEVENT"]
+            "DESCRIPTION:" + esc(text)] + plats + ["END:VEVENT"]
 
 
 def main():
@@ -114,7 +122,8 @@ def main():
     alla = []
     for typ, (slug, namn) in PROGRAM.items():
         h = [handelse(r, zoom) for r in rader if r["typ"] == typ]
-        alla += h
+        if typ not in EGNA:
+            alla += h
         open(os.path.join(UT, slug + ".ics"), "w", encoding="utf-8", newline="").write(kalender(namn, h))
         print(f"{slug}.ics: {len(h)} tillfällen")
     start, slut, titel, text = BOOTCAMP

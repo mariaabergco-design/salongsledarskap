@@ -141,6 +141,12 @@
 
   .bootcamp { margin-top: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; }
   .badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; background: var(--brand-yellow); color: #3D3D3D; padding: 4px 10px; border-radius: 999px; }
+  .badge.adv { margin-top: 12px; background: var(--tint); color: var(--ink); }
+  .req { margin-top: 16px; padding: 16px 20px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--brand-yellow); }
+  .req p { margin: 0; }
+  .req ul { margin: 8px 0 0; padding-left: 18px; }
+  .req li { margin-top: 4px; }
+  h3.sub3 { font-size: 20px; margin-top: 24px; }
   .bootcamp h3 { font-size: 24px; margin-top: 10px; }
   .bootcamp ul { margin: 12px 0 0; padding-left: 18px; }
   .bootcamp li { margin-top: 4px; }
@@ -207,6 +213,7 @@
   <div class="wrap">
     <a href="#oversikt">Översikt</a>
     <a href="#mastermind">Mastermind</a>
+    <a href="#advanced">Advanced</a>
     <a href="#radgivningstimme">Rådgivningstimme</a>
     <a href="#gruppcoaching">Gruppcoaching</a>
     <a href="#bootcamp">Boot Camp</a>
@@ -232,6 +239,11 @@
         <div class="v">6 tillfällen</div>
         <div class="s">Första torsdagen i månaden, kl. 08.00–09.30, mingel till 10.00. Start 7 jan.</div>
       </a>
+      <a class="card" href="#advanced">
+        <div class="k">Mastermind Advanced</div>
+        <div class="v">6 tillfällen</div>
+        <div class="s">Första torsdagen i månaden, kl. 12.00–14.00 med Anders Landgren. För dig som har varit med i minst ett år.</div>
+      </a>
       <a class="card" href="#radgivningstimme">
         <div class="k">Rådgivningstimme</div>
         <div class="v">Öppet forum</div>
@@ -244,7 +256,7 @@
       </a>
       <a class="card soon" href="#bootcamp">
         <div class="k">Boot Camp</div>
-        <div class="v">28 feb – 1 mars</div>
+        <div class="v">28 feb-1 mars</div>
         <div class="s">Sankt Jörgen, Göteborg. För dig som äger en salong och har anställda.</div>
       </a>
     </div>
@@ -270,11 +282,52 @@
 <tr data-date="2027-02-04" data-typ="Mastermind" data-start="08:00" data-slut="10:00" data-titel="Mastermind"><td><span class="date">4 februari 2027</span></td><td>Torsdag</td><td>08.00–09.30</td><td>Mingel till 10.00</td></tr>
 <tr data-date="2027-03-04" data-typ="Mastermind" data-start="08:00" data-slut="10:00" data-titel="Mastermind"><td><span class="date">4 mars 2027</span></td><td>Torsdag</td><td>08.00–09.30</td><td>Mingel till 10.00</td></tr>
 <tr data-date="2027-04-01" data-typ="Mastermind" data-start="08:00" data-slut="10:00" data-titel="Mastermind"><td><span class="date">1 april 2027</span></td><td>Torsdag</td><td>08.00–09.30</td><td>Mingel till 10.00</td></tr>
-<tr data-date="2027-05-05" data-typ="Mastermind" data-start="08:00" data-slut="10:00" data-titel="Mastermind"><td><span class="date">5 maj 2027</span></td><td>Onsdag</td><td>08.00–09.30</td><td>Mingel till 10.00<span class="note">Onsdag – torsdagen 6 maj är helgdag</span></td></tr>
+<tr data-date="2027-05-05" data-typ="Mastermind" data-start="08:00" data-slut="10:00" data-titel="Mastermind"><td><span class="date">5 maj 2027</span></td><td>Onsdag</td><td>08.00–09.30</td><td>Mingel till 10.00<span class="note">Onsdag, eftersom torsdagen 6 maj är helgdag</span></td></tr>
 <tr data-date="2027-06-03" data-typ="Mastermind" data-start="08:00" data-slut="10:00" data-titel="Mastermind"><td><span class="date">3 juni 2027</span></td><td>Torsdag</td><td>08.00–09.30</td><td>Mingel till 10.00</td></tr>
         </tbody>
       </table>
     </div>
+  </section>
+
+  <section id="advanced">
+    <div class="sec-head">
+      <h2>Mastermind Advanced</h2>
+      <button class="btn ghost" data-ics="Mastermind Advanced" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Lägg i kalendern</button>
+    </div>
+    <span class="badge adv">För dig som har jobbat med Åberg &amp; Co i minst ett år</span>
+    <p>Mastermind Advanced är fortsättningen för dig som har varit med i Mastermind i ungefär ett år och är redo att gå vidare till Flyt och Frihet. Här leder Anders Landgren och ni går djupare i ledarskapet tillsammans med andra ledare som har kommit lika långt som du.</p>
+    <div class="req">
+      <p><strong>Du är redo för Advanced när du har</strong></p>
+      <ul>
+        <li>en veckostruktur som fungerar</li>
+        <li>ett samarbete med din eventuella salongsledare som funkar</li>
+        <li>regelbundna personalmöten med agenda</li>
+        <li>fått effekt av dina överenskommelser när du har följt upp och gett feedback</li>
+      </ul>
+    </div>
+    <h3 class="sub3">Mastermind med Anders</h3>
+    <p>Vi ses första torsdagen i månaden kl. 12.00–14.00. Du använder samma Zoom-länk och lösenkod som till Mastermind.</p>
+    <div class="zoom">
+      <div><div class="k">Zoom</div><div class="v"><a href="https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2Vg.1" target="_blank" rel="noopener">Gå med i mötet</a></div></div>
+      <div><div class="k">Mötes-ID</div><div class="v"><code>850 5509 8578</code></div></div>
+      <div><div class="k">Lösenkod</div><div class="v"><code>mastermind</code></div></div>
+    </div>
+    <div class="table">
+      <table>
+        <thead><tr><th>Datum</th><th>Dag</th><th>Tid</th></tr></thead>
+        <tbody>
+<tr data-date="2027-01-07" data-typ="Mastermind Advanced" data-start="12:00" data-slut="14:00" data-titel="Mastermind Advanced"><td><span class="date">7 januari 2027</span></td><td>Torsdag</td><td>12.00–14.00</td></tr>
+<tr data-date="2027-02-04" data-typ="Mastermind Advanced" data-start="12:00" data-slut="14:00" data-titel="Mastermind Advanced"><td><span class="date">4 februari 2027</span></td><td>Torsdag</td><td>12.00–14.00</td></tr>
+<tr data-date="2027-03-04" data-typ="Mastermind Advanced" data-start="12:00" data-slut="14:00" data-titel="Mastermind Advanced"><td><span class="date">4 mars 2027</span></td><td>Torsdag</td><td>12.00–14.00</td></tr>
+<tr data-date="2027-04-01" data-typ="Mastermind Advanced" data-start="12:00" data-slut="14:00" data-titel="Mastermind Advanced"><td><span class="date">1 april 2027</span></td><td>Torsdag</td><td>12.00–14.00</td></tr>
+<tr data-date="2027-05-05" data-typ="Mastermind Advanced" data-start="12:00" data-slut="14:00" data-titel="Mastermind Advanced"><td><span class="date">5 maj 2027</span></td><td>Onsdag</td><td>12.00–14.00<span class="note">Onsdag, eftersom torsdagen 6 maj är helgdag</span></td></tr>
+<tr data-date="2027-06-03" data-typ="Mastermind Advanced" data-start="12:00" data-slut="14:00" data-titel="Mastermind Advanced"><td><span class="date">3 juni 2027</span></td><td>Torsdag</td><td>12.00–14.00</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 class="sub3">Avancerad gruppcoaching</h3>
+    <p>Anders har också avancerade gruppcoachingar på torsdagar kl. 12.00–15.00. Där går vi igenom ett ämne på djupet och du får gärna ta med dina egna frågor in i det.</p>
+    <p>Ämnena är mer avancerade, så här behöver du kunna basen. Datumen kommer här så snart de är satta, och du använder samma Zoom-länk som ovan.</p>
   </section>
 
   <section id="radgivningstimme">
@@ -339,7 +392,7 @@
     <h2>Boot Camp</h2>
     <div class="bootcamp">
       <div>
-        <span class="badge">28 februari – 1 mars 2027 · Sankt Jörgen, Göteborg</span>
+        <span class="badge">28 februari-1 mars 2027 · Sankt Jörgen, Göteborg</span>
         <h3>Välkommen till vårens Boot Camp</h3>
         <p>Vårens Boot Camp är för dig som äger en salong och har anställda eller en anställd salongsledare. Vi börjar på söndagskvällen och ägnar hela måndagen åt ditt ledarskap och din salong, tillsammans med andra som står i samma situation som du.</p>
         <dl class="program">
@@ -366,8 +419,8 @@
   var MAN = ["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"];
   var MANL = ["januari","februari","mars","april","maj","juni","juli","augusti","september","oktober","november","december"];
   var DAG = ["söndag","måndag","tisdag","onsdag","torsdag","fredag","lördag"];
-  var LINKS = { "Mastermind": "https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2Vg.1", "Rådgivningstimme": "https://us06web.zoom.us/j/88920499498?pwd=fQ2zdkBXHtbTIaUR1Sx2vOZOQlcpeu.1", "Gruppcoaching": "https://us06web.zoom.us/j/81692710516?pwd=aybzZj8gfAaZnpQbWRzLHGXFOjhMxj.1" };
-  var IDS = { "Mastermind": "mastermind", "Rådgivningstimme": "radgivningstimme", "Gruppcoaching": "gruppcoaching" };
+  var LINKS = { "Mastermind": "https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2Vg.1", "Mastermind Advanced": "https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2Vg.1", "Rådgivningstimme": "https://us06web.zoom.us/j/88920499498?pwd=fQ2zdkBXHtbTIaUR1Sx2vOZOQlcpeu.1", "Gruppcoaching": "https://us06web.zoom.us/j/81692710516?pwd=aybzZj8gfAaZnpQbWRzLHGXFOjhMxj.1" };
+  var IDS = { "Mastermind": "mastermind", "Mastermind Advanced": "advanced", "Rådgivningstimme": "radgivningstimme", "Gruppcoaching": "gruppcoaching" };
 
   function parse(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
   var t = new Date(); var today = new Date(t.getFullYear(), t.getMonth(), t.getDate());
@@ -400,6 +453,7 @@
   var BAS = "mastermind-varen27.vercel.app/kalender/";
   var FEEDS = {
     "Mastermind": ["mastermind", "Mastermind våren 2027"],
+    "Mastermind Advanced": ["advanced", "Mastermind Advanced våren 2027"],
     "Rådgivningstimme": ["radgivningstimme", "Rådgivningstimme våren 2027"],
     "Gruppcoaching": ["gruppcoaching", "Gruppcoaching våren 2027"],
     "alla": ["alla", "Mastermind våren 2027 · Åberg & Co"]
