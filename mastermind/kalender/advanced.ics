@@ -3,7 +3,7 @@ VERSION:2.0
 PRODID:-//Åberg & Co//Mastermind//SV
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:Mastermind Advanced våren 2027
+X-WR-CALNAME:Mastermind Advanced 2027
 X-WR-TIMEZONE:Europe/Stockholm
 REFRESH-INTERVAL;VALUE=DURATION:PT12H
 X-PUBLISHED-TTL:PT12H
@@ -99,6 +99,62 @@ UID:advanced-2027-06-17@mastermind-varen27
 DTSTAMP:20261029T120000Z
 DTSTART;TZID=Europe/Stockholm:20270617T120000
 DTEND;TZID=Europe/Stockholm:20270617T150000
+SUMMARY:Mastermind Advanced · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:advanced-2027-09-16@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20270916T120000
+DTEND;TZID=Europe/Stockholm:20270916T150000
+SUMMARY:Mastermind Advanced · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:advanced-2027-10-21@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20271021T120000
+DTEND;TZID=Europe/Stockholm:20271021T150000
+SUMMARY:Mastermind Advanced · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:advanced-2027-11-18@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20271118T120000
+DTEND;TZID=Europe/Stockholm:20271118T150000
+SUMMARY:Mastermind Advanced · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:advanced-2027-12-16@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20271216T120000
+DTEND;TZID=Europe/Stockholm:20271216T150000
 SUMMARY:Mastermind Advanced · Åberg & Co
 DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
  1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
