@@ -96,10 +96,10 @@ URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
  g.1
 END:VEVENT
 BEGIN:VEVENT
-UID:advanced-2027-06-24@mastermind-varen27
+UID:advanced-2027-06-28@mastermind-varen27
 DTSTAMP:20261029T120000Z
-DTSTART;TZID=Europe/Stockholm:20270624T120000
-DTEND;TZID=Europe/Stockholm:20270624T150000
+DTSTART;TZID=Europe/Stockholm:20270628T120000
+DTEND;TZID=Europe/Stockholm:20270628T150000
 SUMMARY:Mastermind Advanced · Åberg & Co
 DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
  1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
