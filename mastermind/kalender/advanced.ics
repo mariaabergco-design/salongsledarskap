@@ -25,10 +25,10 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:advanced-2027-01-14@mastermind-varen27
+UID:advanced-2027-01-28@mastermind-varen27
 DTSTAMP:20261029T120000Z
-DTSTART;TZID=Europe/Stockholm:20270114T120000
-DTEND;TZID=Europe/Stockholm:20270114T150000
+DTSTART;TZID=Europe/Stockholm:20270128T120000
+DTEND;TZID=Europe/Stockholm:20270128T150000
 SUMMARY:Mastermind Advanced · Åberg & Co
 DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
  1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
