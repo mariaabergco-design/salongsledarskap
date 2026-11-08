@@ -21,7 +21,7 @@ ADRESS = "https://mastermind-varen27.vercel.app"
 STAMP = "20261029T120000Z"
 
 PROGRAM = {
-    "Mastermind": ("mastermind", "Mastermind våren 2027"),
+    "Mastermind": ("mastermind", "Mastermind 2027"),
     "Mastermind Advanced": ("advanced", "Mastermind Advanced 2027"),
     "Rådgivningstimme": ("radgivningstimme", "Rådgivningstimme våren 2027"),
     "Gruppcoaching": ("gruppcoaching", "Gruppcoaching våren 2027"),
