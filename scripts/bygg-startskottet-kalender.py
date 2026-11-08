@@ -24,8 +24,8 @@ def main():
     for i, d in enumerate(datum, 1):
         dag = d.replace("-", "")
         h.append(["BEGIN:VEVENT", f"UID:startskottet-{d}@startskottet", f"DTSTAMP:{mm.STAMP}",
-                  f"DTSTART;TZID=Europe/Stockholm:{dag}T103000",
-                  f"DTEND;TZID=Europe/Stockholm:{dag}T120000",
+                  f"DTSTART;TZID=Europe/Stockholm:{dag}T120000",
+                  f"DTEND;TZID=Europe/Stockholm:{dag}T133000",
                   "SUMMARY:" + mm.esc(f"Startskottet: gruppcoaching {i} av {len(datum)} · Åberg & Co"),
                   "DESCRIPTION:" + mm.esc("Gruppcoaching på Zoom. Zoom-länken får du när du har anmält dig.\nProgrammet: " + ADRESS),
                   "LOCATION:Zoom", "END:VEVENT"])

@@ -27,8 +27,8 @@ END:VTIMEZONE
 BEGIN:VEVENT
 UID:startskottet-2027-02-18@startskottet
 DTSTAMP:20261029T120000Z
-DTSTART;TZID=Europe/Stockholm:20270218T103000
-DTEND;TZID=Europe/Stockholm:20270218T120000
+DTSTART;TZID=Europe/Stockholm:20270218T120000
+DTEND;TZID=Europe/Stockholm:20270218T133000
 SUMMARY:Startskottet: gruppcoaching 1 av 5 · Åberg & Co
 DESCRIPTION:Gruppcoaching på Zoom. Zoom-länken får du när du har anmäl
  t dig.\nProgrammet: https://startskottet.vercel.app
@@ -37,8 +37,8 @@ END:VEVENT
 BEGIN:VEVENT
 UID:startskottet-2027-03-04@startskottet
 DTSTAMP:20261029T120000Z
-DTSTART;TZID=Europe/Stockholm:20270304T103000
-DTEND;TZID=Europe/Stockholm:20270304T120000
+DTSTART;TZID=Europe/Stockholm:20270304T120000
+DTEND;TZID=Europe/Stockholm:20270304T133000
 SUMMARY:Startskottet: gruppcoaching 2 av 5 · Åberg & Co
 DESCRIPTION:Gruppcoaching på Zoom. Zoom-länken får du när du har anmäl
  t dig.\nProgrammet: https://startskottet.vercel.app
@@ -47,8 +47,8 @@ END:VEVENT
 BEGIN:VEVENT
 UID:startskottet-2027-03-18@startskottet
 DTSTAMP:20261029T120000Z
-DTSTART;TZID=Europe/Stockholm:20270318T103000
-DTEND;TZID=Europe/Stockholm:20270318T120000
+DTSTART;TZID=Europe/Stockholm:20270318T120000
+DTEND;TZID=Europe/Stockholm:20270318T133000
 SUMMARY:Startskottet: gruppcoaching 3 av 5 · Åberg & Co
 DESCRIPTION:Gruppcoaching på Zoom. Zoom-länken får du när du har anmäl
  t dig.\nProgrammet: https://startskottet.vercel.app
@@ -57,8 +57,8 @@ END:VEVENT
 BEGIN:VEVENT
 UID:startskottet-2027-04-01@startskottet
 DTSTAMP:20261029T120000Z
-DTSTART;TZID=Europe/Stockholm:20270401T103000
-DTEND;TZID=Europe/Stockholm:20270401T120000
+DTSTART;TZID=Europe/Stockholm:20270401T120000
+DTEND;TZID=Europe/Stockholm:20270401T133000
 SUMMARY:Startskottet: gruppcoaching 4 av 5 · Åberg & Co
 DESCRIPTION:Gruppcoaching på Zoom. Zoom-länken får du när du har anmäl
  t dig.\nProgrammet: https://startskottet.vercel.app
@@ -67,8 +67,8 @@ END:VEVENT
 BEGIN:VEVENT
 UID:startskottet-2027-04-15@startskottet
 DTSTAMP:20261029T120000Z
-DTSTART;TZID=Europe/Stockholm:20270415T103000
-DTEND;TZID=Europe/Stockholm:20270415T120000
+DTSTART;TZID=Europe/Stockholm:20270415T120000
+DTEND;TZID=Europe/Stockholm:20270415T133000
 SUMMARY:Startskottet: gruppcoaching 5 av 5 · Åberg & Co
 DESCRIPTION:Gruppcoaching på Zoom. Zoom-länken får du när du har anmäl
  t dig.\nProgrammet: https://startskottet.vercel.app
