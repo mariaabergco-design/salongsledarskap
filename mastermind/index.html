@@ -297,8 +297,8 @@
       </a>
       <a class="card soon" href="#bootcamp">
         <div class="k">Boot Camp</div>
-        <div class="v">28 feb–2 mars</div>
-        <div class="s">Sankt Jörgen, Göteborg. För dig som äger en salong och har en anställd salongsledare. Efter inbjudan från Åberg &amp; Co.</div>
+        <div class="v">Vår och höst</div>
+        <div class="s">28 feb–2 mars på Sankt Jörgen, efter inbjudan. Save the date: 13–15 okt, tre dagar för alla.</div>
       </a>
     </div>
 
@@ -317,8 +317,8 @@
         <div><p class="term">Våren 2027</p><div class="chips"><span class="chip" data-d="2027-01-28" data-t="Rådgivningstimme">28 jan</span><span class="chip" data-d="2027-02-18" data-t="Rådgivningstimme">18 feb</span><span class="chip" data-d="2027-03-15" data-t="Rådgivningstimme">15 mars (mån)</span><span class="chip" data-d="2027-04-15" data-t="Rådgivningstimme">15 april</span><span class="chip" data-d="2027-05-20" data-t="Rådgivningstimme">20 maj</span><span class="chip" data-d="2027-06-17" data-t="Rådgivningstimme">17 juni</span></div><p class="term">Hösten 2027</p><div class="chips"><span class="chip" data-d="2027-09-16" data-t="Rådgivningstimme">16 sep</span><span class="chip" data-d="2027-10-21" data-t="Rådgivningstimme">21 okt</span><span class="chip" data-d="2027-11-18" data-t="Rådgivningstimme">18 nov</span><span class="chip" data-d="2027-12-16" data-t="Rådgivningstimme">16 dec</span></div></div>
       </div>
       <div class="drow">
-        <div class="name"><a href="#bootcamp">Boot Camp</a><small>Sankt Jörgen, Göteborg. För dig som äger en salong och har en anställd salongsledare</small><span class="invite">Gäller dig som är inbjuden</span></div>
-        <div><div class="chips"><span class="chip" data-d="2027-02-28" data-t="Boot Camp">28 feb–2 mars</span></div><a class="more" href="#bootcamp">Läs om Boot Camp →</a></div>
+        <div class="name"><a href="#bootcamp">Boot Camp</a><small>Våren: för dig som äger en salong och har en anställd salongsledare, efter inbjudan. Hösten: för alla.</small></div>
+        <div><p class="term">Våren 2027 · Sankt Jörgen, Göteborg · för inbjudna</p><div class="chips"><span class="chip" data-d="2027-02-28" data-end="2027-03-02" data-t="Boot Camp">28 feb–2 mars</span></div><p class="term">Hösten 2027 · Save the date · för alla</p><div class="chips"><span class="chip" data-d="2027-10-13" data-end="2027-10-15" data-t="Boot Camp">13–15 okt</span></div><a class="more" href="#bootcamp">Läs om Boot Camp →</a></div>
       </div>
       <div class="drow adv">
         <div class="name"><a href="#advanced">Mastermind Advanced</a><small>Torsdagar kl. 12.00–15.00 med Anders Landgren och Maria</small><span class="invite">Gäller dig som är inbjuden</span><small>Inbjudan kommer från Maria Åberg &amp; Co</small></div>
@@ -336,7 +336,7 @@
         <label><input type="checkbox" value="m" checked><span>Mastermind<small>10 tillfällen, torsdagar 08.00</small></span></label>
         <label><input type="checkbox" value="g" checked><span>Gruppcoaching<small>12 tillfällen, fredagar 09.00</small></span></label>
         <label><input type="checkbox" value="r" checked><span>Rådgivningstimme<small>10 tillfällen, 09.00–10.00</small></span></label>
-        <label><input type="checkbox" value="b"><span>Boot Camp<small>28 feb–2 mars, för inbjudna</small></span></label>
+        <label><input type="checkbox" value="b"><span>Boot Camp<small>28 feb–2 mars och 13–15 okt</small></span></label>
         <label><input type="checkbox" value="a"><span>Mastermind Advanced<small>10 tillfällen, för inbjudna</small></span></label>
       </div>
       <div class="go" id="kalender-val"></div>
@@ -528,7 +528,7 @@
         <p class="sign">Varmt välkommen! / Maria</p>
       </div>
     </div>
-    <div class="autumn"><strong>Höstens Boot Camp återkommer</strong>I september eller oktober 2027 kör vi Boot Camp igen, den gången under tre dagar. Datum kommer.</div>
+    <div class="autumn"><strong>Save the date: Boot Camp 13–15 oktober 2027</strong>I höst kör vi Boot Camp igen, den gången under tre dagar, onsdag till fredag. Höstens Boot Camp är öppen för alla. Boka in datumen redan nu, mer information kommer.</div>
   </section>
 
 </main>
@@ -561,7 +561,7 @@
   var seenC = {};
   document.querySelectorAll(".chip[data-d]").forEach(function (c) {
     var d = parse(c.dataset.d);
-    if (c.dataset.t === "Boot Camp") d = parse("2027-03-02");
+    if (c.dataset.end) d = parse(c.dataset.end);
     if (d < today) c.classList.add("past");
     else if (!seenC[c.dataset.t]) { seenC[c.dataset.t] = 1; c.classList.add("nxt"); }
   });

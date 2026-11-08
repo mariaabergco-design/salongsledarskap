@@ -140,10 +140,16 @@ def main():
         per_typ[typ] = h
         open(os.path.join(UT, slug + ".ics"), "w", encoding="utf-8", newline="").write(kalender(namn, h))
         print(f"{slug}.ics: {len(h)} tillfällen")
-    per_typ["Boot Camp"] = [bootcamp()]
+    per_typ["Boot Camp"] = [bootcamp(), [
+        "BEGIN:VEVENT", "UID:bootcamp-2027-10-13@mastermind-varen27", f"DTSTAMP:{STAMP}",
+        "DTSTART;VALUE=DATE:20271013", "DTEND;VALUE=DATE:20271016",
+        "SUMMARY:" + esc("Save the date: Boot Camp · Åberg & Co"),
+        "DESCRIPTION:" + esc("Höstens Boot Camp, tre dagar onsdag till fredag. Öppen för alla. "
+                             "Mer information kommer.\n" + ADRESS + "/#bootcamp"),
+        "END:VEVENT"]]
     open(os.path.join(UT, "bootcamp.ics"), "w", encoding="utf-8", newline="").write(
         kalender("Boot Camp 2027 · Åberg & Co", per_typ["Boot Camp"]))
-    print("bootcamp.ics: 1 tillfälle")
+    print("bootcamp.ics: 2 tillfällen")
 
     alla = [h for typ in ORDNING if typ not in EGNA for h in per_typ[typ]]
     open(os.path.join(UT, "alla.ics"), "w", encoding="utf-8", newline="").write(

@@ -344,4 +344,14 @@ DESCRIPTION:Söndag kväll: enklare middag för dig som vill sova över. M
  .\nhttps://mastermind-varen27.vercel.app/#bootcamp
 LOCATION:Sankt Jörgen\, Göteborg
 END:VEVENT
+BEGIN:VEVENT
+UID:bootcamp-2027-10-13@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20271013
+DTEND;VALUE=DATE:20271016
+SUMMARY:Save the date: Boot Camp · Åberg & Co
+DESCRIPTION:Höstens Boot Camp\, tre dagar onsdag till fredag. Öppen för 
+ alla. Mer information kommer.\nhttps://mastermind-varen27.vercel.app/#boot
+ camp
+END:VEVENT
 END:VCALENDAR
