@@ -84,6 +84,13 @@
   .pc-side h3{font-size:20px;margin-bottom:10px;color:#fff}
   .pc-side p{color:#d9d3cc;font-size:15px}
   .pc-side .amount2{font-family:'Playfair Display',serif;font-size:30px;color:#fff;margin:6px 0 10px}
+  .price-card.two{grid-template-columns:1fr 1fr}
+  .price-card.two .pc-side{grid-column:1 / -1;display:grid;grid-template-columns:auto auto 1fr;gap:6px 24px;align-items:center}
+  .price-card.two .pc-side h3,.price-card.two .pc-side .amount2,.price-card.two .pc-side p{margin:0}
+  .pc-tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:12px}
+  .pc-main.alt{border-top-color:#C4C4BE}
+  .amount{white-space:nowrap}
+  @media (max-width:760px){.price-card.two{grid-template-columns:1fr}.price-card.two .pc-side{grid-template-columns:1fr}.price-card.two .pc-main{padding:28px 24px}}
 
   .cta{text-align:center}
   .cta h2{max-width:700px;margin:0 auto}
@@ -264,15 +271,21 @@
     <h2>Pris för Advanced</h2>
     <div class="bar"></div>
 
-    <div class="price-card">
+    <div class="price-card two">
+      <div class="pc-main alt">
+        <span class="pc-tag">Utan workshops</span>
+        <div class="amount">6 900 kr <small>/ mån</small></div>
+        <p>I 12 månader, per salongsledare, exkl. moms. Omfattar Advanced-träffarna, Mastermind, alla digitala utbildningar och individuell uppföljning med Maria och Anders. Workshops på din salong ingår inte, men kan bokas till.</p>
+      </div>
       <div class="pc-main">
+        <span class="pc-tag">Med två workshops</span>
         <div class="amount">8 900 kr <small>/ mån</small></div>
-        <p>I 12 månader, per salongsledare, exkl. moms. Omfattar Advanced-träffarna, Mastermind, alla digitala utbildningar, individuell uppföljning med Maria och Anders och <strong>två workshops på din salong</strong>. Resa och boende för workshoparna tillkommer.</p>
+        <p>I 12 månader, per salongsledare, exkl. moms. Omfattar allt i alternativet utan workshops, och dessutom <strong>två workshops på din salong</strong>. Resa och boende för workshoparna tillkommer.</p>
       </div>
       <div class="pc-side">
-        <h3>Tillval: extra workshop</h3>
+        <h3>Tillval: workshop</h3>
         <div class="amount2">14 000 kr</div>
-        <p>Vill du ha fler än de två workshops som ingår bokar vi en extra workshop på plats hos dig. Exkl. moms, resa och boende tillkommer.</p>
+        <p>Vill du ha en workshop, eller fler än de två som ingår, bokar vi in den på plats hos dig. Exkl. moms, resa och boende tillkommer.</p>
       </div>
     </div>
   </div>
