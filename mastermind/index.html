@@ -280,7 +280,7 @@
       </a>
       <a class="card soon" href="#bootcamp">
         <div class="k">Boot Camp</div>
-        <div class="v">28 feb-1 mars</div>
+        <div class="v">28 feb–2 mars</div>
         <div class="s">Sankt Jörgen, Göteborg. För dig som äger en salong och har anställda.</div>
       </a>
     </div>
@@ -301,7 +301,7 @@
       </div>
       <div class="drow">
         <div class="name"><a href="#bootcamp">Boot Camp</a><small>Sankt Jörgen, Göteborg. För salongsägare med anställda eller en anställd salongsledare</small></div>
-        <div><div class="chips"><span class="chip" data-d="2027-02-28" data-t="Boot Camp">28 feb–1 mars</span></div><a class="more" href="#bootcamp">Läs om Boot Camp →</a></div>
+        <div><div class="chips"><span class="chip" data-d="2027-02-28" data-t="Boot Camp">28 feb–2 mars</span></div><a class="more" href="#bootcamp">Läs om Boot Camp →</a></div>
       </div>
       <div class="drow adv">
         <div class="name"><a href="#advanced">Mastermind Advanced</a><small>Torsdagar kl. 12.00–15.00 med Anders Landgren och Maria</small><span class="invite">Gäller dig som är inbjuden</span><small>Inbjudan kommer från Maria Åberg &amp; Co</small></div>
@@ -456,12 +456,13 @@
     <h2>Boot Camp</h2>
     <div class="bootcamp">
       <div>
-        <span class="badge">28 februari-1 mars 2027 · Sankt Jörgen, Göteborg</span>
+        <span class="badge">28 februari–2 mars 2027 · Sankt Jörgen, Göteborg</span>
         <h3>Välkommen till vårens Boot Camp</h3>
         <p>Vårens Boot Camp är för dig som äger en salong och har anställda eller en anställd salongsledare. Vi börjar på söndagskvällen och ägnar hela måndagen åt ditt ledarskap och din salong, tillsammans med andra som står i samma situation som du.</p>
         <dl class="program">
           <div><dt>Söndag<span>28 februari</span></dt><dd>Vi samlas på kvällen och äter en enklare middag, för dig som hinner och vill sova över.</dd></div>
           <div><dt>Måndag<span>1 mars</span></dt><dd>Konferens hela dagen, som leds av mig och Anders Landgren. På kvällen äter vi middag tillsammans med ledare som jag har jobbat med i några år.</dd></div>
+          <div><dt>Tisdag<span>2 mars</span></dt><dd>Ni arbetar självständigt med er plan. Jag finns kvar under förmiddagen och kommer ut och stöttar er där ni behöver.</dd></div>
           <div><dt>Boende</dt><dd>Du kan sova över en eller två nätter.</dd></div>
           <div><dt>Pris</dt><dd>Pris och mer information hittar du i PDF:en som är bifogad i inbjudan.</dd></div>
         </dl>
@@ -502,7 +503,7 @@
   var seenC = {};
   document.querySelectorAll(".chip[data-d]").forEach(function (c) {
     var d = parse(c.dataset.d);
-    if (c.dataset.t === "Boot Camp") d = parse("2027-03-01");
+    if (c.dataset.t === "Boot Camp") d = parse("2027-03-02");
     if (d < today) c.classList.add("past");
     else if (!seenC[c.dataset.t]) { seenC[c.dataset.t] = 1; c.classList.add("nxt"); }
   });

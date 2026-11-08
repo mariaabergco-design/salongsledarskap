@@ -28,9 +28,10 @@ PROGRAM = {
 }
 
 # Boot Camp har inga klockslag än och ligger därför som heldagar i filen med allt
-BOOTCAMP = ("20270228", "20270302", "Boot Camp · Sankt Jörgen, Göteborg",
+BOOTCAMP = ("20270228", "20270303", "Boot Camp · Sankt Jörgen, Göteborg",
             "Söndag kväll: enklare middag för dig som vill sova över. "
-            "Måndag: konferens hela dagen och middag på kvällen.")
+            "Måndag: konferens hela dagen och middag på kvällen. "
+            "Tisdag förmiddag: ni arbetar självständigt med er plan, Maria finns på plats och stöttar.")
 
 TZ = """BEGIN:VTIMEZONE
 TZID:Europe/Stockholm

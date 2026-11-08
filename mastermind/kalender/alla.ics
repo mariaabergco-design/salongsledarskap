@@ -364,11 +364,12 @@ BEGIN:VEVENT
 UID:bootcamp-2027-02-28@mastermind-varen27
 DTSTAMP:20261029T120000Z
 DTSTART;VALUE=DATE:20270228
-DTEND;VALUE=DATE:20270302
+DTEND;VALUE=DATE:20270303
 SUMMARY:Boot Camp · Sankt Jörgen\, Göteborg
 DESCRIPTION:Söndag kväll: enklare middag för dig som vill sova över. M
- åndag: konferens hela dagen och middag på kvällen.\nhttps://mastermind-
- varen27.vercel.app/#bootcamp
+ åndag: konferens hela dagen och middag på kvällen. Tisdag förmiddag: n
+ i arbetar självständigt med er plan\, Maria finns på plats och stöttar
+ .\nhttps://mastermind-varen27.vercel.app/#bootcamp
 LOCATION:Sankt Jörgen\, Göteborg
 END:VEVENT
 END:VCALENDAR
