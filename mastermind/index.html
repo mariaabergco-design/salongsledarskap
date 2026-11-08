@@ -125,7 +125,21 @@
   .allcal .calmenu { left: 0; right: auto; }
 
   .table { margin-top: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
+  th:nth-child(1) { width: 34%; }
+  th:nth-child(2) { width: 18%; }
+  th:nth-child(3) { width: 20%; }
+  @media (max-width: 640px) {
+    th:nth-child(1) { width: 44%; }
+    th:nth-child(2) { width: 22%; }
+    th:nth-child(3) { width: 34%; }
+    td:nth-child(3) { white-space: nowrap; }
+    table:has(th:nth-child(4)) { min-width: 620px; }
+    table:has(th:nth-child(4)) th:nth-child(1) { width: 30%; }
+    table:has(th:nth-child(4)) th:nth-child(2) { width: 16%; }
+    table:has(th:nth-child(4)) th:nth-child(3) { width: 20%; }
+    .zoom { grid-template-columns: 1fr; }
+  }
   th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
   th { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); }
   tr:last-child td { border-bottom: 0; }
@@ -186,10 +200,13 @@
   .picker { margin-top: 22px; background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--accent); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
   .picker h2 { font-size: 24px; }
   .picker > p { margin-top: 6px; color: var(--muted); font-size: 14px; }
-  .picker .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-top: 14px; }
+  .picker .opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+  @media (max-width: 760px) { .picker .opts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 480px) { .picker .opts { grid-template-columns: 1fr; } }
   .picker label { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; background: var(--surface-2); font-weight: 600; font-size: 14px; line-height: 1.35; }
   .picker label:hover { border-color: var(--accent); }
   .picker label:has(input:checked) { border-color: var(--accent); background: var(--tint); }
+  .picker label > span { min-width: 0; overflow-wrap: anywhere; }
   .picker label small { display: block; font-weight: 500; font-size: 12px; color: var(--muted); margin-top: 2px; }
   .picker input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--accent); flex: none; }
   .picker .go { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
