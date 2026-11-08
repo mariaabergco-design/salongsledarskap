@@ -216,6 +216,13 @@
   .picker .go.off a { opacity: .4; pointer-events: none; }
   .picker .hint { margin-top: 10px; font-size: 12px; color: var(--muted); }
 
+  .book { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+  .book a { display: flex; flex-direction: column; gap: 4px; text-decoration: none; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--accent); border-radius: var(--radius); padding: 16px 18px; }
+  .book a:hover { border-color: var(--accent); }
+  .book .len { font-family: var(--display); font-size: 26px; font-weight: 600; }
+  .book .go { font-weight: 700; color: var(--accent-deep, var(--accent)); font-size: 14px; }
+  @media (max-width: 640px) { .book { grid-template-columns: 1fr; } }
+
   footer { border-top: 1px solid var(--line); padding: 24px 0 40px; font-size: 13px; color: var(--muted); }
 
   @media (max-width: 640px) {
@@ -274,6 +281,7 @@
     <a href="#advanced">Advanced</a>
     <a href="#radgivningstimme">Rådgivningstimme</a>
     <a href="#gruppcoaching">Gruppcoaching</a>
+    <a href="#coaching">Egen coaching</a>
     <a href="#bootcamp">Boot Camp</a>
   </div>
 </nav>
@@ -337,6 +345,10 @@
       <div class="drow">
         <div class="name"><a href="#radgivningstimme">Rådgivningstimme</a><small>Kl. 09.00–10.00, öppet forum</small></div>
         <div><p class="term">Våren 2027</p><div class="chips"><span class="chip" data-d="2027-01-28" data-t="Rådgivningstimme">28 jan</span><span class="chip" data-d="2027-02-18" data-t="Rådgivningstimme">18 feb</span><span class="chip" data-d="2027-03-15" data-t="Rådgivningstimme">15 mars (mån)</span><span class="chip" data-d="2027-04-15" data-t="Rådgivningstimme">15 april</span><span class="chip" data-d="2027-05-20" data-t="Rådgivningstimme">20 maj</span><span class="chip" data-d="2027-06-17" data-t="Rådgivningstimme">17 juni</span></div><p class="term">Hösten 2027</p><div class="chips"><span class="chip" data-d="2027-09-16" data-t="Rådgivningstimme">16 sep</span><span class="chip" data-d="2027-10-21" data-t="Rådgivningstimme">21 okt</span><span class="chip" data-d="2027-11-18" data-t="Rådgivningstimme">18 nov</span><span class="chip" data-d="2027-12-16" data-t="Rådgivningstimme">16 dec</span></div></div>
+      </div>
+      <div class="drow">
+        <div class="name"><a href="#coaching">Egen coaching</a><small>30 eller 60 minuter med Maria, på Zoom</small></div>
+        <div><p class="term" style="margin:0">Boka själv när du behöver, på de tider som är bokningsbara</p><a class="more" href="https://calendly.com/abergcocoach/coaching-clone" target="_blank" rel="noopener">Boka 30 minuter →</a> &nbsp; <a class="more" href="https://calendly.com/abergcocoach/coaching" target="_blank" rel="noopener">Boka 60 minuter →</a></div>
       </div>
       <div class="drow">
         <div class="name"><a href="#bootcamp">Boot Camp</a><small>Våren: för dig som äger en salong och har en eller flera anställda salongsledare. Hösten: för alla.</small></div>
@@ -530,6 +542,17 @@
 <tr data-date="2027-06-04" data-typ="Gruppcoaching" data-start="09:00" data-slut="10:30" data-titel="Gruppcoaching: Veckostruktur – 8"><td><span class="date">4 juni 2027</span></td><td>Fredag</td><td>09.00–10.30</td><td>Veckostruktur – 8</td></tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <section id="coaching">
+    <div class="sec-head">
+      <h2>Egen coaching med Maria</h2>
+    </div>
+    <p>Utöver träffarna kan du boka egna coachingsamtal med mig, så ofta du själv känner att du behöver. Välj 30 eller 60 minuter och boka en tid som passar dig bland de tider som är bokningsbara. Samtalen sker på Zoom, och du får länken i bokningsbekräftelsen.</p>
+    <div class="book">
+      <a href="https://calendly.com/abergcocoach/coaching-clone" target="_blank" rel="noopener"><span class="len">30 minuter</span><span>Ett kortare samtal när du vill stämma av något.</span><span class="go">Boka 30 minuter →</span></a>
+      <a href="https://calendly.com/abergcocoach/coaching" target="_blank" rel="noopener"><span class="len">60 minuter</span><span>När du vill gå på djupet i en fråga.</span><span class="go">Boka 60 minuter →</span></a>
     </div>
   </section>
 
