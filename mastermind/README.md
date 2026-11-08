@@ -18,3 +18,10 @@ kalenderfilerna i `kalender/`, som deltagarna prenumererar på via knapparna
 "Lägg i kalendern" (Google Kalender, iPhone och Outlook). När filerna är
 pushade uppdateras datumen i deltagarnas kalendrar av sig själva, oftast inom
 några timmar.
+
+## Kalenderväljaren
+
+Under "Lägg in datumen i din kalender" kryssar deltagaren i vilka delar hon vill
+ha (Mastermind, Gruppcoaching, Rådgivningstimme, Boot Camp, Mastermind Advanced).
+Skriptet bygger en färdig fil per kombination i `kalender/val/`, där filnamnet är
+bokstäverna för de valda delarna (m, g, r, b, a), till exempel `mgr.ics`.

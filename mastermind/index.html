@@ -183,6 +183,22 @@
   .drow .more:hover { text-decoration: underline; }
   @media (max-width: 640px) { .drow { grid-template-columns: 1fr; gap: 8px; } }
 
+  .picker { margin-top: 22px; background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--accent); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+  .picker h2 { font-size: 24px; }
+  .picker > p { margin-top: 6px; color: var(--muted); font-size: 14px; }
+  .picker .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-top: 14px; }
+  .picker label { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; background: var(--surface-2); font-weight: 600; font-size: 14px; line-height: 1.35; }
+  .picker label:hover { border-color: var(--accent); }
+  .picker label:has(input:checked) { border-color: var(--accent); background: var(--tint); }
+  .picker label small { display: block; font-weight: 500; font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .picker input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--accent); flex: none; }
+  .picker .go { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .picker .go a { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); text-decoration: none; font-weight: 600; font-size: 14px; }
+  .picker .go a:hover { border-color: var(--accent); }
+  .picker .go a svg { width: 22px; height: 22px; }
+  .picker .go.off a { opacity: .4; pointer-events: none; }
+  .picker .hint { margin-top: 10px; font-size: 12px; color: var(--muted); }
+
   footer { border-top: 1px solid var(--line); padding: 24px 0 40px; font-size: 13px; color: var(--muted); }
 
   @media (max-width: 640px) {
@@ -236,6 +252,7 @@
   <div class="wrap">
     <a href="#oversikt">Översikt</a>
     <a href="#datum">Alla datum</a>
+    <a href="#kalender">Lägg i kalendern</a>
     <a href="#mastermind">Mastermind</a>
     <a href="#advanced">Advanced</a>
     <a href="#radgivningstimme">Rådgivningstimme</a>
@@ -312,7 +329,19 @@
         </div>
       </div>
     </div>
-    <div class="allcal"><button class="btn" data-ics="alla" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Lägg alla datum i kalendern</button></div>
+    <div class="picker" id="kalender">
+      <h2>Lägg in datumen i din kalender</h2>
+      <p>Kryssa i det du ska gå på och välj sedan din kalender. Allt du väljer hamnar i en och samma kalender.</p>
+      <div class="opts">
+        <label><input type="checkbox" value="m" checked><span>Mastermind<small>10 tillfällen, torsdagar 08.00</small></span></label>
+        <label><input type="checkbox" value="g" checked><span>Gruppcoaching<small>12 tillfällen, fredagar 09.00</small></span></label>
+        <label><input type="checkbox" value="r" checked><span>Rådgivningstimme<small>10 tillfällen, 09.00–10.00</small></span></label>
+        <label><input type="checkbox" value="b"><span>Boot Camp<small>28 feb–2 mars, för inbjudna</small></span></label>
+        <label><input type="checkbox" value="a"><span>Mastermind Advanced<small>10 tillfällen, för inbjudna</small></span></label>
+      </div>
+      <div class="go" id="kalender-val"></div>
+      <p class="hint" id="kalender-hint"></p>
+    </div>
   </section>
 
   <section id="mastermind">
@@ -360,7 +389,7 @@
       <button class="btn ghost" data-ics="Mastermind Advanced" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Lägg i kalendern</button>
     </div>
     <span class="badge adv">Gäller dig som har blivit inbjuden av Maria Åberg &amp; Co</span>
-    <p>Advanced är bara för dig som har fått en inbjudan av Maria Åberg &amp; Co. Mastermind Advanced är fortsättningen för dig som har jobbat med oss i abonnemangsform i ungefär ett år eller mer och vill fortsätta utvecklas. Anders Landgren och jag leder, och under ett år mängdtränar du ett ledarbeteende i taget tillsammans med andra ledare som har kommit lika långt som du. För dig i Advanced ersätter träffarna gruppcoachingen på fredagar.</p>
+    <p>Advanced är bara för dig som har fått en inbjudan av Maria Åberg &amp; Co. Mastermind Advanced är fortsättningen för dig som har jobbat med oss i abonnemangsform i ungefär ett år eller mer och vill fortsätta utvecklas. Anders Landgren och jag leder, och under ett år mängdtränar du ett ledarbeteende i taget tillsammans med andra ledare som har kommit lika långt som du. Du är också varmt välkommen på gruppcoachingen på fredagarna, om du vill gå tillbaka till grunderna.</p>
     <p><a href="/advanced/"><strong>Läs mer om Advanced: förflyttningen, kraven och priset →</strong></a></p>
     <div class="req">
       <p><strong>Du är redo för Advanced när du har</strong></p>
@@ -479,7 +508,10 @@
   </section>
 
   <section id="bootcamp">
-    <h2>Boot Camp</h2>
+    <div class="sec-head">
+      <h2>Boot Camp</h2>
+      <button class="btn ghost" data-ics="Boot Camp" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Lägg i kalendern</button>
+    </div>
     <div class="bootcamp">
       <div>
         <span class="badge">28 februari–2 mars 2027 · Sankt Jörgen, Göteborg</span>
@@ -556,6 +588,7 @@
     "Mastermind Advanced": ["advanced", "Mastermind Advanced 2027"],
     "Rådgivningstimme": ["radgivningstimme", "Rådgivningstimme 2027"],
     "Gruppcoaching": ["gruppcoaching", "Gruppcoaching våren 2027"],
+    "Boot Camp": ["bootcamp", "Boot Camp 2027"],
     "alla": ["alla", "Mastermind våren 2027 · Åberg & Co"]
   };
   var ICON = {
@@ -578,6 +611,32 @@
     }).join("") + '<p>Du kan lägga till i flera kalendrar. Datumen uppdateras av sig själva om något ändras.</p>';
     return m;
   }
+  // Kalenderväljaren: en färdig fil per kombination i /kalender/val/
+  var ORD = ["m", "g", "r", "b", "a"];
+  var NAMN = { m: "Mastermind", g: "Gruppcoaching", r: "Rådgivningstimme", b: "Boot Camp", a: "Mastermind Advanced" };
+  var valBox = document.getElementById("kalender-val");
+  function ritaVal() {
+    var koder = ORD.filter(function (k) { return document.querySelector('#kalender input[value="' + k + '"]').checked; });
+    var kod = koder.join("");
+    var namn = "Åberg & Co · " + (koder.length === 5 ? "Alla tillfällen 2027" : koder.map(function (k) { return NAMN[k]; }).join(", "));
+    var fil = BAS + "val/" + (kod || "m") + ".ics";
+    var webcal = "webcal://" + fil, https = "https://" + fil;
+    var val = [
+      ["google", "Google Kalender", "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal), "_blank"],
+      ["apple", "iPhone, iPad och Mac", webcal, "_self"],
+      ["outlook", "Outlook", "https://outlook.live.com/calendar/0/addfromweb?url=" + encodeURIComponent(https) + "&name=" + encodeURIComponent(namn), "_blank"]
+    ];
+    valBox.innerHTML = val.map(function (v) {
+      return '<a href="' + v[2] + '" target="' + v[3] + '" rel="noopener">' + ICON[v[0]] + '<span>' + v[1] + '</span></a>';
+    }).join("");
+    valBox.className = "go" + (kod ? "" : " off");
+    document.getElementById("kalender-hint").textContent = kod
+      ? "Datumen uppdateras av sig själva om något ändras."
+      : "Kryssa i minst en del för att lägga in datumen.";
+  }
+  document.querySelectorAll("#kalender input").forEach(function (i) { i.addEventListener("change", ritaVal); });
+  ritaVal();
+
   document.querySelectorAll("[data-ics]").forEach(function (b) {
     var wrap = document.createElement("div");
     wrap.className = "calwrap";
