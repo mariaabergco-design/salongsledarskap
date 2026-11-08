@@ -110,6 +110,20 @@ URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
  g.1
 END:VEVENT
 BEGIN:VEVENT
+UID:mastermind-2027-08-05@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20270805T080000
+DTEND;TZID=Europe/Stockholm:20270805T100000
+SUMMARY:Mastermind · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
 UID:mastermind-2027-09-02@mastermind-varen27
 DTSTAMP:20261029T120000Z
 DTSTART;TZID=Europe/Stockholm:20270902T080000
@@ -560,6 +574,20 @@ UID:advanced-2027-06-28@mastermind-varen27
 DTSTAMP:20261029T120000Z
 DTSTART;TZID=Europe/Stockholm:20270628T120000
 DTEND;TZID=Europe/Stockholm:20270628T150000
+SUMMARY:Mastermind Advanced · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:advanced-2027-08-12@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20270812T120000
+DTEND;TZID=Europe/Stockholm:20270812T150000
 SUMMARY:Mastermind Advanced · Åberg & Co
 DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
  1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v

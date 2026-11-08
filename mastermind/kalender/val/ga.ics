@@ -277,6 +277,20 @@ URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
  g.1
 END:VEVENT
 BEGIN:VEVENT
+UID:advanced-2027-08-12@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20270812T120000
+DTEND;TZID=Europe/Stockholm:20270812T150000
+SUMMARY:Mastermind Advanced · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
 UID:advanced-2027-09-30@mastermind-varen27
 DTSTAMP:20261029T120000Z
 DTSTART;TZID=Europe/Stockholm:20270930T120000
