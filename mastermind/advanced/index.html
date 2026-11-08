@@ -50,6 +50,12 @@
   .check span{color:var(--muted);font-size:15px}
   .note{margin-top:26px;padding:18px 22px;border-left:4px solid var(--orange);background:var(--orange-soft);border-radius:0 10px 10px 0;font-size:16px}
 
+  .flow{list-style:none;display:flex;justify-content:space-between;position:relative;margin:40px 0 6px;padding:0}
+  .flow::before{content:"";position:absolute;left:4%;right:4%;top:9px;height:3px;background:linear-gradient(90deg,var(--orange-soft),var(--orange))}
+  .flow li{position:relative;flex:1;text-align:center;padding-top:30px;font-size:14px;font-weight:600;color:var(--ink)}
+  .flow li::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:21px;height:21px;border-radius:50%;background:#fff;border:4px solid var(--orange);box-sizing:border-box}
+  .flow li:last-child::before{background:var(--orange)}
+  .flow-loop{font-size:15px;color:var(--muted);text-align:right;margin-top:10px}
   .do{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
   .do .box h3{font-size:19px;margin-bottom:8px}
   .do .box p{color:var(--muted);font-size:15px}
@@ -92,6 +98,11 @@
     .fromto,.checks,.do,.price-card{grid-template-columns:1fr}
     .facts{grid-template-columns:1fr 1fr}
     .incl{columns:1}
+    .flow{flex-direction:column;gap:14px;margin-left:4px}
+    .flow::before{left:9px;right:auto;top:6px;bottom:6px;width:3px;height:auto;background:linear-gradient(180deg,var(--orange-soft),var(--orange))}
+    .flow li{text-align:left;padding:0 0 0 36px;line-height:21px}
+    .flow li::before{left:0;transform:none}
+    .flow-loop{text-align:left}
     .dates{grid-template-columns:repeat(3,1fr)}
   }
 </style>
@@ -167,11 +178,21 @@
 <section class="alt">
   <div class="wrap">
     <div class="eyebrow">Det här behöver du göra</div>
-    <h2>Ett år av ledarskapsträning – på riktigt</h2>
+    <h2>Ett år av ledarskapsträning – på riktigt avancerad nivå</h2>
     <div class="bar"></div>
     <p class="lead">Precis som på gymmet blir du starkare av att träna, inte av att läsa om träning. I Advanced väljer du ett beteende i taget och mängdtränar det tills det sitter.</p>
 
-    <p class="lead" style="margin-top:22px">Det är en cirkel du går runt i hela året: du blir medveten om ett beteende, tränar på det, dokumenterar och reflekterar, får feedback från gruppen, justerar – och tränar igen tills det nya sättet sitter.</p>
+    <p class="lead" style="margin-top:22px">Så här kommer vi att jobba – hela året, ett beteende i taget:</p>
+    <ol class="flow">
+      <li>Självinsikt</li>
+      <li>Träning</li>
+      <li>Dokumentation</li>
+      <li>Reflektion</li>
+      <li>Feedback</li>
+      <li>Justering</li>
+      <li>Ny träning</li>
+    </ol>
+    <p class="flow-loop">↻ Sedan börjar cirkeln om – tills det nya beteendet sitter.</p>
 
     <div class="do">
       <div class="box">
