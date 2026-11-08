@@ -119,8 +119,10 @@ def handelse(r, zoom):
 
 # Bokstäver för kalenderväljaren på sidan: en fil per kombination i kalender/val/
 KOD = {"Mastermind": "m", "Gruppcoaching": "g", "Rådgivningstimme": "r",
-       "Boot Camp": "b", "Mastermind Advanced": "a"}
-ORDNING = ["Mastermind", "Gruppcoaching", "Rådgivningstimme", "Boot Camp", "Mastermind Advanced"]
+       "Boot Camp": "b", "Mastermind Advanced": "a", "Boot Camp oktober": "o"}
+ORDNING = ["Mastermind", "Gruppcoaching", "Rådgivningstimme", "Boot Camp", "Mastermind Advanced",
+           "Boot Camp oktober"]
+VISNING = {"Boot Camp oktober": "Save the date: Boot Camp i oktober"}
 
 
 def bootcamp():
@@ -140,7 +142,8 @@ def main():
         per_typ[typ] = h
         open(os.path.join(UT, slug + ".ics"), "w", encoding="utf-8", newline="").write(kalender(namn, h))
         print(f"{slug}.ics: {len(h)} tillfällen")
-    per_typ["Boot Camp"] = [bootcamp(), [
+    per_typ["Boot Camp"] = [bootcamp()]
+    per_typ["Boot Camp oktober"] = [[
         "BEGIN:VEVENT", "UID:bootcamp-2027-10-13@mastermind-varen27", f"DTSTAMP:{STAMP}",
         "DTSTART;VALUE=DATE:20271013", "DTEND;VALUE=DATE:20271016",
         "SUMMARY:" + esc("Save the date: Boot Camp · Åberg & Co"),
@@ -148,7 +151,7 @@ def main():
                              "Mer information kommer.\n" + ADRESS + "/#bootcamp"),
         "END:VEVENT"]]
     open(os.path.join(UT, "bootcamp.ics"), "w", encoding="utf-8", newline="").write(
-        kalender("Boot Camp 2027 · Åberg & Co", per_typ["Boot Camp"]))
+        kalender("Boot Camp 2027 · Åberg & Co", per_typ["Boot Camp"] + per_typ["Boot Camp oktober"]))
     print("bootcamp.ics: 2 tillfällen")
 
     alla = [h for typ in ORDNING if typ not in EGNA for h in per_typ[typ]]
@@ -166,7 +169,7 @@ def main():
         valda = [typ for i, typ in enumerate(ORDNING) if mask >> i & 1]
         kod = "".join(KOD[typ] for typ in valda)
         h = [x for typ in valda for x in per_typ[typ]]
-        namn = "Åberg & Co · " + ", ".join(valda) if len(valda) < len(ORDNING) else "Åberg & Co · Alla tillfällen 2027"
+        namn = "Åberg & Co · " + ", ".join(VISNING.get(x, x) for x in valda) if len(valda) < len(ORDNING) else "Åberg & Co · Alla tillfällen 2027"
         open(os.path.join(val, kod + ".ics"), "w", encoding="utf-8", newline="").write(kalender(namn, h))
         antal += 1
     print(f"val/: {antal} kombinationer")

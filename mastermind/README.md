@@ -22,6 +22,6 @@ några timmar.
 ## Kalenderväljaren
 
 Under "Lägg in datumen i din kalender" kryssar deltagaren i vilka delar hon vill
-ha (Mastermind, Gruppcoaching, Rådgivningstimme, Boot Camp, Mastermind Advanced).
+ha (Mastermind, Gruppcoaching, Rådgivningstimme, Boot Camp, Mastermind Advanced, Save the date Boot Camp i oktober).
 Skriptet bygger en färdig fil per kombination i `kalender/val/`, där filnamnet är
-bokstäverna för de valda delarna (m, g, r, b, a), till exempel `mgr.ics`.
+bokstäverna för de valda delarna (m, g, r, b, a, o), till exempel `mgr.ics`.

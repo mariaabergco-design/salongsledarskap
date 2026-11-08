@@ -1,0 +1,190 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Åberg & Co//Mastermind//SV
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Åberg & Co · Mastermind\, Boot Camp\, Save the date: Boot Ca
+ mp i oktober
+X-WR-TIMEZONE:Europe/Stockholm
+REFRESH-INTERVAL;VALUE=DURATION:PT12H
+X-PUBLISHED-TTL:PT12H
+BEGIN:VTIMEZONE
+TZID:Europe/Stockholm
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:mastermind-2027-01-07@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20270107T080000
+DTEND;TZID=Europe/Stockholm:20270107T100000
+SUMMARY:Mastermind · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:mastermind-2027-02-04@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20270204T080000
+DTEND;TZID=Europe/Stockholm:20270204T100000
+SUMMARY:Mastermind · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:mastermind-2027-03-04@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20270304T080000
+DTEND;TZID=Europe/Stockholm:20270304T100000
+SUMMARY:Mastermind · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:mastermind-2027-04-01@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20270401T080000
+DTEND;TZID=Europe/Stockholm:20270401T100000
+SUMMARY:Mastermind · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:mastermind-2027-05-05@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20270505T080000
+DTEND;TZID=Europe/Stockholm:20270505T100000
+SUMMARY:Mastermind · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:mastermind-2027-06-03@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20270603T080000
+DTEND;TZID=Europe/Stockholm:20270603T100000
+SUMMARY:Mastermind · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:mastermind-2027-09-02@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20270902T080000
+DTEND;TZID=Europe/Stockholm:20270902T100000
+SUMMARY:Mastermind · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:mastermind-2027-10-07@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20271007T080000
+DTEND;TZID=Europe/Stockholm:20271007T100000
+SUMMARY:Mastermind · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:mastermind-2027-11-04@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20271104T080000
+DTEND;TZID=Europe/Stockholm:20271104T100000
+SUMMARY:Mastermind · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:mastermind-2027-12-02@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;TZID=Europe/Stockholm:20271202T080000
+DTEND;TZID=Europe/Stockholm:20271202T100000
+SUMMARY:Mastermind · Åberg & Co
+DESCRIPTION:Zoom: https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt
+ 1XaVNfOqMRam2Vg.1\nLösenkod: mastermind\nProgrammet: https://mastermind-v
+ aren27.vercel.app
+LOCATION:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqM
+ Ram2Vg.1
+URL:https://us06web.zoom.us/j/85055098578?pwd=v8zQ0cRPHoDSDYt1XaVNfOqMRam2V
+ g.1
+END:VEVENT
+BEGIN:VEVENT
+UID:bootcamp-2027-02-28@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20270228
+DTEND;VALUE=DATE:20270303
+SUMMARY:Boot Camp · Sankt Jörgen\, Göteborg
+DESCRIPTION:Söndag kväll: enklare middag för dig som vill sova över. M
+ åndag: konferens hela dagen och middag på kvällen. Tisdag förmiddag: n
+ i arbetar självständigt med er plan\, Maria finns på plats och stöttar
+ .\nhttps://mastermind-varen27.vercel.app/#bootcamp
+LOCATION:Sankt Jörgen\, Göteborg
+END:VEVENT
+BEGIN:VEVENT
+UID:bootcamp-2027-10-13@mastermind-varen27
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20271013
+DTEND;VALUE=DATE:20271016
+SUMMARY:Save the date: Boot Camp · Åberg & Co
+DESCRIPTION:Höstens Boot Camp\, tre dagar onsdag till fredag. Öppen för 
+ alla. Mer information kommer.\nhttps://mastermind-varen27.vercel.app/#boot
+ camp
+END:VEVENT
+END:VCALENDAR

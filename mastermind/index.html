@@ -358,8 +358,9 @@
         <label><input type="checkbox" value="m" checked><span>Mastermind<small>10 tillfällen, torsdagar 08.00</small></span></label>
         <label><input type="checkbox" value="g" checked><span>Gruppcoaching<small>12 tillfällen, fredagar 09.00</small></span></label>
         <label><input type="checkbox" value="r" checked><span>Rådgivningstimme<small>10 tillfällen, 09.00–10.00</small></span></label>
-        <label><input type="checkbox" value="b"><span>Boot Camp<small>28 feb–2 mars och 13–15 okt</small></span></label>
+        <label><input type="checkbox" value="b"><span>Boot Camp<small>28 feb–2 mars, Sankt Jörgen</small></span></label>
         <label><input type="checkbox" value="a"><span>Mastermind Advanced<small>10 tillfällen, för inbjudna</small></span></label>
+        <label><input type="checkbox" value="o" checked><span>Boot Camp i oktober<small>Save the date: 13–15 okt, för alla</small></span></label>
       </div>
       <div class="go" id="kalender-val"></div>
       <p class="hint" id="kalender-hint"></p>
@@ -634,13 +635,13 @@
     return m;
   }
   // Kalenderväljaren: en färdig fil per kombination i /kalender/val/
-  var ORD = ["m", "g", "r", "b", "a"];
-  var NAMN = { m: "Mastermind", g: "Gruppcoaching", r: "Rådgivningstimme", b: "Boot Camp", a: "Mastermind Advanced" };
+  var ORD = ["m", "g", "r", "b", "a", "o"];
+  var NAMN = { m: "Mastermind", g: "Gruppcoaching", r: "Rådgivningstimme", b: "Boot Camp", a: "Mastermind Advanced", o: "Save the date: Boot Camp i oktober" };
   var valBox = document.getElementById("kalender-val");
   function ritaVal() {
     var koder = ORD.filter(function (k) { return document.querySelector('#kalender input[value="' + k + '"]').checked; });
     var kod = koder.join("");
-    var namn = "Åberg & Co · " + (koder.length === 5 ? "Alla tillfällen 2027" : koder.map(function (k) { return NAMN[k]; }).join(", "));
+    var namn = "Åberg & Co · " + (koder.length === 6 ? "Alla tillfällen 2027" : koder.map(function (k) { return NAMN[k]; }).join(", "));
     var fil = BAS + "val/" + (kod || "m") + ".ics";
     var webcal = "webcal://" + fil, https = "https://" + fil;
     var val = [

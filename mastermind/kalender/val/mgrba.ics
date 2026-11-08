@@ -3,7 +3,8 @@ VERSION:2.0
 PRODID:-//Åberg & Co//Mastermind//SV
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:Åberg & Co · Alla tillfällen 2027
+X-WR-CALNAME:Åberg & Co · Mastermind\, Gruppcoaching\, Rådgivningstimme\
+ , Boot Camp\, Mastermind Advanced
 X-WR-TIMEZONE:Europe/Stockholm
 REFRESH-INTERVAL;VALUE=DURATION:PT12H
 X-PUBLISHED-TTL:PT12H
@@ -483,16 +484,6 @@ DESCRIPTION:Söndag kväll: enklare middag för dig som vill sova över. M
  i arbetar självständigt med er plan\, Maria finns på plats och stöttar
  .\nhttps://mastermind-varen27.vercel.app/#bootcamp
 LOCATION:Sankt Jörgen\, Göteborg
-END:VEVENT
-BEGIN:VEVENT
-UID:bootcamp-2027-10-13@mastermind-varen27
-DTSTAMP:20261029T120000Z
-DTSTART;VALUE=DATE:20271013
-DTEND;VALUE=DATE:20271016
-SUMMARY:Save the date: Boot Camp · Åberg & Co
-DESCRIPTION:Höstens Boot Camp\, tre dagar onsdag till fredag. Öppen för 
- alla. Mer information kommer.\nhttps://mastermind-varen27.vercel.app/#boot
- camp
 END:VEVENT
 BEGIN:VEVENT
 UID:advanced-2027-01-28@mastermind-varen27
